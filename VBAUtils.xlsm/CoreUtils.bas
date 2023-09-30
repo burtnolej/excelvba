@@ -18,6 +18,48 @@ Attribute VB_Name = "CoreUtils"
 'Function IsInStr(findStr As String, searchStr As String, Optional notFlag As Boolean = False)
 'Sub DumpFormats(Optional tmpRange As Range = Nothing)
 'Sub SetConditionalFillFormat()
+'Sub WaitSecs(seconds As Long)
+'Public Function GetCellFormat(tmpRange As Range) As String()
+'Public Sub ApplyCellFormats(cellFormats() As String, tmpRange As Range)
+
+
+Public Function GetCellFormat(tmpRange As Range) As Variant()
+Dim cellFormats() As Variant
+    
+    ReDim cellFormats(1 To 6)
+    
+    With tmpRange.Interior
+        cellFormats(1) = .Pattern
+        cellFormats(2) = .TintAndShade
+        cellFormats(3) = .Color
+        cellFormats(4) = .PatternColorIndex
+        cellFormats(5) = .PatternTintAndShade
+        cellFormats(6) = .ThemeColor
+    End With
+    
+    GetCellFormat = cellFormats
+                
+End Function
+
+Public Sub ApplyCellFormats(cellFormats() As Variant, tmpRange As Range)
+    With tmpRange.Interior
+        .Pattern = cellFormats(1)
+        .TintAndShade = cellFormats(2)
+        .Color = cellFormats(3)
+        .PatternColorIndex = cellFormats(4)
+        .PatternTintAndShade = cellFormats(5)
+        If cellFormats(6) <> 0 Then
+            .ThemeColor = cellFormats(6)
+        End If
+    End With
+End Sub
+
+
+Sub WaitSecs(seconds As Long)
+    Application.Wait (Now + TimeValue("0:00:" & Str(seconds)))
+
+End Sub
+
 
 Public Function GetNow(Optional format As String = "yymmdd") As String
 
@@ -63,30 +105,38 @@ End Sub
 
 
 Public Sub sortRange(tmpWorksheet As Worksheet, sortRange As Range, sortColumn As Integer)
-Dim tmpRange As Range, tmpColumn As Range
+Dim tmpColumn As Range
+Dim origSheet As Worksheet
+
+    Set origSheet = ActiveSheet
+    tmpWorksheet.Activate
 
     Set tmpColumn = sortRange.Columns(sortColumn)
-    
-    sortRange.Rows(1).Offset(-1).Select
-    Range(Selection, Selection.End(xlDown)).Select
+    sortRange.Select
+
     tmpWorksheet.Sort.SortFields.Clear
-    tmpWorksheet.Sort.SortFields.Add2 Key:=tmpColumn, _
-        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    tmpWorksheet.Sort.SortFields.Add2 key:=tmpColumn, _
+        SortOn:=xlSortOnValues, Order:=xlDescending, DataOption:=xlSortNormal
     With tmpWorksheet.Sort
-        .SetRange sortRange.Offset(-1).Resize(sortRange.Rows.Count + 1)
-        .Header = xlGuess
+        .SetRange sortRange.Offset(1).Resize(sortRange.Rows.Count + 1)
+        .header = xlGuess
         .MatchCase = False
         .Orientation = xlTopToBottom
         .SortMethod = xlPinYin
         .Apply
     End With
 
+endsub:
+    origSheet.Activate
+    Set origSheet = Nothing
+    Set tmpColumn = Nothing
+
 End Sub
 Sub DeleteNamedRanges(tmpWorkbook As Workbook, Optional sheetName As String = "ALL")
 Dim myName As Name
 
     For Each myName In tmpWorkbook.Names
-        If sheetName = "ALL" Or Left(myName.Name, Len(sheetName)) = UCase(sheetName) Then
+        If sheetName = "ALL" Or left(myName.Name, Len(sheetName)) = UCase(sheetName) Then
             If myName.MacroType = -4142 Then
                 If myName.Name = "CLIENTS_ROW_COUNT" Or myName.Name = "OPPORTUNITY_ROW_COUNT" Or myName.Name = "PERSONS_ROW_COUNT" Then
                 Else
@@ -106,7 +156,7 @@ Dim sHostName As String
 
     sHostName = Environ$("computername")
     
-    If Left(fullPathName, 3) = "E:\" Or Left(fullPathName, 3) = "C:\" Then
+    If left(fullPathName, 3) = "E:\" Or left(fullPathName, 3) = "C:\" Then
         GetSharedPathPrefix = fullPathName
     ElseIf sHostName = "DESKTOP-AIODDE8" Then
         GetSharedPathPrefix = "C:\Users\burtn\" & fullPathName
@@ -151,9 +201,9 @@ Dim i As Integer
     expRangeHeight = 0
     
     For i = 1 To numRows
-        sheetName = inputRange.Cells(i, 1).Value
-        rangeName = inputRange.Cells(i, 2).Value
-        rangeHeight = inputRange.Cells(i, 3).Value
+        sheetName = inputRange.Cells(i, 1).value
+        rangeName = inputRange.Cells(i, 2).value
+        rangeHeight = inputRange.Cells(i, 3).value
         
         Set sourceSheet = ActiveWorkbook.Sheets(sourceSheetName)
         'Set sourceHeaderRange = sourceSheet.Range("1:1")
@@ -235,6 +285,7 @@ Public Sub SetEventsOn()
     Application.ScreenUpdating = True
     Application.EnableEvents = True
     Application.DisplayAlerts = True
+    Application.Calculation = xlCalculationAutomatic
     EVENTSON = True
 End Sub
 
@@ -242,6 +293,7 @@ Public Sub SetEventsOff()
     Application.ScreenUpdating = False
     Application.EnableEvents = False
     Application.DisplayAlerts = False
+    Application.Calculation = xlCalculationManual
     EVENTSON = False
 End Sub
 Public Function SheetExists(sheetName As String, book As Workbook) As Boolean
@@ -275,7 +327,6 @@ Function IsInStr(findStr As String, searchStr As String, Optional notFlag As Boo
 End Function
 
 
-'Selection.Font.Bold = True
 
 Sub DumpFormats(Optional tmpRange As Range = Nothing)
 Dim tmpCell As Range
@@ -317,8 +368,8 @@ Dim myThemeColor As Variant, myColor As Variant, myTintAndShade As Variant, myPa
         Set currentArea = dataRange.Areas(areaCount)
         For Each myCell In currentArea.Cells
             For colorCount = 1 To width
-                If myCell.Value <= colorRefArray(2, colorCount) And myCell.Value >= colorRefArray(1, colorCount) Then
-                    Debug.Print myCell.Value
+                If myCell.value <= colorRefArray(2, colorCount) And myCell.value >= colorRefArray(1, colorCount) Then
+                    Debug.Print myCell.value
                     myThemeColor = colorRefArray(3, colorCount)
                     myColor = colorRefArray(4, colorCount)
                     myTintAndShade = colorRefArray(5, colorCount)
