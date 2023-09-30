@@ -72,7 +72,7 @@ End Function
 Function IsEmailAddressInternal(emailAddress As String, folderString As String, nextRow As Long) As Boolean
 
     IsEmailAddressInternal = False
-    If Left(LCase(emailAddress), Len("/O=EXCHANGELABS")) = LCase("/O=EXCHANGELABS") Then
+    If left(LCase(emailAddress), Len("/O=EXCHANGELABS")) = LCase("/O=EXCHANGELABS") Then
         IsEmailAddressInternal = True
         'Application.StatusBar = folderString & ": row:" & Str(nextRow) & emailAddress & ": INTERNAL - SKIPPING"
     End If

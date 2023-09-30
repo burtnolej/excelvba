@@ -55,11 +55,11 @@ Dim i As Integer
         resultArray(i, 0) = oFile.Name
         resultArray(i, 1) = format(CDate(oFile.DateCreated), "YYYY/MM/DD")
         resultArray(i, 2) = format(CDate(oFile.DateLastModified), "YYYY/MM/DD")
-        resultArray(i, 3) = "=hyperlink(" & DDQ & oFile.Path & DDQ & ")"
-        resultArray(i, 4) = Left(oFile.Name, Len(oFile.Name) - 12)
+        resultArray(i, 3) = "=hyperlink(" & DDQ & oFile.path & DDQ & ")"
+        resultArray(i, 4) = left(oFile.Name, Len(oFile.Name) - 12)
         
         If InStr(1, oFile.Name, "_") <> 0 Then
-            resultArray(i, 5) = Left(oFile.Name, InStr(1, oFile.Name, "_") - 1)
+            resultArray(i, 5) = left(oFile.Name, InStr(1, oFile.Name, "_") - 1)
         End If
         
         resultArray(i, 6) = resultArray(i, 4) & " [" & resultArray(i, 1) & "]"
@@ -112,7 +112,7 @@ Dim oFile As Object
 End Function
 Public Function GetFileFromPath(sPath As String) As String
 Dim fso As New FileSystemObject
-Dim FileName As String
+Dim fileName As String
     GetFileFromPath = fso.GetFileName(sPath)
 End Function
 
