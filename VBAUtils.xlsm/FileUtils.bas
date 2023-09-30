@@ -50,7 +50,7 @@ Dim i As Integer
     Set oFSO = CreateObject("Scripting.FileSystemObject")
     Set oFolder = oFSO.GetFolder(folderDir)
 
-     
+    
     For Each oFile In oFolder.Files
         resultArray(i, 0) = oFile.Name
         resultArray(i, 1) = format(CDate(oFile.DateCreated), "YYYY/MM/DD")
@@ -152,7 +152,7 @@ Dim sSourceFilePath As String, sTargetFilePath As String
     'FuncLogIt sFuncName, "Copied from  [" & sSourceFilePath & "] to [" & sTargetFilePath & "]", C_MODULE_NAME, LogMsgType.Failure
     Exit Sub
 err:
-    FuncLogIt sFuncName, "Failed to copy [" & sSourceFilePath & "] to  [" & sTargetFilePath & "]", C_MODULE_NAME, LogMsgType.Failure
+    'FuncLogIt sFuncName, "Failed to copy [" & sSourceFilePath & "] to  [" & sTargetFilePath & "]", C_MODULE_NAME, LogMsgType.Failure
 
 End Sub
 

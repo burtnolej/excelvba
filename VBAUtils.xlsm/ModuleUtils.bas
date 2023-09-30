@@ -1,4 +1,5 @@
 Attribute VB_Name = "ModuleUtils"
+'Public Sub ExportAllModules()
 'Function ExportModules(xlwb As Workbook, sDirectory As String, sSuffix As String, Optional sModuleName As String) As String()
 'Function GetModule(xlwb As Workbook, sModuleName As String) As Variant
 'Function ImportModules(xlwb As Workbook, sDirectory As String, _
@@ -7,7 +8,39 @@ Attribute VB_Name = "ModuleUtils"
                     Optional sIgnoreModules As String, _
                     Optional bDryRun As Boolean = False) As Integer
                     
+Public Function GetFilePath(fullpath As String) As String
+Dim oFSO As FileSystemObject, oFile As File
+    Set oFSO = CreateObject("Scripting.FileSystemObject")
+    GetFilePath = Left(fullpath, Len(fullpath) - Len(oFSO.GetFileName(fullpath)))
+End Function
 
+
+    
+Public Sub ExportAllModules()
+Dim ubuntubookpath As String, ubuntuhome As String, bookname As String, SourcePath As String, siteaddress As String, NewSourcePath As String
+Dim tmpWorkbook As Workbook
+
+    Set tmpWorkbook = ActiveWorkbook
+    siteaddress = "https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive/Shared Documents/"
+    
+    bookname = ActiveWorkbook.Name
+    SourcePath = GetFilePath(ActiveWorkbook.FullName)
+    
+    If Left(SourcePath, Len(siteaddress)) = siteaddress Then
+        NewSourcePath = "E:/Velox Financial Technology/Velox Shared Drive - Documents/" & Right(SourcePath, Len(SourcePath) - Len(siteaddress))
+    End If
+        
+    
+    ubuntuhome = "\\wsl.localhost\Ubuntu\home\burtnolej\sambashare\veloxmon\excelvba"
+    ubuntubookpath = ubuntuhome & "\" & bookname & "\"
+    
+    CreateDir ubuntubookpath
+    ExportModules ActiveWorkbook, ubuntubookpath, _
+        ""
+        
+    FileCopy bookname, NewSourcePath, ubuntubookpath
+
+End Sub
 
 Function ExportModules(xlwb As Workbook, sDirectory As String, sSuffix As String, Optional sModuleName As String) As String()
 Dim VBProj As VBIDE.VBProject

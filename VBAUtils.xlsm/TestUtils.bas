@@ -1,5 +1,4 @@
 Attribute VB_Name = "TestUtils"
-'Public Sub ExportAllModules()
 'Public Sub TestRefreshCapsuleData()
 'Public Sub TestExportModules()
 'Public Sub TestRefreshMondayData()
@@ -15,17 +14,7 @@ Attribute VB_Name = "TestUtils"
 'Public Function RangeToDict(tmpWorkbook As Workbook, sheetNameStr As String, rangeNameStr As String, _
 '    ByRef tmpDict As Dictionary, Optional ByRef length As Long, Optional ByRef width As Long) As Variant
 
-Public Sub ExportAllModules()
-Dim ubuntubookpath As String, ubuntuhome As String
 
-    ubuntuhome = "\\wsl.localhost\Ubuntu\home\burtnolej\sambashare\veloxmon\excelvba"
-    ubuntubookpath = ubuntuhome & "\" & ActiveWorkbook.Name & "\"
-    
-    CreateDir ubuntubookpath
-    ExportModules ActiveWorkbook, ubuntubookpath, _
-        ""
-
-End Sub
 
 
 Public Sub TestRefreshCapsuleData()
