@@ -14,7 +14,29 @@ Attribute VB_Name = "TestUtils"
 'Public Function RangeToDict(tmpWorkbook As Workbook, sheetNameStr As String, rangeNameStr As String, _
 '    ByRef tmpDict As Dictionary, Optional ByRef length As Long, Optional ByRef width As Long) As Variant
 
+Public Sub GenerateRibbon()
+    LoadCustRibbon
+End Sub
 
+Public Sub OpenDesktop()
+Dim tmpWorkbook As Workbook, tmpWindow As Window
+
+    ActiveWindow.Visible = False
+    Set tmpWorkbook = Workbooks.Open("E:\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools\Desktop.xlsm")
+    
+    Set tmpWindow = Windows("Desktop.xlsm")
+    tmpWindow.WindowState = xlNormal
+    tmpWindow.top = 0
+    tmpWindow.left = 1300
+    tmpWindow.width = 240
+    tmpWindow.height = 800
+    tmpWindow.Visible = True
+
+exitsub:
+    Set tmpWindow = Nothing
+    Set tmpWorkbook = Nothing
+    
+End Sub
 
 
 Public Sub TestRefreshCapsuleData()
@@ -35,12 +57,21 @@ Public Sub TestExportModules()
         "Utils"
 End Sub
 Public Sub TestRefreshMondayData()
-Dim outputRange As Range
-    Set outputRange = HTTPDownloadFile("http://172.22.237.138/datafiles/Monday/6666786972.txt", _
+Dim outputRange As Range, itemName As Range, subItemName As Range, itemId As Range
+    Set outputRange = HTTPDownloadFile("http://172.22.237.138/datafiles/Monday/5555786972.txt", _
                 ActiveWorkbook, _
-                "", "", 0, "start-of-day", "Sheet3", False, 1)
+                "", "", 0, "start-of-day", "Monday Data", False, 1)
                 
     sortRange outputRange.Worksheet, outputRange, 6
+    
+    Set itemName = outputRange.Columns(4)
+    Set subItemName = outputRange.Columns(5)
+    Set itemId = outputRange.Columns(7)
+    
+    ActiveWorkbook.Names.Add "MONDAY_ITEMS", itemName
+    ActiveWorkbook.Names.Add "MONDAY_SUBITEMS", subItemName
+    ActiveWorkbook.Names.Add "MONDAY_ITEMID", itemId
+    
                     
 End Sub
 
@@ -107,7 +138,7 @@ Dim origSheet As Worksheet
     Set tmpRange = tmpSheet.Range(rangeNameStr)
     origSheet.Activate
     
-    tmpRange.Value = tmpArray
+    tmpRange.value = tmpArray
 
     
 endfunc:
@@ -159,8 +190,8 @@ Dim origSheet As Worksheet
     Set tmpRange = tmpSheet.Range(rangeNameStr)
     
     For j = 1 To tmpRange.Rows.Count
-        If tmpDict.Exists(tmpRange(j, 2).Value) = False Then
-            tmpDict.Add tmpRange(j, 2).Value, CStr(tmpRange(j, 1).Value)
+        If tmpDict.Exists(tmpRange(j, 2).value) = False Then
+            tmpDict.Add tmpRange(j, 2).value, CStr(tmpRange(j, 1).value)
         End If
         'Debug.Print tmpDict.Item(tmpRange(j, 2).Value)
     Next j
