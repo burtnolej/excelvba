@@ -11,34 +11,36 @@ Attribute VB_Name = "ModuleUtils"
 Public Function GetFilePath(fullpath As String) As String
 Dim oFSO As FileSystemObject, oFile As File
     Set oFSO = CreateObject("Scripting.FileSystemObject")
-    GetFilePath = Left(fullpath, Len(fullpath) - Len(oFSO.GetFileName(fullpath)))
+    GetFilePath = left(fullpath, Len(fullpath) - Len(oFSO.GetFileName(fullpath)))
 End Function
 
 
     
 Public Sub ExportAllModules()
-Dim ubuntubookpath As String, ubuntuhome As String, bookname As String, SourcePath As String, siteaddress As String, NewSourcePath As String
+Dim ubuntubookpath As String, ubuntuhome As String, bookName As String, SourcePath As String, siteaddress As String, NewSourcePath As String
 Dim tmpWorkbook As Workbook
 
     Set tmpWorkbook = ActiveWorkbook
     siteaddress = "https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive/Shared Documents/"
     
-    bookname = ActiveWorkbook.Name
+    bookName = ActiveWorkbook.Name
     SourcePath = GetFilePath(ActiveWorkbook.FullName)
     
-    If Left(SourcePath, Len(siteaddress)) = siteaddress Then
+    If left(SourcePath, Len(siteaddress)) = siteaddress Then
         NewSourcePath = "E:/Velox Financial Technology/Velox Shared Drive - Documents/" & Right(SourcePath, Len(SourcePath) - Len(siteaddress))
+    Else
+        NewSourcePath = SourcePath
     End If
         
     
     ubuntuhome = "\\wsl.localhost\Ubuntu\home\burtnolej\sambashare\veloxmon\excelvba"
-    ubuntubookpath = ubuntuhome & "\" & bookname & "\"
+    ubuntubookpath = ubuntuhome & "\" & bookName & "\"
     
     CreateDir ubuntubookpath
     ExportModules ActiveWorkbook, ubuntubookpath, _
         ""
         
-    FileCopy bookname, NewSourcePath, ubuntubookpath
+    FileCopy bookName, NewSourcePath, ubuntubookpath
 
 End Sub
 
@@ -65,9 +67,9 @@ ReDim vModulesNames(0 To 100)
 
     For i = 0 To UBound(vModulesNames)
         Set VBComp = GetModule(xlwb, vModulesNames(i))
-        Path = sDirectory & vModulesNames(i) & sSuffix & ".bas"
+        path = sDirectory & vModulesNames(i) & sSuffix & ".bas"
         
-        Call VBComp.Export(Path)
+        Call VBComp.Export(path)
     Next i
 
 End Function
