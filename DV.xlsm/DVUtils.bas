@@ -1,4 +1,10 @@
 Attribute VB_Name = "DVUtils"
+
+
+Public Sub TestCustomSave(Optional param As Variant)
+    ThisWorkbook.CustomSave ActiveWorkbook.Name
+End Sub
+
 Public Sub DVGetDataFile(filename)
 Dim tmpSheet As Worksheet
 Dim outputRange As Range

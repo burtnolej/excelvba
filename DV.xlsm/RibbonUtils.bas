@@ -33,7 +33,7 @@ Public Sub RefreshQuery(Optional param As String, Optional param2 As Variant)
     Application.Run "DV.xlsm!DVGetDataFile", selectedDatafile
 End Sub
 
-Sub dropDown_onAction(Control As IRibbonControl, id As String, index As Integer)
+Sub dropDown_onAction(control As IRibbonControl, id As String, index As Integer)
     Select Case id
         
         Case "dev"
@@ -49,6 +49,18 @@ Sub dropDown_onAction(Control As IRibbonControl, id As String, index As Integer)
     
 End Sub
 
+'Sub InitializeDropdown(control As IRibbonControl, ByRef returnedVal)
+'    Select Case control.id
+'
+'        Case "dropDown2"
+'            returnedVal = RetrieveCheckEnvUrl
+'        Case "dropDown3"
+'            returnedVal = "singlesheet"''
+
+'    End Select
+
+'    PersistVar control.tag, Text
+'End Sub
 
 Sub InitCheckBoxVals()
 Dim runningAppsRange As Range
@@ -221,16 +233,16 @@ Dim varValues As Dictionary
 
     PersistVar "ribbonui", ObjPtr(ribbon)
     
-    rbxUI.ActivateTab "tab3"
+    rbxUI.ActivateTab "tab2"
     
 End Sub
 
 
 ' Set default value of editBox to 0
 
-Sub editBox_onChange(Control As IRibbonControl, Text As Variant)
+Sub editBox_onChange(control As IRibbonControl, Text As Variant)
 
-    Select Case Control.tag
+    Select Case control.tag
     
         Case "x"
             x = Text
@@ -244,13 +256,13 @@ Sub editBox_onChange(Control As IRibbonControl, Text As Variant)
             rootpath = Text
     End Select
 
-    PersistVar Control.tag, Text
+    PersistVar control.tag, Text
     
 End Sub
 
 ' Return value of editBox
 
-Sub editBox_getText(Control As IRibbonControl, ByRef returnedVal)
+Sub editBox_getText(control As IRibbonControl, ByRef returnedVal)
 Dim persistedVars() As Variant
 Dim varValues As Dictionary
 
@@ -263,7 +275,7 @@ Dim varValues As Dictionary
         height = varValues("height")
     End If
     
-    Select Case Control.tag
+    Select Case control.tag
     
         Case "x"
              returnedVal = x
@@ -283,7 +295,7 @@ End Sub
 
 
 
-Sub chkBox_onAction(Control As IRibbonControl, isPressed As Boolean)
+Sub chkBox_onAction(control As IRibbonControl, isPressed As Boolean)
 
     'Display status of checkbox in cell: TRUE or FALSE
     
@@ -291,13 +303,13 @@ Sub chkBox_onAction(Control As IRibbonControl, isPressed As Boolean)
     
 End Sub
 
-Public Sub fncGetPressed(Control As IRibbonControl, ByRef bolReturn)
+Public Sub fncGetPressed(control As IRibbonControl, ByRef bolReturn)
 'Callback Checkbox State
 'Select Case control.id
 'Case "MA"
 'Here do you change the condition of bolReturn conforms to your form
-If CheckboxValues.Exists(Control.id) Then
-    If CheckboxValues.Item(Control.id) = True Then
+If CheckboxValues.Exists(control.id) Then
+    If CheckboxValues.Item(control.id) = True Then
         bolReturn = True
     Else
         bolReturn = False
@@ -306,7 +318,7 @@ End If
 'End Select
 End Sub
 
-Sub btns_onAction(Control As IRibbonControl)
+Sub btns_onAction(control As IRibbonControl)
 Dim tag As String, action As String, param As String, foldername As String, bookname As String
 Dim tagSplit As Variant, functionSplit As Variant
 Dim w As Long, h As Long
@@ -318,7 +330,7 @@ Dim args() As Variant
 
 foldername = "E:\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools"
 
-    tag = Control.tag
+    tag = control.tag
     
     tagSplit = Split(tag, "_")
     action = tagSplit(0)
@@ -369,8 +381,15 @@ foldername = "E:\Velox Financial Technology\Velox Shared Drive - Documents\Gener
             
             
         Case "runfunction"
+
             functionSplit = Split(param, "^")
-            functionSplit = Application.Run(functionSplit(0) & ".xlsm!" & functionSplit(1), functionSplit(2))
+            If InStr(functionSplit(1), ".") <> -1 Then
+                functionSplit = Application.Run(functionSplit(1), functionSplit(2))
+            Else
+                functionSplit = Application.Run(functionSplit(0) & ".xlsm!" & functionSplit(1), functionSplit(2))
+            End If
+            
+            
             
         Case "pickfolder"
             rootpath = Application.Run("VBAUtils.xlsm!GetFolderSelection", Environ("OneDrive"))
@@ -433,8 +452,8 @@ foldername = "E:\Velox Financial Technology\Velox Shared Drive - Documents\Gener
     CustomRibbon.Invalidate
 End Sub
 
-Sub btnGrp_onAction(Control As IRibbonControl)
-    Select Case Control.id
+Sub btnGrp_onAction(control As IRibbonControl)
+    Select Case control.id
 
         'Buttons 1-9
         
@@ -444,9 +463,9 @@ Sub btnGrp_onAction(Control As IRibbonControl)
     End Select
 End Sub
 
-Sub togBtn_onAction(Control As IRibbonControl, isPressed As Boolean)
+Sub togBtn_onAction(control As IRibbonControl, isPressed As Boolean)
     
-    Select Case Control.id
+    Select Case control.id
         
         Case "togBtn_btn1"
             
@@ -467,8 +486,8 @@ End Sub
 '    End Select
     
 'End Sub
-Sub splitBtn_onAction(Control As IRibbonControl)
-    Select Case Control.id
+Sub splitBtn_onAction(control As IRibbonControl)
+    Select Case control.id
         
         Case "splitBtn_btn1"
             MsgBox "This is a button!"
@@ -496,7 +515,7 @@ Sub Initialize(ribbon As IRibbonUI)
 End Sub
 
 'Callback for Combo3 getItemCount (called once when the combobox is invalidated)
-Sub Combo3_getItemCount(Control As IRibbonControl, ByRef returnedVal)
+Sub Combo3_getItemCount(control As IRibbonControl, ByRef returnedVal)
     'returnedVal = 10 'the number of items for combobox
     If (Not Not manifestFiles) = 0 Then
         RefreshDownloadFiles
@@ -507,13 +526,13 @@ Sub Combo3_getItemCount(Control As IRibbonControl, ByRef returnedVal)
 End Sub
 
 'Callback for Combo3 getItemID (called 10 times when combobox is invalidated)
-Public Sub Combo3_getItemID(Control As IRibbonControl, index As Integer, ByRef id)
+Public Sub Combo3_getItemID(control As IRibbonControl, index As Integer, ByRef id)
     'id = "ComboboxItem" & index + 1
     id = manifestFiles(index + 1, 1)
 End Sub
 
 'Callback for Combo3 getItemLabel (called 10 times when combobox is invalidated)
-Sub Combo3_getItemLabel(Control As IRibbonControl, index As Integer, ByRef returnedVal)
+Sub Combo3_getItemLabel(control As IRibbonControl, index As Integer, ByRef returnedVal)
     'returnedVal = "Item" & index + 1
     
     returnedVal = manifestFiles(index + 1, 1)
@@ -522,12 +541,12 @@ Sub Combo3_getItemLabel(Control As IRibbonControl, index As Integer, ByRef retur
 End Sub
 
 'Callback for Combo3 getText
-Sub Combo3_getText(Control As IRibbonControl, ByRef returnedVal)
+Sub Combo3_getText(control As IRibbonControl, ByRef returnedVal)
     returnedVal = "" 'clears the text from the combobox
 End Sub
 
 'Callback for Combo3 onChange
-Sub Combo3_onChange(Control As IRibbonControl, filename As String)
+Sub Combo3_onChange(control As IRibbonControl, filename As String)
 Dim textSplit As Variant
 Dim sheetname As String, url As String
 Dim outputRange As Range
@@ -556,11 +575,11 @@ Sub UpdateCombo3()
 End Sub
 
 
-Public Sub GetImage(Control As IRibbonControl, ByRef image)
+Public Sub GetImage(control As IRibbonControl, ByRef image)
 image = "FileSave"
 End Sub
 
-Public Sub GetItemImage(Control As IRibbonControl, ByRef image)
+Public Sub GetItemImage(control As IRibbonControl, ByRef image)
 image = "FileSave"
 End Sub
 

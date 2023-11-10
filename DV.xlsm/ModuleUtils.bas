@@ -45,9 +45,10 @@ Dim tmpWorkbook As Workbook
     
     If left(sourcepath, Len(siteaddress)) = siteaddress Then
         NewSourcePath = "E:/Velox Financial Technology/Velox Shared Drive - Documents/" & Right(sourcepath, Len(sourcepath) - Len(siteaddress))
+    Else
+        NewSourcePath = sourcepath
     End If
         
-    
     ubuntuhome = "\\wsl.localhost\Ubuntu\home\burtnolej\sambashare\veloxmon\excelvba"
     ubuntubookpath = ubuntuhome & "\" & bookname & "\"
     
