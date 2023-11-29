@@ -242,7 +242,7 @@ Sub generateRanges()
     
 End Sub
 
-Public Sub GetCellFill()
+Public Sub GetCellFill(Optional param As Variant, Optional param2 As Variant)
 Dim length As Long, count As Long
 Dim headerRange As Range, resultRange As Range, myCell As Range
 Dim resultArray() As Variant

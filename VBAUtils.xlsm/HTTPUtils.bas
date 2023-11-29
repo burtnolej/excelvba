@@ -89,7 +89,7 @@ Dim fieldCount As Integer
     
     recordFormRange.ClearContents
     
-    For i = 1 To recordDefaultsRange.Rows.Count
+    For i = 1 To recordDefaultsRange.Rows.count
         If recordDefaultsTypeRange.Rows(i).value = recordTypeRange.value Then
             Debug.Print recordFormDefaultRange.Address
             Debug.Print recordsDefaultsDefaultRange.Rows(i).value
@@ -108,7 +108,7 @@ Dim lookupField As New Dictionary
     Set lookupFieldsRange = tmpWorksheet.Range("LOOKUP_FIELDS")
     Set lookupValuesRange = tmpWorksheet.Range("LOOKUP_VALUES")
     
-    For i = 1 To fieldsRange.Count
+    For i = 1 To fieldsRange.count
         Set customField = New Dictionary
         If lookupsRange.Rows(i).value <> False Then
             customField.Add "id", lookupsRange.Rows(i).value
@@ -124,7 +124,7 @@ Dim subCustomField As New Dictionary, customField As New Dictionary
     Set customfieldFieldsRange = tmpWorksheet.Range("CUSTOMFIELD_FIELDS")
     Set customfieldValuesRange = tmpWorksheet.Range("CUSTOMFIELD_VALUES")
 
-    For i = 1 To fieldsRange.Count
+    For i = 1 To fieldsRange.count
         If customFieldsRange.Rows(i).value <> False And customFieldsRange.Rows(i).value <> "" Then
             Set subCustomField = New Dictionary
             Set customField = New Dictionary
@@ -170,7 +170,7 @@ Dim resultFieldsRange As Range, resultValuesRange As Range, customfieldFieldsRan
     Set responseTextRange = tmpWorksheet.Range("RESPONSE_TEXT")
     Set postDataRange = tmpWorksheet.Range("POST_DATA")
     
-    For i = 1 To fieldsRange.Count
+    For i = 1 To fieldsRange.count
         If customFieldsRange.Rows(i).value = False And lookupsRange.Rows(i) = False And fieldsRange.Rows(i).value <> "" Then
             If fieldsRange.Rows(i).value = "value" Then
                 Set tmpRecord = New Dictionary
@@ -297,8 +297,6 @@ Dim objHTTP As Object
 Dim rowCountRangeName As String
 Dim origWorksheet As Worksheet
 
-    SetEventsOff
-    
     Set origWorksheet = ActiveSheet
 
     On Error GoTo err
@@ -307,6 +305,10 @@ Dim origWorksheet As Worksheet
     Else
         rowOffset = startRangeRow
     End If
+    
+    'Application.ScreenUpdating = False
+    'Application.EnableEvents = False
+    'Application.Calculation = xlCalculationManual
     
     If fileType = "start-of-day" Then
         If deleteSheet = True Then
@@ -318,8 +320,14 @@ Dim origWorksheet As Worksheet
             Set tmpSheet = tmpWorkbook.Sheets.Add
             tmpSheet.Name = newSheetName
         Else
-            Set tmpSheet = tmpWorkbook.Sheets(newSheetName)
-            tmpSheet.Range("1:1048576").ClearContents
+            If SheetExists(newSheetName, tmpWorkbook) = False Then
+                Set tmpSheet = ActiveWorkbook.Sheets.Add
+                tmpSheet.Name = newSheetName
+            Else
+                
+                Set tmpSheet = tmpWorkbook.Sheets(newSheetName)
+                tmpSheet.Range("1:1048576").ClearContents
+            End If
         End If
         
         
@@ -367,6 +375,8 @@ endsub:
     Set tmpRange = Nothing
     Set rowCountRange = Nothing
     Set origWorksheet = Nothing
-    SetEventsOn
-
+    
+    'Application.ScreenUpdating = True
+    'Application.EnableEvents = True
+    'Application.Calculation = xlCalculationAutomatic
 End Function

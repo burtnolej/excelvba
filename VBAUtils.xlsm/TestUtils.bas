@@ -21,7 +21,6 @@ End Sub
 Public Sub OpenDesktop()
 Dim tmpWorkbook As Workbook, tmpWindow As Window
 
-    ActiveWindow.Visible = False
     Set tmpWorkbook = Workbooks.Open("E:\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools\Desktop.xlsm")
     
     Set tmpWindow = Windows("Desktop.xlsm")
@@ -57,21 +56,12 @@ Public Sub TestExportModules()
         "Utils"
 End Sub
 Public Sub TestRefreshMondayData()
-Dim outputRange As Range, itemName As Range, subItemName As Range, itemId As Range
-    Set outputRange = HTTPDownloadFile("http://172.22.237.138/datafiles/Monday/5555786972.txt", _
+Dim outputRange As Range
+    Set outputRange = HTTPDownloadFile("http://172.22.237.138/datafiles/Monday/6666786972.txt", _
                 ActiveWorkbook, _
-                "", "", 0, "start-of-day", "Monday Data", False, 1)
+                "", "", 0, "start-of-day", "Sheet3", False, 1)
                 
     sortRange outputRange.Worksheet, outputRange, 6
-    
-    Set itemName = outputRange.Columns(4)
-    Set subItemName = outputRange.Columns(5)
-    Set itemId = outputRange.Columns(7)
-    
-    ActiveWorkbook.Names.Add "MONDAY_ITEMS", itemName
-    ActiveWorkbook.Names.Add "MONDAY_SUBITEMS", subItemName
-    ActiveWorkbook.Names.Add "MONDAY_ITEMID", itemId
-    
                     
 End Sub
 
@@ -179,26 +169,32 @@ Public Function RangeToDict(tmpWorkbook As Workbook, sheetNameStr As String, ran
 Dim tmpRange As Range
 Dim tmpSheet As Worksheet
 Dim origSheet As Worksheet
+Dim colvalues() As Variant
 
     'Set tmpDict = New Dictionary
     
     Set origSheet = ActiveSheet
 
-    Set tmpSheet = tmpWorkbook.Sheets(sheetNameStr)
+    'Set tmpSheet = Workbooks("vbautils.xlsm").Sheets(sheetNameStr)
     
-    tmpSheet.Activate
-    Set tmpRange = tmpSheet.Range(rangeNameStr)
+    tmpWorkbook.Sheets(sheetNameStr).Activate
+    Set tmpRange = tmpWorkbook.Sheets(sheetNameStr).Range(rangeNameStr)
     
-    For j = 1 To tmpRange.Rows.Count
-        If tmpDict.Exists(tmpRange(j, 2).value) = False Then
-            tmpDict.Add tmpRange(j, 2).value, CStr(tmpRange(j, 1).value)
+    ReDim colvalues(1 To tmpRange.Columns.count)
+    
+    For j = 1 To tmpRange.Rows.count
+        If tmpDict.Exists(tmpRange(j, 1).value) = False Then
+            For i = 2 To tmpRange.Columns.count
+                colvalues(i - 1) = CStr(tmpRange(j, i).value)
+            Next i
+            tmpDict.Add tmpRange(j, 1).value, colvalues
         End If
         'Debug.Print tmpDict.Item(tmpRange(j, 2).Value)
     Next j
     
     origSheet.Activate
     width = 2
-    length = tmpRange.Rows.Count
+    length = tmpRange.Rows.count
     
 endfunc:
 

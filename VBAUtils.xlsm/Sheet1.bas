@@ -25,7 +25,7 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
         GoTo exitsub
     End If
     
-    If (Target.Rows.Count > 1 Or Target.Columns.Count > 1) And Target.MergeCells = False Then
+    If (Target.Rows.count > 1 Or Target.Columns.count > 1) And Target.MergeCells = False Then
         GoTo exitsub
     End If
     

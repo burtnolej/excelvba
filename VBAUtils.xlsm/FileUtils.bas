@@ -111,9 +111,9 @@ Dim oFile As Object
     DirExists = False
 End Function
 Public Function GetFileFromPath(sPath As String) As String
-Dim fso As New FileSystemObject
-Dim fileName As String
-    GetFileFromPath = fso.GetFileName(sPath)
+Dim FSO As New FileSystemObject
+Dim filename As String
+    GetFileFromPath = FSO.GetFileName(sPath)
 End Function
 
 Public Sub FileMove(sFileName As String, sSourcePath As String, sTargetPath As String)
@@ -291,7 +291,7 @@ setup:
     If sInitVal = BLANK Then
         err.Raise ErrorMsgType.BAD_ARGUMENT, Description:="init val cannot be BLANK"
     Else
-        FuncLogIt sFuncName, "init val cannot be BLANK", C_MODULE_NAME, LogMsgType.INFO
+        FuncLogIt sFuncName, "init val cannot be BLANK", C_MODULE_NAME, LogMsgType.Info
     End If
     ' END ASSERTIONS -------------------------------------
     
@@ -330,7 +330,7 @@ setup:
     If FileExists(sFilePath) = False Then
         err.Raise ErrorMsgType.BAD_ARGUMENT, Description:="file does not exist"
     Else
-        FuncLogIt sFuncName, "file [" & sFilePath & "] does not exist", C_MODULE_NAME, LogMsgType.INFO
+        FuncLogIt sFuncName, "file [" & sFilePath & "] does not exist", C_MODULE_NAME, LogMsgType.Info
     End If
     ' END ASSERTIONS -------------------------------------
 

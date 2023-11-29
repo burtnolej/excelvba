@@ -14,35 +14,53 @@ Dim oFSO As FileSystemObject, oFile As File
     GetFilePath = left(fullpath, Len(fullpath) - Len(oFSO.GetFileName(fullpath)))
 End Function
 
+Sub TestCheckInChanges()
+    CheckInChanges ActiveWorkbook.Name
+End Sub
+
+Sub CheckInChanges(Optional bookname As String)
+Dim sourcepath As String
+
+    If bookname = "" Then
+        bookname = ActiveWorkbook.Name
+    End If
+    
+    sourcepath = ExportAllModules(ActiveWorkbook.Name)
+    LaunchGitBash sourcepath
+End Sub
 
     
-Public Sub ExportAllModules()
-Dim ubuntubookpath As String, ubuntuhome As String, bookName As String, SourcePath As String, siteaddress As String, NewSourcePath As String
+Public Function ExportAllModules(Optional bookname As String, Optional param As Variant) As String
+Dim ubuntubookpath As String, ubuntuhome As String, sourcepath As String, siteaddress As String, NewSourcePath As String
 Dim tmpWorkbook As Workbook
-
+    
     Set tmpWorkbook = ActiveWorkbook
     siteaddress = "https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive/Shared Documents/"
     
-    bookName = ActiveWorkbook.Name
-    SourcePath = GetFilePath(ActiveWorkbook.FullName)
+    If bookname = "" Then
+        bookname = ActiveWorkbook.Name
+    End If
     
-    If left(SourcePath, Len(siteaddress)) = siteaddress Then
-        NewSourcePath = "E:/Velox Financial Technology/Velox Shared Drive - Documents/" & Right(SourcePath, Len(SourcePath) - Len(siteaddress))
+    sourcepath = GetFilePath(ActiveWorkbook.FullName)
+    
+    If left(sourcepath, Len(siteaddress)) = siteaddress Then
+        NewSourcePath = "E:/Velox Financial Technology/Velox Shared Drive - Documents/" & Right(sourcepath, Len(sourcepath) - Len(siteaddress))
     Else
-        NewSourcePath = SourcePath
+        NewSourcePath = sourcepath
     End If
         
     
     ubuntuhome = "\\wsl.localhost\Ubuntu\home\burtnolej\sambashare\veloxmon\excelvba"
-    ubuntubookpath = ubuntuhome & "\" & bookName & "\"
+    ubuntubookpath = ubuntuhome & "\" & bookname & "\"
     
     CreateDir ubuntubookpath
     ExportModules ActiveWorkbook, ubuntubookpath, _
         ""
         
-    FileCopy bookName, NewSourcePath, ubuntubookpath
+    FileCopy bookname, NewSourcePath, ubuntubookpath
 
-End Sub
+    ExportAllModules = ubuntubookpath
+End Function
 
 Function ExportModules(xlwb As Workbook, sDirectory As String, sSuffix As String, Optional sModuleName As String) As String()
 Dim VBProj As VBIDE.VBProject
@@ -124,9 +142,9 @@ Dim sFuncName As String
         vIgnoreModules = Split(sIgnoreModules, ",")
         If InArray(vIgnoreModules, sModuleName) = False Then
             If ModuleExists(xlwb, sModuleName) = True And bOverwrite = False Then
-                FuncLogIt sFuncName, "skipping " & sModuleName & " as exists and bOverwrite = False", C_MODULE_NAME, LogMsgType.INFO
+                FuncLogIt sFuncName, "skipping " & sModuleName & " as exists and bOverwrite = False", C_MODULE_NAME, LogMsgType.Info
             ElseIf ModuleExists(xlwb, sModuleName) = True And bOverwrite = True Then
-                FuncLogIt sFuncName, "deleting [" & sModuleName & "] as exists but overwrite=True", C_MODULE_NAME, LogMsgType.INFO
+                FuncLogIt sFuncName, "deleting [" & sModuleName & "] as exists but overwrite=True", C_MODULE_NAME, LogMsgType.Info
                 If bDryRun = False Then
                     DeleteModule xlwb, sModuleName
                     VBComps.Import sDirectory & "/" & sFile
@@ -137,11 +155,11 @@ Dim sFuncName As String
                     VBComps.Import sDirectory & "/" & sFile
                 End If
                 iCount = iCount + 1
-                FuncLogIt sFuncName, "importing [" & sModuleName & "]", C_MODULE_NAME, LogMsgType.INFO
+                FuncLogIt sFuncName, "importing [" & sModuleName & "]", C_MODULE_NAME, LogMsgType.Info
                 On Error GoTo 0
             End If
         Else
-            FuncLogIt sFuncName, "skipping [" & sFile & "] as in ignore list", C_MODULE_NAME, LogMsgType.INFO
+            FuncLogIt sFuncName, "skipping [" & sFile & "] as in ignore list", C_MODULE_NAME, LogMsgType.Info
         End If
     Next sFile
     ImportModules = iCount

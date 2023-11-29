@@ -22,6 +22,22 @@ Attribute VB_Name = "CoreUtils"
 'Public Function GetCellFormat(tmpRange As Range) As String()
 'Public Sub ApplyCellFormats(cellFormats() As String, tmpRange As Range)
 
+Function IsWorkBookOpen(filename As String)
+    Dim ff As Long, ErrNo As Long
+
+    On Error Resume Next
+    ff = FreeFile()
+    Open filename For Input Lock Read As #ff
+    Close ff
+    ErrNo = err
+    On Error GoTo 0
+
+    Select Case ErrNo
+    Case 0:    IsWorkBookOpen = False
+    Case 70:   IsWorkBookOpen = True
+    Case Else: Error ErrNo
+    End Select
+End Function
 
 Public Function GetCellFormat(tmpRange As Range) As Variant()
 Dim cellFormats() As Variant
@@ -60,10 +76,21 @@ Sub WaitSecs(seconds As Long)
 
 End Sub
 
+Public Function FileToString(filename As String) As String
 
-Public Function GetNow(Optional format As String = "yymmdd") As String
+  Dim strText As String
+  Dim FSO  As Object
+  Dim TSO As Object
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  Set TSO = FSO.OpenTextFile(filename)
+  FileToString = TSO.ReadAll
+  TSO.Close
+  Set TSO = Nothing
+  Set FSO = Nothing
+End Function
+Public Function GetNow(Optional dateformat As String = "yymmdd") As String
 
-    TestGetNow = format(Now(), format)
+    TestGetNow = format(Now(), dateformat)
 
 End Function
 
@@ -118,7 +145,7 @@ Dim origSheet As Worksheet
     tmpWorksheet.Sort.SortFields.Add2 key:=tmpColumn, _
         SortOn:=xlSortOnValues, Order:=xlDescending, DataOption:=xlSortNormal
     With tmpWorksheet.Sort
-        .SetRange sortRange.Offset(1).Resize(sortRange.Rows.Count + 1)
+        .SetRange sortRange.Offset(1).Resize(sortRange.Rows.count + 1)
         .header = xlGuess
         .MatchCase = False
         .Orientation = xlTopToBottom
@@ -132,11 +159,11 @@ endsub:
     Set tmpColumn = Nothing
 
 End Sub
-Sub DeleteNamedRanges(tmpWorkbook As Workbook, Optional sheetName As String = "ALL")
+Sub DeleteNamedRanges(tmpWorkbook As Workbook, Optional sheetname As String = "ALL")
 Dim myName As Name
 
     For Each myName In tmpWorkbook.Names
-        If sheetName = "ALL" Or left(myName.Name, Len(sheetName)) = UCase(sheetName) Then
+        If sheetname = "ALL" Or left(myName.Name, Len(sheetname)) = UCase(sheetname) Then
             If myName.MacroType = -4142 Then
                 If myName.Name = "CLIENTS_ROW_COUNT" Or myName.Name = "OPPORTUNITY_ROW_COUNT" Or myName.Name = "PERSONS_ROW_COUNT" Then
                 Else
@@ -176,11 +203,62 @@ Public Sub testform(controlSourceRangeAddress As String, controlSourceSheetName 
 End Sub
 'move to vbautils as routine already there
 
+Sub AddNamedRange(tmpSheet As Worksheet, targetRange As Range, targetColumn As Integer, _
+    nameName As String, Optional includeHeader As Boolean = False)
+
+Dim targetColRange As Range
+
+    On Error Resume Next
+    ActiveWorkbook.Names.Item(nameName).Delete
+    On Error GoTo 0
+    
+    If includeHeader = False Then
+        Set targetColRange = targetRange.Columns(targetColumn).Offset(1)
+        Set targetColRange = targetColRange.Resize(targetRange.Rows.count - 1)
+    Else
+        Set targetColRange = targetRange.Columns(targetColumn)
+    End If
+    
+    
+    Debug.Print targetColRange.Address
+    tmpSheet.Parent.Names.Add nameName, targetColRange
+    
+exitsub:
+    Set targetColRange = Nothing
+End Sub
+
+Function PadString(Text As String, padChar As String, targetLen As Long) As String
+
+    Do While Len(Text) < targetLen
+        Text = Text & padChar
+    Loop
+    
+    PadString = Text
+
+End Function
+Public Sub CreateCalcNamedRange(tmpSheet As Worksheet, targetRange As Range, nameName As String, colArray As Variant, Optional includeHeader As Boolean = False)
+Dim newColVal As String
+Dim resultColArray() As String
+Dim targetColumn As Range
+Dim newColArray As Variant
+
+    ReDim resultColArray(1 To targetRange.Rows.count, 1 To 1)
+    resultColArray(1, 1) = nameName
+     
+    Set targetColumn = targetRange.Columns(targetRange.Columns.count).Offset(, 1)
+    For i = 0 To UBound(colArray)
+        newColArray = targetRange.Columns(Int(colArray(i)))
+        For j = 2 To targetRange.Rows.count - 1
+            resultColArray(j, 1) = resultColArray(j, 1) & " " & PadString(CStr(targetRange.Cells(j, colArray(i))), " ", 20)
+        Next j
+    Next i
+    targetColumn = resultColArray
+End Sub
 Sub CreateRefNamedRanges(refSheetName As String, configAddress As String, _
         headerAddress As String, sourceSheetName As String, Optional rangeOffset As Long = 0, _
         Optional deleteCurrent As Boolean = True)
 Dim numRows As Integer
-Dim sheetName As String
+Dim sheetname As String
 Dim rangeName As String, dataRangeName As String
 Dim rangeHeight As Long, expRangeHeight As Long
 Dim inputRange As Range
@@ -197,11 +275,11 @@ Dim i As Integer
     inputSheet.Activate
     Set inputRange = inputSheet.Range(configAddress)
 
-    numRows = inputRange.Rows.Count
+    numRows = inputRange.Rows.count
     expRangeHeight = 0
     
     For i = 1 To numRows
-        sheetName = inputRange.Cells(i, 1).value
+        sheetname = inputRange.Cells(i, 1).value
         rangeName = inputRange.Cells(i, 2).value
         rangeHeight = inputRange.Cells(i, 3).value
         
@@ -219,7 +297,7 @@ Dim i As Integer
         If rangeHeight = -999 Then
             dataTopCell.Select
             Range(Selection, Selection.End(xlDown)).Select
-            expRangeHeight = Selection.Rows.Count
+            expRangeHeight = Selection.Rows.count
         ElseIf rangeHeight = -1 Then
             If expRangeHeight <> 0 Then
                 dataTopCell.Select
@@ -234,7 +312,7 @@ Dim i As Integer
             dataTopCell.Select
         End If
         
-        dataRangeName = Replace(UCase(sheetName) & "_" & UCase(rangeName), " ", "_")
+        dataRangeName = Replace(UCase(sheetname) & "_" & UCase(rangeName), " ", "_")
         
         If deleteCurrent = True Then
             On Error Resume Next
@@ -243,13 +321,13 @@ Dim i As Integer
         End If
         ActiveWorkbook.Names.Add Name:=dataRangeName, RefersTo:=Selection
         
-        Debug.Print sheetName, rangeName, dataColumnNum, dataRangeName, Selection.Address
+        Debug.Print sheetname, rangeName, dataColumnNum, dataRangeName, Selection.Address
         
     Next i
     GoTo endsub
     
 err:
-     Debug.Print "error", sheetName, rangeName
+     Debug.Print "error", sheetname, rangeName
      
 endsub:
     On Error GoTo 0
@@ -296,12 +374,12 @@ Public Sub SetEventsOff()
     Application.Calculation = xlCalculationManual
     EVENTSON = False
 End Sub
-Public Function SheetExists(sheetName As String, book As Workbook) As Boolean
+Public Function SheetExists(sheetname As String, book As Workbook) As Boolean
 
     SheetExists = False
     
-    For i = 1 To book.Sheets.Count
-    If LCase(book.Worksheets(i).Name) = LCase(sheetName) Then
+    For i = 1 To book.Sheets.count
+    If LCase(book.Worksheets(i).Name) = LCase(sheetname) Then
         SheetExists = True
         Exit Function
     End If
@@ -363,7 +441,7 @@ Dim myThemeColor As Variant, myColor As Variant, myTintAndShade As Variant, myPa
     
     Set dataRange = ActiveWorkbook.Sheets("TopTargetGrid").Range("DATARANGE")
     ActiveWorkbook.Sheets("TopTargetGrid").Activate
-    numAreas = dataRange.Areas.Count
+    numAreas = dataRange.Areas.count
     For areaCount = 1 To numAreas
         Set currentArea = dataRange.Areas(areaCount)
         For Each myCell In currentArea.Cells
