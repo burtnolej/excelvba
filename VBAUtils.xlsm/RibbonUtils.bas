@@ -10,6 +10,7 @@ Dim y As Long
 Dim height As Long
 Dim width As Long
 Dim rootpath As String
+Dim dataurl As String
 
 Declare PtrSafe Function GetSystemMetrics32 Lib "USER32" _
     Alias "GetSystemMetrics" (ByVal nIndex As Long) As Long
@@ -88,6 +89,45 @@ Private Property Get CheckboxValues() As Dictionary
         Set CheckboxValues = checkboxVals
     End If
 End Property
+
+Function RetrieveRootPathVals() As String
+Dim persistedVars() As Variant
+Dim varValues As Dictionary
+
+    persistedVars = Array("rootpath")
+    Set varValues = RetreiveVars(persistedVars)
+    RetrieveRootPathVals = varValues("rootpath")
+    
+End Function
+
+Function RetrieveDataurlVals() As String
+Dim persistedVars() As Variant
+Dim varValues As Dictionary
+
+    persistedVars = Array("dataurl")
+    Set varValues = RetreiveVars(persistedVars)
+    RetrieveDataurlVals = varValues("dataurl")
+    
+End Function
+
+Private Property Get RootPathValue() As String
+
+    If rootpath = "" Then
+        'Set CheckboxValues = New Dictionary
+        RootPathValue = RetrieveRootPathVals()
+    Else
+        RootPathValue = rootpath
+    End If
+End Property
+
+Private Property Get DataURLValue() As String
+    If dataurl = "" Then
+        DataURLValue = RetrieveDataurlVals()
+    Else
+        DataURLValue = dataurl
+    End If
+End Property
+
 Private Property Get CustomRibbon() As IRibbonUI
 Dim persistedVars() As Variant
 Dim varValues As Dictionary
@@ -161,7 +201,7 @@ Dim tmpWorksheet As Worksheet
 Dim tmpDict As New Dictionary
 Dim i As Variant
 
-    Set tmpWorksheet = ActiveWorkbook.Sheets("Reference")
+    Set tmpWorksheet = Workbooks("vbautils.xlsm").Sheets("Reference")
     For i = 0 To UBound(persistedVars)
         tmpDict.Add persistedVars(i), tmpWorksheet.Range(persistedVars(i)).value
     Next i
@@ -303,8 +343,9 @@ Dim varValues As Dictionary
 Dim args() As Variant
 
 
-
-foldername = "E:\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools"
+    foldername = RootPathValue
+    
+    'foldername = "E:\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools"
 
     tag = control.tag
     
@@ -316,13 +357,8 @@ foldername = "E:\Velox Financial Technology\Velox Shared Drive - Documents\Gener
         param = ""
     End If
 
-
-    
     CustomRibbon.Invalidate
-    'CustomRibbon.InvalidateControl "editBox2"
-    'CustomRibbon.InvalidateControl "editBox3"
-    'CustomRibbon.InvalidateControl "editBox4"
-    
+
     Select Case action
     
         Case "openbook"
@@ -337,6 +373,11 @@ foldername = "E:\Velox Financial Technology\Velox Shared Drive - Documents\Gener
                 CheckboxValues.Item(param) = True
             End If
             PersistCheckBoxVals CheckboxValues
+            
+            'Workbooks(bookname).Sheets("REFERENCE").Activate
+            'Set tmpWB = Workbooks(bookname).Sheets("REFERENCE")
+            'tmpWB.Activate
+            Workbooks(bookname).Sheets("REFERENCE").Range("dataurl").value = DataURLValue
             
         Case "closebook"
             CloseWorkbook param

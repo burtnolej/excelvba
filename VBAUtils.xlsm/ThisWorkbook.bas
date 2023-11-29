@@ -13,7 +13,7 @@ Dim oXl As Excel.Application
     'CommandBars("Document Recovery").Visible = False
     
     'ResizeWindow "vbautils.xlsm", 1920, 200
-    ResizeVBAUtilsWindow
+    'ResizeVBAUtilsWindow
     'MoveWindow "vbautils.xlsm", 0, 0
     
     Application.DisplayFormulaBar = False

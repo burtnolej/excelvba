@@ -32,7 +32,7 @@ Public Const MAXSIZE = 4096
 Sub ResizeVBAUtilsWindow(Optional param As Variant)
     ResizeWindow "vbautils.xlsm", 1920, 200
     MoveWindow "vbautils.xlsm", 0, 0
-    HideVBAUtilsTools "vbautils.xlsm"
+    'HideVBAUtilsTools "vbautils.xlsm"
 End Sub
     
 Sub HideVBAUtilsTools(param As String)
