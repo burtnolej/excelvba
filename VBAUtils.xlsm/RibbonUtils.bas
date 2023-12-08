@@ -247,7 +247,7 @@ Dim varValues As Dictionary
     RangeToDict ActiveWorkbook, "Reference", "APPS", appListDict
     RangeToDict ActiveWorkbook, "Reference", "URLS", urlListDict
     
-    SetXLOnTop
+    'SetXLOnTop
     
     InitCheckBoxVals
     

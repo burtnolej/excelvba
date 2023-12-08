@@ -22,10 +22,10 @@ End Sub
 
 Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
     
-    If Not AllowSave Then
-        MsgBox "You can't save this workbook!"
-        Cancel = True
-    End If
+   ' If Not AllowSave Then
+   '     MsgBox "You can't save this workbook!"
+   '     Cancel = True
+   ' End If
 End Sub
 
 
