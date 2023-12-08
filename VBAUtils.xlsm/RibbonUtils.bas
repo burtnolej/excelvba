@@ -234,7 +234,7 @@ Dim varValues As Dictionary
     width = varValues("width")
     height = varValues("height")
     PersistVar "onedrive", Environ("OneDrive")
-    rootpath = Environ("OneDrive")
+    rootpath = Environ("rootpath")
     
     rbxUI.ActivateTab "tab3"
     
@@ -301,9 +301,9 @@ Dim varValues As Dictionary
             returnedVal = height
         Case "width"
             returnedVal = width
-            
         Case "rootpath"
-            returnedVal = rootpath
+            'returnedVal = rootpath
+            returnedVal = RootPathValue
     End Select
     
    
