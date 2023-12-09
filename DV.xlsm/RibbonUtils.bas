@@ -10,7 +10,7 @@ Dim y As Long
 Dim height As Long
 Dim width As Long
 Dim rootpath As String
-Dim envUrl As String
+Dim dataurl As String
 Dim selectedDatafile As String
 
 Declare PtrSafe Function GetSystemMetrics32 Lib "USER32" _
@@ -37,12 +37,12 @@ Sub dropDown_onAction(control As IRibbonControl, id As String, index As Integer)
     Select Case id
         
         Case "dev"
-            envUrl = "http://172.22.237.138/datafiles/"
+            dataurl = "http://172.22.237.138/datafiles/"
         Case "prod"
-            envUrl = "https://www.veloxfintech.com/datafiles/"
+            dataurl = "https://www.veloxfintech.com/datafiles/"
     End Select
     
-    PersistVar "envurl", envUrl
+    PersistVar "dataurl", dataurl
     
     CustomRibbon.InvalidateControl "Combo3"
     CustomRibbon.InvalidateControl "Combo4"
@@ -117,7 +117,7 @@ End Function
 
 Function RetrieveCheckEnvUrl() As String
 
-    RetrieveCheckEnvUrl = Workbooks("DV.xlsm").Sheets("Reference").Range("envurl").value
+    RetrieveCheckEnvUrl = Workbooks("DV.xlsm").Sheets("Reference").Range("dataurl").value
     
 End Function
 Private Property Get CheckboxValues() As Dictionary
@@ -132,11 +132,11 @@ End Property
 
 Private Property Get CheckEnvUrl() As String
 
-    If envUrl = "" Then
+    If dataurl = "" Then
         'Set CheckboxValues = New Dictionary
         CheckEnvUrl = RetrieveCheckEnvUrl()
     Else
-        CheckEnvUrl = envUrl
+        CheckEnvUrl = dataurl
     End If
 End Property
 Private Property Get CustomRibbon() As IRibbonUI
@@ -178,8 +178,11 @@ Dim colArray() As Variant
     Application.Run "DV.xlsm!SetEventsOff"
     
     On Error Resume Next
-    Application.StatusBar = "loading http://172.22.237.138/datafiles/manifest.csv"
-    Set outputRange = HTTPDownloadFile(url + "manifest.csv", _
+    'https://www.veloxfintech.com/datafiles/manifest.csv
+    
+    Application.StatusBar = "loading " + url + "/manifest.csv"
+    'url = "https://www.veloxfintech.com/datafiles"
+    Set outputRange = HTTPDownloadFile(url + "/manifest.csv", _
                 ActiveWorkbook, _
                 "", "", 1, "start-of-day", "MANIFEST", False, 0)
                 
