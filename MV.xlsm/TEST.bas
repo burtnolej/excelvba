@@ -140,9 +140,9 @@ End Sub
 
 Sub TestExportAllModules()
 
-    Application.Run "vbautils.xlsm!ExportAllModules"
+    ExportAllModules
     
-End Sub
+End Function
 Sub testAddMondayItemsBatch()
 Dim dataRange As Range, dataRow As Range
 Dim groupid As String, boardid As String, rs As String, rt As String, itemName As String
