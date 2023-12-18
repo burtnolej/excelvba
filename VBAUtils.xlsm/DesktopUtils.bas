@@ -442,8 +442,15 @@ End Sub
 Public Function OpenWorkbook(bookFullPath As String) As String
 Dim tmpWorkbook As Workbook
 Dim currentWorkbook As Workbook
+Dim splitpath() As String
 
     Set currentWorkbook = ActiveWorkbook
+    splitpath = Split(bookFullPath, "\")
+    If splitpath(0) = "$HOME" Then
+        splitpath(0) = Environ("USERPROFILE")
+        bookFullPath = Join(splitpath, "\")
+    End If
+
     Set tmpWorkbook = Application.Workbooks.Open(bookFullPath)
     currentWorkbook.Activate
     
