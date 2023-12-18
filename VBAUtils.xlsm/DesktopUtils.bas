@@ -439,6 +439,20 @@ exitsub:
     Set tmpWorkbook = Nothing
 
 End Sub
+'Public Function OpenWorkbook(bookFullPath As String) As String
+'Dim tmpWorkbook As Workbook
+'Dim currentWorkbook As Workbook
+
+'    Set currentWorkbook = ActiveWorkbook
+'    Set tmpWorkbook = Application.Workbooks.Open(bookFullPath)
+'    currentWorkbook.Activate
+    
+'exitsub:
+'    OpenWorkbook = tmpWorkbook.Name
+'    Set tmpWorkbook = Nothing
+
+'End Function
+
 Public Function OpenWorkbook(bookFullPath As String) As String
 Dim tmpWorkbook As Workbook
 Dim currentWorkbook As Workbook
@@ -459,6 +473,7 @@ exitsub:
     Set tmpWorkbook = Nothing
 
 End Function
+
 
 Public Sub DisplayCommandBars()
 Dim tmpCommandBar As CommandBar
