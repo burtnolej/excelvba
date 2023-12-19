@@ -447,10 +447,17 @@ Public Function GetUpdates(updateFileDir As String, ByVal updatesSheet As Worksh
 Dim oFSO As FileSystemObject
 Dim tmpWorkbook As Workbook
 
+    dataurl = ActiveWorkbook.Sheets("Reference").Range("dataurl").Value
+    
     Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
-            "http://172.22.237.138/datafiles/Monday/updates.txt", _
+            dataurl + "datafiles/Monday/updates.txt", _
             updatesSheet.Parent, _
             "", "REFERENCE", 1, "start-of-day", updatesSheet.Name, True
+            
+    'Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
+    '        "http://172.22.237.138/datafiles/Monday/updates.txt", _
+    '        updatesSheet.Parent, _
+    '        "", "REFERENCE", 1, "start-of-day", updatesSheet.Name, True
     
 exitfunction:
     Set oFSO = Nothing
@@ -700,9 +707,16 @@ Dim boardIdArray As Variant
         boardName = boardIdArray(i)
     
         Debug.Print Now() & " HTTPDownloadFile " & boardName & ".txt"
-                
+        
+        dataurl = ActiveWorkbook.Sheets("Reference").Range("dataurl").Value
+        
+        'Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
+        '            "http://172.22.237.138/datafiles/Monday/" & boardName & ".txt", _
+        '            codeWorkbook, _
+        '            "A", "REFERENCE", 0, "start-of-day", boardName, False
+        
         Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
-                    "http://172.22.237.138/datafiles/Monday/" & boardName & ".txt", _
+                    dataurl + "/Monday/" & boardName & ".txt", _
                     codeWorkbook, _
                     "A", "REFERENCE", 0, "start-of-day", boardName, False
                     
