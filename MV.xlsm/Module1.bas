@@ -450,7 +450,7 @@ Dim tmpWorkbook As Workbook
     dataurl = ActiveWorkbook.Sheets("Reference").Range("dataurl").Value
     
     Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
-            dataurl + "datafiles/Monday/updates.txt", _
+            dataurl + "/Monday/updates.txt", _
             updatesSheet.Parent, _
             "", "REFERENCE", 1, "start-of-day", updatesSheet.Name, True
             
@@ -708,7 +708,7 @@ Dim boardIdArray As Variant
     
         Debug.Print Now() & " HTTPDownloadFile " & boardName & ".txt"
         
-        dataurl = ActiveWorkbook.Sheets("Reference").Range("dataurl").Value
+        dataurl = Workbooks("MV.xlsm").Sheets("Reference").Range("dataurl").Value
         
         'Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
         '            "http://172.22.237.138/datafiles/Monday/" & boardName & ".txt", _
