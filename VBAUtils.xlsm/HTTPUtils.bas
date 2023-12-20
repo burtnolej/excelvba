@@ -347,21 +347,23 @@ Dim origWorksheet As Worksheet
         fileArray = Split(objHTTP.responseText, Chr(10))
         fileLength = UBound(fileArray)
         
-        For i = startRow To fileLength - 1
-            'j = i - startRow
-            lineArray = Split(fileArray(i), "^")
-            rowWidth = UBound(lineArray) + 1
-            
-            If UBound(lineArray) > 0 Then
-                Set tmpRange = tmpSheet.Rows(i + 1 + rowOffset).Resize(, rowWidth)
-                tmpRange = lineArray
-            End If
-        Next i
-    End If
+        If fileLength > 1 Then
+            For i = startRow To fileLength - 1
+                'j = i - startRow
+                lineArray = Split(fileArray(i), "^")
+                rowWidth = UBound(lineArray) + 1
+                
+                If UBound(lineArray) > 0 Then
+                    Set tmpRange = tmpSheet.Rows(i + 1 + rowOffset).Resize(, rowWidth)
+                    tmpRange = lineArray
+                End If
+            Next i
 
-    tmpSheet.Activate
-    Set outputRange = tmpSheet.Range(Cells(1 + startRangeRow, 1), Cells(fileLength + startRangeRow, UBound(Split(fileArray(1), "^")) + 1))
-    GoTo endsub
+            tmpSheet.Activate
+            Set outputRange = tmpSheet.Range(Cells(1 + startRangeRow, 1), Cells(fileLength + startRangeRow, UBound(Split(fileArray(1), "^")) + 1))
+            GoTo endsub
+        End If
+    End If
     
 err:
     MsgBox "probably timedout"
