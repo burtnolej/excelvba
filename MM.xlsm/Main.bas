@@ -50,7 +50,9 @@ Sub PopulateWordDocFromExcel(Optional param As Variant)
     wordApp.Visible = False 'optional!
     wordApp.ScreenUpdating = False
     
-    Set wordDoc = wordApp.Documents.Open("C:\Users\burtn\MeetingMinutes_Template.docm")
+    Set wordDoc = wordApp.Documents.Open(Environ("USERPROFILE") & "\Deploy\MeetingMinutes_Template.docm")
+    
+    'Set wordDoc = wordApp.Documents.Open("C:\Users\burtn\MeetingMinutes_Template.docm")
     
     Set wordRange = wordDoc.Range
     'Set wordTable = wordDoc.Tables.Item(1)
