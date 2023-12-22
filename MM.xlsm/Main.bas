@@ -266,7 +266,7 @@ exitsub:
     
     'wordApp.Run "ExportToHTML", targetFolder & clientName
 
-    wordApp.Run "ExportToHTML", docFilePath
+    wordApp.Run "ExportToHTML", htmFilePath
 
     'wordDoc.ExportAsFixedFormat outputFileName:=targetFolder & clientName & "_" & GetNow() & ".pdf", ExportFormat:=wdExportFormatPDF
     wordDoc.ExportAsFixedFormat pdfFilePath, ExportFormat:=wdExportFormatPDF

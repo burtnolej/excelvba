@@ -196,6 +196,21 @@ Dim PythonExe, PythonScript As String
     'PythonExe & PythonScript
     
 End Sub
+
+Sub RunPowershell(arg1 As String)
+Dim objShell As Object
+Dim PSExe, PSScript As String
+    
+    Set objShell = VBA.CreateObject("Wscript.Shell")
+
+    PythonExe = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+    PythonScript = "" & Environ("USERPROFILE") & "\Deploy\Upload-MMReport.ps1"
+    
+    Debug.Print PythonExe & " " & PythonScript & " " & arg1
+
+    objShell.Run PythonExe & " " & PythonScript & " " & arg1
+
+End Sub
 Public Sub LaunchApp(appname As String, param As String)
 Dim execStr As String
 

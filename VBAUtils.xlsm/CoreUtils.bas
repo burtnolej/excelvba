@@ -90,7 +90,7 @@ Public Function FileToString(filename As String) As String
 End Function
 Public Function GetNow(Optional dateformat As String = "yymmdd") As String
 
-    TestGetNow = format(Now(), dateformat)
+    GetNow = format(Now(), dateformat)
 
 End Function
 
