@@ -256,19 +256,31 @@ nextcursorrownum:
     
 exitsub:
 
-    
+    Dim outputFileName As String, pdfFilePath As String, docFilePath As String, htmFilePath As String
+    targetFolder = Environ("USERPROFILE") & "\Deploy"
     clientName = arrayDict.Item("INPUT_OPPORTUNITY_NAME")(1, 1)
+    outputFileName = clientName & "_" & GetNow()
+    pdfFilePath = targetFolder & "\" & outputFileName & ".pdf"
+    docFilePath = targetFolder & "\" & outputFileName & ".doc"
+    htmFilePath = targetFolder & "\" & outputFileName & ".htm"
     
-    'wordApp.Run "CopyTableToClipboard"
-    wordApp.Run "ExportToHTML", targetFolder & clientName
+    'wordApp.Run "ExportToHTML", targetFolder & clientName
 
-    wordDoc.ExportAsFixedFormat OutputFileName:=targetFolder & clientName & ".pdf", ExportFormat:=wdExportFormatPDF
+    wordApp.Run "ExportToHTML", docFilePath
+
+    'wordDoc.ExportAsFixedFormat outputFileName:=targetFolder & clientName & "_" & GetNow() & ".pdf", ExportFormat:=wdExportFormatPDF
+    wordDoc.ExportAsFixedFormat pdfFilePath, ExportFormat:=wdExportFormatPDF
     
-    wordDoc.SaveAs2 targetFolder & clientName & "_" & GetNow(), FileFormat:=wdFormatDocument
+    'wordDoc.SaveAs2 targetFolder & clientName & "_" & GetNow(), FileFormat:=wdFormatDocument
+    wordDoc.SaveAs2 docFilePath, FileFormat:=wdFormatDocument
     wordApp.Quit
     
-    CreateMMEmail targetFolder & clientName & ".htm", targetFolder & clientName & ".pdf"
+    'CreateMMEmail targetFolder & clientName & ".htm", targetFolder & clientName & ".pdf"
+    CreateMMEmail htmFilePath, pdfFilePath
     
+    Application.Run "vbautils.xlsm!RunPowershell", pdfFilePath
+    Application.Run "vbautils.xlsm!RunPowershell", docFilePath
+
     Set wordDoc = Nothing
     Set wordApp = Nothing
     Set wordRange = Nothing
