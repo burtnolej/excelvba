@@ -30,13 +30,15 @@ Sub RefreshMondayData()
 Dim outputRange As Range
 Dim formulaStr As String
 
-    url = "http://172.22.237.138/datafiles/Monday/"
+    url = ActiveWorkbook.Sheets("Reference").Range("dataurl").Value + "/Monday/"
+    
+    'url = "http://172.22.237.138/datafiles/Monday/"
 
 
     Application.Run "vbautils.xlsm!SetEventsOff"
     
     On Error Resume Next
-    Application.StatusBar = "loading http://172.22.237.138/datafiles/Monday/5555786972.txt"
+    Application.StatusBar = "loading " + url + "5555786972.txt"
     Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "5555786972.txt", _
                 ActiveWorkbook, _
                 "", "", 1, "start-of-day", "MONDAY_META", False, 0)
@@ -66,7 +68,9 @@ Dim formulaStr As String
     
     Application.Run "vbautils.xlsm!AddNamedRange", outputRange.Worksheet, outputRange, 14, "MONDAY_ITEMLINK"
     
-    
+exitsub:
+    Set outputRange = Nothing
+
 End Sub
 Function RefreshCapsuleData(Optional param As String) As String
 Dim outputRange As Range
@@ -74,36 +78,43 @@ Dim outputRange As Range
     On Error GoTo errhandler
     RefreshCapsuleData = "OK"
     'url = "http://172.23.208.38/datafiles/"
-    url = "http://172.22.237.138/datafiles/"
+    'url = "http://172.22.237.138/datafiles/"
+
+    url = ActiveWorkbook.Sheets("Reference").Range("dataurl").Value
     
+    'Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
+    '        dataurl + "/Monday/updates.txt", _
+    '        updatesSheet.Parent, _
+    '        "", "REFERENCE", 1, "start-of-day", updatesSheet.Name, True
+            
     Application.Run "vbautils.xlsm!SetEventsOff"
     
     On Error Resume Next
-    Application.StatusBar = "loading http://172.22.237.138/datafiles/entries_meetings.csv"
-    Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "entries_meetings.csv", _
+    Application.StatusBar = "loading " + url + "/entries_meetings.csv"
+    Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "/entries_meetings.csv", _
                 ActiveWorkbook, _
                 "", "", 0, "start-of-day", "ENTRIES_MEETINGS", False, 0)
                 
     Application.Run "vbautils.xlsm!SortRange", outputRange.Worksheet, outputRange, 7
     
     
-    Application.StatusBar = "loading http://172.22.237.138/datafiles/person.csv"
-    Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "person.csv", _
+    Application.StatusBar = "loading " + url + "/datafiles/person.csv"
+    Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "/person.csv", _
                 ActiveWorkbook, _
                 "", "", 0, "start-of-day", "PERSON", False, 0)
                 
     Application.Run "vbautils.xlsm!SortRange", outputRange.Worksheet, outputRange, 13
     
     
-    Application.StatusBar = "loading http://172.22.237.138/datafiles/opportunities.csv"
-    Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "opportunities.csv", _
+    Application.StatusBar = "loading " + url + "/datafiles/opportunities.csv"
+    Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "/opportunities.csv", _
                 ActiveWorkbook, _
                 "", "", 0, "start-of-day", "OPPORTUNITY", False, 0)
     
     Application.Run "vbautils.xlsm!SortRange", outputRange.Worksheet, outputRange, 15
     
-    Application.StatusBar = "loading http://172.22.237.138/datafiles/organisation.csv"
-    Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "organisation.csv", _
+    Application.StatusBar = "loading " + url + "/datafiles/organisation.csv"
+    Set outputRange = Application.Run("vbautils.xlsm!HTTPDownloadFile", url + "/organisation.csv", _
                 ActiveWorkbook, _
                 "", "", 0, "start-of-day", "CLIENT", False, 0)
             
@@ -266,7 +277,8 @@ Dim colors As Variant
         myCell.Interior.Color = RGB(colors(0), colors(1), colors(2))
     Next myCell
     
-    
+exitsub:
+    Set headerRange = Nothing
 End Sub
 
 
@@ -332,12 +344,17 @@ Dim i As Integer
         
     Next i
     GoTo endsub
+
     
 err:
      Debug.Print "error", sheetName, rangeName
      
 endsub:
     On Error GoTo 0
+    Set inputRange = Nothing
+    Set sourceSheet = Nothing
+    Set sourceHeaderRange = Nothing
+    Set dataTopCell = Nothing
      
 End Sub
 Sub TestCreateMMEmail()
@@ -393,6 +410,11 @@ colspan = """2"""
     Application.Run "vbautils.xlsm!createEmail", "MeetingSummaries@veloxfintech.com", _
             capsuleOppEmailAddress, emailSubject, HTMLContent, myAttachment
 
+exitsub:
+    Set capsuleIdRange = Nothing
+    Set meetingDateRange = Nothing
+    Set oppClientNameRange = Nothing
+    Set meetingTypeRange = Nothing
     
 End Sub
 Sub ChangeInputSheetFocus(rangeName As String)
@@ -455,6 +477,8 @@ Dim FSO As FileSystemObject
     hlinkFormula = "=HYPERLINK(" & DQ & selectionResult & DQ & "," & DQ & selectionResult & DQ & ")"
     Target.Formula = hlinkFormula
 
+exitsub:
+    Set FSO = Nothing
 End Sub
 Public Sub WriteFolderHyperlink(folderName As String, Target As Range)
 Dim hlinkFormula As String, initFolderPath As String, hlinkName As String, DQ As String
@@ -477,6 +501,8 @@ Dim FSO As FileSystemObject
     Target.Formula = hlinkFormula
 
     'https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive/Shared Documents/General/Sales Cycle/In Sales Process/Adaptive/talking points.docx?web=1
+exitsub:
+    Set FSO = Nothing
     
 End Sub
 
@@ -529,6 +555,10 @@ Dim inputRangeSet As Range, inputRange As Range
         On Error GoTo 0
     Next inputRange
 
+exitsub:
+    Set inputRangeSet = Nothing
+    Set tmpNames = Nothing
+    Set tmpName = Nothing
     
 End Sub
 
@@ -545,6 +575,9 @@ Dim tmpName As Name
     If tmpName Is Not Nothing Then
         NamedRangeExists = True
     End If
+    
+exitsub:
+    Set tmpName = Nothing
     
 End Function
 Function IsInStr(findStr As String, searchStr As String, Optional notFlag As Boolean = False)
@@ -611,6 +644,8 @@ Dim myThemeColor As Variant, myColor As Variant, myTintAndShade As Variant, myPa
 
 endsub:
     Set dataRange = Nothing
+    Set currentArea = Nothing
+
 End Sub
 
 Function GetEmailDomainFromAddress(emailAddress As String) As String

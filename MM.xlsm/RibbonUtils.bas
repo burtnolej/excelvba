@@ -67,6 +67,8 @@ Dim folderListDict As Dictionary
             
             
     End Select
+exitsub:
+    Set folderListDict = Nothing
     
 End Sub
 
