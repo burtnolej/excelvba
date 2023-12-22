@@ -68,9 +68,7 @@ Dim formulaStr As String
     
     Application.Run "vbautils.xlsm!AddNamedRange", outputRange.Worksheet, outputRange, 14, "MONDAY_ITEMLINK"
     
-exitsub:
-    Set outputRange = Nothing
-
+    
 End Sub
 Function RefreshCapsuleData(Optional param As String) As String
 Dim outputRange As Range
@@ -277,8 +275,7 @@ Dim colors As Variant
         myCell.Interior.Color = RGB(colors(0), colors(1), colors(2))
     Next myCell
     
-exitsub:
-    Set headerRange = Nothing
+    
 End Sub
 
 
@@ -344,17 +341,12 @@ Dim i As Integer
         
     Next i
     GoTo endsub
-
     
 err:
      Debug.Print "error", sheetName, rangeName
      
 endsub:
     On Error GoTo 0
-    Set inputRange = Nothing
-    Set sourceSheet = Nothing
-    Set sourceHeaderRange = Nothing
-    Set dataTopCell = Nothing
      
 End Sub
 Sub TestCreateMMEmail()
@@ -410,11 +402,6 @@ colspan = """2"""
     Application.Run "vbautils.xlsm!createEmail", "MeetingSummaries@veloxfintech.com", _
             capsuleOppEmailAddress, emailSubject, HTMLContent, myAttachment
 
-exitsub:
-    Set capsuleIdRange = Nothing
-    Set meetingDateRange = Nothing
-    Set oppClientNameRange = Nothing
-    Set meetingTypeRange = Nothing
     
 End Sub
 Sub ChangeInputSheetFocus(rangeName As String)
@@ -477,8 +464,6 @@ Dim FSO As FileSystemObject
     hlinkFormula = "=HYPERLINK(" & DQ & selectionResult & DQ & "," & DQ & selectionResult & DQ & ")"
     Target.Formula = hlinkFormula
 
-exitsub:
-    Set FSO = Nothing
 End Sub
 Public Sub WriteFolderHyperlink(folderName As String, Target As Range)
 Dim hlinkFormula As String, initFolderPath As String, hlinkName As String, DQ As String
@@ -501,8 +486,6 @@ Dim FSO As FileSystemObject
     Target.Formula = hlinkFormula
 
     'https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive/Shared Documents/General/Sales Cycle/In Sales Process/Adaptive/talking points.docx?web=1
-exitsub:
-    Set FSO = Nothing
     
 End Sub
 
@@ -555,10 +538,6 @@ Dim inputRangeSet As Range, inputRange As Range
         On Error GoTo 0
     Next inputRange
 
-exitsub:
-    Set inputRangeSet = Nothing
-    Set tmpNames = Nothing
-    Set tmpName = Nothing
     
 End Sub
 
@@ -575,9 +554,6 @@ Dim tmpName As Name
     If tmpName Is Not Nothing Then
         NamedRangeExists = True
     End If
-    
-exitsub:
-    Set tmpName = Nothing
     
 End Function
 Function IsInStr(findStr As String, searchStr As String, Optional notFlag As Boolean = False)
@@ -644,8 +620,6 @@ Dim myThemeColor As Variant, myColor As Variant, myTintAndShade As Variant, myPa
 
 endsub:
     Set dataRange = Nothing
-    Set currentArea = Nothing
-
 End Sub
 
 Function GetEmailDomainFromAddress(emailAddress As String) As String

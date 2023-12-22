@@ -273,13 +273,5 @@ exitsub:
     Set wordApp = Nothing
     Set wordRange = Nothing
     Set workTable = Nothing
-    Set myName = Nothing
-    Set mySheet = Nothing
-    Set columnRange = Nothing
-    Set firstColumnCell = Nothing
-    Set newColumnRange = Nothing
-    Set reportNumRange = Nothing
-    Set recordDict = Nothing
-    Set arrayDict = Nothing
 End Sub
 

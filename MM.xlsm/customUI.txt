@@ -1,0 +1,65 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="rbx_onLoad">
+	<ribbon startFromScratch="false"> <!--Hide all default tabs-->
+		<tabs>
+            <tab id="tab3" label="MM Actions">
+                <group id="grp_btns" label="Add Monday Items">
+                    <box id="box1" boxStyle="vertical">
+                        <button id="btns_btn1" label="Refresh Capsule Data" size="large" onAction="btns_onAction" image="I_A1" tag="runfunction_MM^RefreshCapsuleData^"  />
+                        <button id="btns_btn2" label="Generate Report" size="large" onAction="btns_onAction" image="I_B1" tag="runfunction_MM^PopulateWordDocFromExcel^"  />
+                        <button id="btns_btn3" label="Update Sheet Ranges" size="large" onAction="btns_onAction" image="I_C1" tag="runfunction_MM^CreateRefNamedRanges^"/>
+                        <button id="btns_btn4" label="Clear Inputs" size="large" onAction="btns_onAction" image="I_D1" tag="runfunction_MM^ClearInputContents^"/>
+                        <button id="btns_btn5" label="Get Previous Minutes" size="large" onAction="btns_onAction" image="I_E1" tag="runfunction_MM^TestGetFolderFiles^"/>
+                        <button id="btns_btn6" label="Get Cell Colors" size="large" onAction="btns_onAction" image="I_F1" tag="runfunction_MM^GetCellFill^"/>
+                        <button id="btns_btn7"  label="Enable Events" size="large" onAction="btns_onAction" image="I_A2" tag="runfunction_vbautils^SetEventsOn^"/>
+                        <button id="btns_btn10"  label="Disable Events" size="large" onAction="btns_onAction" image="I_D2" tag="runfunction_vbautils^SetEventsOff^"/>
+                        <button id="btns_btn8" label="Export Modules" size="large" onAction="btns_onAction" image="I_B2" tag="runfunction_vbautils^ExportAllModules^"/>
+                        <button id="btns_btn9" label="Open Meeting Minutes" size="large" onAction="btns_onAction" image="I_C2" tag="openfolder_meetingminutes^"/>
+                        <button id="btns_btn11" label="Check In Changes" size="large" onAction="btns_onAction" image="I_D2" tag="runfunction_vbautils^CheckInChanges^vbautils.xlsm"/>
+                        <!--separator id="separator1"/-->
+                    </box>
+                      
+                 </group>
+                 <group id="grp_btns2" label="Enter Attribute">
+                    <splitButton id="splitBtn3" size="large">
+                        <button id="splitBtn_btn16" image="veloxemblem0" label="Move to Attribute" supertip="This is a splitButton." onAction="splitBtn_onAction" />
+                        <menu id="splitBtn_menu3" itemSize="large">
+                            <button id="splitBtn_btn1" image="I_F2" label="Client Name" onAction="btns_onAction" tag="gotoattr_1. INPUT^CLIENT^NAME"/>
+                            <button id="splitBtn_btn2" image="I_F2" label="Opportunity Name" onAction="btns_onAction"  tag="gotoattr_3. INPUT^OPPORTUNITY^NAME"/>
+                            <button id="splitBtn_btn3" image="I_F2" label="Meeting Attendees" onAction="btns_onAction"  tag="gotoattr_4. INPUT^ATTENDEES1"/>
+                            <button id="splitBtn_btn4" image="I_F2" label="Meeting Date" onAction="btns_onAction" tag="gotoattr_5. INPUT^DATE"/>
+                            <button id="splitBtn_btn5" image="I_F2" label="Meeting Outcome" onAction="btns_onAction"  tag="gotoattr_6. INPUT^OUTCOME^DESCRIPTION"/>
+                            <button id="splitBtn_btn6" image="I_F2" label="Meeting Purpose" onAction="btns_onAction"  tag="gotoattr_7. INPUT^PURPOSE" />
+                            <button id="splitBtn_btn7" image="I_F2" label="Opportunity Concerns" onAction="btns_onAction"  tag="gotoattr_8. INPUT_OPPO^CONCERNS" />
+                            <button id="splitBtn_btn8" image="I_F2" label="Documents Used" onAction="btns_onAction"   tag="gotoattr_9. INPUT^DOCUMENTS^USED"/>
+                            <button id="splitBtn_btn9" image="I_F2" label="Documents Shared" onAction="btns_onAction"   tag="gotoattr_A. INPUT^DOCUMENTS^SHARED"/>
+                            <button id="splitBtn_btn10" image="I_F2" label="Next Steps" onAction="btns_onAction"  tag="gotoattr_B. INPUT^NEXT^STEPS" />
+                            <button id="splitBtn_btn11" image="I_F2" label="Meeting Artefacts" onAction="btns_onAction"  tag="gotoattr_C. INPUT^ARTEFACTS"/>
+                            <button id="splitBtn_btn12" image="I_F2" label="Meeting Recording" onAction="btns_onAction"  tag="gotoattr_D. INPUT^RECORDING^3" />
+                            <button id="splitBtn_btn13" image="I_F2" label="Deck Used" onAction="btns_onAction"  tag="gotoattr_E. INPUT^DECK^USED^4"/>
+                            <button id="splitBtn_btn14" image="I_F2" label="Previous Minutes" onAction="btns_onAction"  tag="gotoattr_F. INPUT^LAST^MINUTES"/>
+                            <button id="splitBtn_btn15" image="I_F2" label="Monday Items" onAction="btns_onAction" tag="gotoattr_G. INPUT^MONDAY^ID1" />
+                        </menu>
+                    </splitButton>
+                </group> 
+                        
+                <group id="grp_togBtn" label="Toggle Sheets">     
+                    <toggleButton id="togBtn_btn2" image="I_F2" label="Person" size="normal" onAction="togBtn_onAction" tag="togglesheet_person"/>             
+                    <toggleButton id="togBtn_btn3" image="I_F2" label="Opportunity" size="normal" onAction="togBtn_onAction" tag="togglesheet_opportunity"/>                                                      
+                    <toggleButton id="togBtn_btn4" image="I_F2" label="Client" size="normal" onAction="togBtn_onAction" tag="togglesheet_client"/>             
+                    <toggleButton id="togBtn_btn5" image="I_F2" label="EntriesMeetings" size="normal" onAction="togBtn_onAction" tag="togglesheet_entries^meetings"/>         
+                    <toggleButton id="togBtn_btn6" image="I_F2" label="Meeting Minutes" size="normal" onAction="togBtn_onAction" tag="togglesheet_meeting^minutes"/>             
+                    <toggleButton id="togBtn_btn7" image="I_F2" label="Simple Input Sheet" size="normal" onAction="togBtn_onAction" tag="togglesheet_simple^input^sheet"/>                                                      
+                    <toggleButton id="togBtn_btn8" image="I_F2" label="Config" size="normal" onAction="togBtn_onAction" tag="togglesheet_config"/>             
+                    <toggleButton id="togBtn_btn9" image="I_F2" label="Lookups" size="normal" onAction="togBtn_onAction" tag="togglesheet_lookups"/>   
+                    <toggleButton id="togBtn_btn10" image="I_F2" label="Ranges" size="normal" onAction="togBtn_onAction" tag="togglesheet_ranges"/>             
+                    <toggleButton id="togBtn_btn11" image="I_F2" label="Opportunity Meta" size="normal" onAction="togBtn_onAction" tag="togglesheet_opportunity^meta"/>  
+                    <toggleButton id="togBtn_btn12" image="I_F2" label="Ranges" size="normal" onAction="togBtn_onAction" tag="togglesheet_ranges"/>             
+                    <toggleButton id="togBtn_btn13" image="I_F2" label="Opportunity Meta Ref" size="normal" onAction="togBtn_onAction" tag="togglesheet_opportunity^meta^ref"/>    
+                    <toggleButton id="togBtn_btn14" image="I_F2" label="Monday Meta" size="normal" onAction="togBtn_onAction" tag="togglesheet_monday^meta"/>                         
+                </group>
+           
+            </tab>
+        </tabs>
+	</ribbon>
+</customUI>
+    
