@@ -28,6 +28,7 @@ Sub rbx_onLoad(ribbon As IRibbonUI)
     ribbon.InvalidateControl "userval"
     ribbon.InvalidateControl "agefilterval"
     ribbon.InvalidateControl "sortval"
+    ribbon.InvalidateControl "workingdir"
     
 End Sub
 
@@ -68,13 +69,34 @@ End Sub
 'Callback for dropDown3 onAction
 Sub dropDown_onAction(control As IRibbonControl, id As String, index As Integer)
     Debug.Print "dropDown_onAction", id, index
+    Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, id
+    Set RV = Nothing
 End Sub
 
 'Callback for working onAction
 Sub chkBox_onAction(control As IRibbonControl, pressed As Boolean)
     Debug.Print "chkBox_onAction"
+    Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, CStr(pressed)
+    Set RV = Nothing
+End Sub
+
+'Callback for workingdir getText
+Sub editBox_getText(control As IRibbonControl, ByRef returnedVal)
+    Debug.Print "editBox_getText"
+    Set RV = New RibbonVariables
+    returnedVal = CallByName(RV, control.id, VbGet)
+    Debug.Print "returnedval=" & returnedVal
+    Set RV = Nothing
+End Sub
+
+'Callback for workingdir onChange
+Sub editBox_onChange(control As IRibbonControl, text As String)
+    Debug.Print "editBox_onChange"
+    Set RV = New RibbonVariables
+    CallByName RV, control.id, VbLet, text
+    Set RV = Nothing
 End Sub
 
 
@@ -91,8 +113,17 @@ Sub fncGetPressed(control As IRibbonControl, ByRef returnedVal)
 End Sub
 
 Sub InvalidateRibbon()
-    'ribbon.InvalidateControl "debugflagval"
-    'ribbon.InvalidateControl "userval"
-    'ribbon.InvalidateControl "agefilterval"
-    'ribbon.InvalidateControl "sortval"
+Dim ribbonpointerval As IRibbonUI
+    
+    Set RV = New RibbonVariables
+    Set ribbonpointerval = RV.RibbonPointer
+    
+    ribbonpointerval.InvalidateControl "debugflag"
+    ribbonpointerval.InvalidateControl "user"
+    ribbonpointerval.InvalidateControl "agefilter"
+    ribbonpointerval.InvalidateControl "sort"
+    ribbonpointerval.InvalidateControl "workingdir"
+    ribbonpointerval.InvalidateControl "maxmondayitems"
+    Set RV = Nothing
+    Set ribbonpointerval = Nothing
 End Sub

@@ -11,6 +11,13 @@ Private debugflagval As String
 Private userval As String
 Private agefilterval As String
 Private sortval As String
+Private workingdirval As String
+Private maxmondayitemsval As String
+
+Private refreshfoldersval As String
+Private refreshupdatesval As String
+Private subitemparentval As String
+Private latestval As String
 
 Private statusfiltercompletedval As String
 Private statusfilterdoneval As String
@@ -20,6 +27,7 @@ Private statusfilternotstartedval As String
 Private bookname As String
 Private sheetname As String
 Private persistfilename As String
+
 
 Private persistrangename As String
 Private persistrangelen As Long
@@ -45,6 +53,91 @@ Property Let RibbonPointer(value As IRibbonUI)
     LetVariableSheetValue "ribbonpointerval", ObjPtr(value)
 End Property
 
+
+' Latest  ''''''''''''''''''''''''''''''
+Property Get Latest() As String
+    Debug.Print "Latest"
+    If latestval = "" Then
+        Latest = GetVariableSheetValue("latestval")
+    Else
+        Latest = latestval
+    End If
+End Property
+Property Let Latest(value As String)
+    Debug.Print "LetLatest", value
+    LetVariableSheetValue "latestval", value
+End Property
+
+' Refresh Folders  ''''''''''''''''''''''''''''''
+Property Get RefreshFolders() As String
+    Debug.Print "RefreshFolders"
+    If refreshfoldersval = "" Then
+        RefreshFolders = GetVariableSheetValue("refreshfoldersval")
+    Else
+        RefreshFolders = refreshfoldersval
+    End If
+End Property
+Property Let RefreshFolders(value As String)
+    Debug.Print "LetRefreshFolders", value
+    LetVariableSheetValue "refreshfoldersval", value
+End Property
+
+' Refresh Updates  ''''''''''''''''''''''''''''''
+Property Get RefreshUpdates() As String
+    Debug.Print "RefreshUpdates"
+    If refreshupdatesval = "" Then
+        RefreshUpdates = GetVariableSheetValue("refreshupdatesval")
+    Else
+        RefreshUpdates = refreshupdatesval
+    End If
+End Property
+Property Let RefreshUpdates(value As String)
+    Debug.Print "LetRefreshUpdates", value
+    LetVariableSheetValue "refreshupdatesval", value
+End Property
+
+' Sub Item Parent   ''''''''''''''''''''''''''''''
+Property Get SubItemParent() As String
+    Debug.Print "SubItemParent"
+    If subitemparentval = "" Then
+        SubItemParent = GetVariableSheetValue("subitemparentval")
+    Else
+        SubItemParent = subitemparentval
+    End If
+End Property
+Property Let SubItemParent(value As String)
+    Debug.Print "LetSubItemParent", value
+    LetVariableSheetValue "subitemparentval", value
+End Property
+
+
+' Working Directory  ''''''''''''''''''''''''''''''
+Property Get WorkingDir() As String
+    Debug.Print "WorkingDir"
+    If workingdirval = "" Then
+        WorkingDir = GetVariableSheetValue("workingdirval")
+    Else
+        WorkingDir = workingdirval
+    End If
+End Property
+Property Let WorkingDir(value As String)
+    Debug.Print "LetWorkingDir", value
+    LetVariableSheetValue "workingdirval", value
+End Property
+
+' Max Monday Items  ''''''''''''''''''''''''''''''
+Property Get MaxMondayItems() As String
+    Debug.Print "MaxMondayItems"
+    If maxmondayitemsval = "" Then
+        MaxMondayItems = GetVariableSheetValue("maxmondayitemsval")
+    Else
+        MaxMondayItems = maxmondayitemsval
+    End If
+End Property
+Property Let MaxMondayItems(value As String)
+    Debug.Print "LetMaxMondayItems", value
+    LetVariableSheetValue "maxmondayitemsval", value
+End Property
 
 ' Status Filter Completed  ''''''''''''''''''''''''''''''
 Property Get StatusFilterCompleted() As String

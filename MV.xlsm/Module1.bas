@@ -232,20 +232,20 @@ Dim folderPath As String, mondayFolderName As String, foldername As String
 
         If Dir(docPath) = "" Then
             Set wordDoc = wordApp.Documents.Add
-            wordDoc.Content.InsertAfter Text:=initDocText
-            wordDoc.Content.InsertAfter Text:=extraDocText
+            wordDoc.Content.InsertAfter text:=initDocText
+            wordDoc.Content.InsertAfter text:=extraDocText
 
             Debug.Print "created word doc : " & wordDocName
         Else
             Set wordDoc = wordApp.Documents.Open(docPath)
             
-            If InStr(1, wordDoc.Content.Text, extraDocText) <> 0 Then
+            If InStr(1, wordDoc.Content.text, extraDocText) <> 0 Then
                 Debug.Print "content allready exists : " & docPath
                 GoTo exitsub
             End If
         
             wordDoc.Content.InsertParagraphAfter
-            wordDoc.Content.InsertAfter Text:=extraDocText
+            wordDoc.Content.InsertAfter text:=extraDocText
         End If
 
         Debug.Print "added to word doc : " & extraDocText
@@ -290,7 +290,7 @@ Dim folderNamesCol As Range, itemIdCell As Range
         If dryRun = False Then
             fso.CreateFolder folderPath
             Set wordDoc = wordApp.Documents.Add
-            wordDoc.Content.InsertAfter Text:=initDocText
+            wordDoc.Content.InsertAfter text:=initDocText
             wordDoc.SaveAs2 fso.BuildPath(folderPath, wordDocName)
             wordDoc.Close
         End If
