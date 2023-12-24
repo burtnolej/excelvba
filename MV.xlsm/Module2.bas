@@ -52,14 +52,15 @@ Dim tagSplit As Variant, functionSplit As Variant
             functionSplit = Split(param, "^")
             functionSplit = Application.Run(functionSplit(0) & ".xlsm!" & functionSplit(1), functionSplit(2))
     End Select
+End Sub
 
-Sub RehydrateConfig()
+Sub RehydrateConfig(Optional param As String = "")
     Set RV = New RibbonVariables
     RV.Rehydrate
     
 End Sub
 
-Sub PersistConfig()
+Sub PersistConfig(Optional param As String = "")
     Set RV = New RibbonVariables
     RV.Persist
 End Sub

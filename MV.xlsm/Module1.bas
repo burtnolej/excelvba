@@ -583,7 +583,7 @@ exitsub:
 End Sub
 
 
-Public Sub LoadMondayDumpFile()
+Public Sub GenerateReport(Optional param As String = "")
 Dim dirnameString As String, fileNameSuffix As String, parentDirnameString As String, datafileDirname As String
 Dim targetSheetName As String, targetFileName As String, dataFile As String, targetDirName As String, inputUser As String, boardName As String
 Dim inputUserName As String, inputDate As String, inputGDrive As String, inputFolder As String, folderSheetName As String, outputFolder As String

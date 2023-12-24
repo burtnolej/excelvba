@@ -194,7 +194,7 @@ Private Sub Class_Initialize()
     Debug.Print "Class_Initialize"
     sheetname = "Persist"
     bookname = "MV.xlsm"
-    persistfilename = Environ("USERPROFILE") & "Deploy/.MV_persist.csv"
+    persistfilename = Environ("USERPROFILE") & "\Deploy\.MV_persist.csv"
     persistrangename = "persistdata"
     persistrangelen = Workbooks(bookname).Sheets(sheetname).Range(persistrangename).Rows.Count
     
