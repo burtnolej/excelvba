@@ -115,7 +115,7 @@ Public Sub CopyCellFormat(fromCell As Range, toRange As Range)
     
 End Sub
 
-Public Sub AddFilterCalbackSub(targetBook As Workbook, sheetName As String)
+Public Sub AddFilterCalbackSub(targetBook As Workbook, sheetname As String)
     Dim wb As Workbook
     Dim xPro As VBIDE.VBProject
     Dim xCom As VBIDE.VBComponent
@@ -161,7 +161,7 @@ Public Sub AddFilterCalbackSub(targetBook As Workbook, sheetName As String)
 
 End Sub
 
-Public Sub AddFilterCode(targetBook As Workbook, sheetName As String, filterRange As Range, filterName As Name, _
+Public Sub AddFilterCode(targetBook As Workbook, sheetname As String, filterRange As Range, filterName As Name, _
             Optional filterRangeDepth As Long = 2000, Optional allOffFlag As Boolean = False)
     Dim wb As Workbook
     Dim xPro As VBIDE.VBProject
@@ -513,14 +513,14 @@ End Sub
 
 Sub AddReference(targetBook As Workbook, refName As String, refFileName As String)
     Dim VBAEditor As VBIDE.VBE
-    Dim vbProj As VBIDE.VBProject
+    Dim VBProj As VBIDE.VBProject
     Dim chkRef As VBIDE.Reference
     Dim BoolExists As Boolean
 
     Set VBAEditor = Application.VBE
-    Set vbProj = targetBook.VBProject
+    Set VBProj = targetBook.VBProject
 
-    For Each chkRef In vbProj.References
+    For Each chkRef In VBProj.References
         Debug.Print Now() & " adding reference " & refName
         If chkRef.Name = refName Then
             BoolExists = True
@@ -528,10 +528,10 @@ Sub AddReference(targetBook As Workbook, refName As String, refFileName As Strin
         End If
     Next
 
-    vbProj.References.AddFromFile refFileName
+    VBProj.References.AddFromFile refFileName
 exitsub:
 
-    Set vbProj = Nothing
+    Set VBProj = Nothing
     Set VBAEditor = Nothing
 End Sub
 
@@ -541,7 +541,7 @@ Dim prevCopyRowCount As Long: prevCopyRowCount = 0
 Dim prevCopyPasteCount As Long: prevCopyPasteCount = 0
 Dim sourceWBStr As String
 
-    sourceWBStr = ActiveSheet.Range("REFSHEET").Value
+    sourceWBStr = ActiveSheet.Range("REFSHEET").value
     
     'groups
     UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 4, "ITEM_GROUP_NAMES", "monday_report_gen_DEV_v1.10.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount
@@ -634,7 +634,7 @@ exitsub:
 End Sub
 
 Public Sub CreateGroupNameDropdown(dropDownTarget As Range, inputRangeAddress As String, inputSheetName As String)
-Dim rangeAddress As String, sheetName As String, dropdownAddress As String
+Dim rangeAddress As String, sheetname As String, dropdownAddress As String
 Dim listRange As Range, inputRange As Range
 Dim rangeLength As Integer, outputStartRow As Integer
 Dim tmpWorksheet As Worksheet
@@ -678,19 +678,19 @@ Dim tmpWorksheet As Worksheet
         .ShowError = True
     End With
     
-    dropDownTarget.Value = listRange.Rows(1) 'set the cell to the first value in the drop down
+    dropDownTarget.value = listRange.Rows(1) 'set the cell to the first value in the drop down
 End Sub
 
 Sub DumpReferences()
     Dim VBAEditor As VBIDE.VBE
-    Dim vbProj As VBIDE.VBProject
+    Dim VBProj As VBIDE.VBProject
     Dim chkRef As VBIDE.Reference
     Dim BoolExists As Boolean
 
     Set VBAEditor = Application.VBE
-    Set vbProj = ActiveWorkbook.VBProject
+    Set VBProj = ActiveWorkbook.VBProject
 
-    For Each chkRef In vbProj.References
+    For Each chkRef In VBProj.References
         Debug.Print chkRef.Name, chkRef.FullPath
     Next
 End Sub
@@ -699,14 +699,14 @@ Public Sub AddReferences()
 Dim nameArray As Variant, pathArray As Variant
 Dim i As Integer
 Dim VBAEditor As VBIDE.VBE
-Dim vbProj As VBIDE.VBProject
+Dim VBProj As VBIDE.VBProject
 Dim chkRef As VBIDE.Reference
 Dim BoolExists As Boolean
 Dim resultStr As String
 
 Set VBAEditor = Application.VBE
 ActiveWorkbook.Activate
-Set vbProj = ActiveWorkbook.VBProject
+Set VBProj = ActiveWorkbook.VBProject
 
 
 nameArray = Array("VBA", "Excel", "stdole", "Office", "MSForms", "Outlook", "VBIDE", "Scripting", "PowerPoint", "VBScript_RegExp_55", "VBScript_RegExp_10", "Word")
@@ -719,7 +719,7 @@ pathArray = Array("C:\Program Files\Common Files\Microsoft Shared\VBA\VBA7.1\VBE
         Debug.Print Now() & " Adding Reference " & nameArray(i)
         If Not CheckReference(nameArray(i)) Then
             resultStr = resultStr & nameArray(i) & " adding vba reference " & Now() & vbCrLf
-            vbProj.References.AddFromFile pathArray(i)
+            VBProj.References.AddFromFile pathArray(i)
         Else
             resultStr = resultStr & nameArray(i) & " vba reference already exists " & Now() & vbCrLf
         End If
@@ -731,15 +731,15 @@ End Sub
 
 Function CheckReference(refName As Variant) As Boolean
     Dim VBAEditor As VBIDE.VBE
-    Dim vbProj As VBIDE.VBProject
+    Dim VBProj As VBIDE.VBProject
     Dim chkRef As VBIDE.Reference
     Dim BoolExists As Boolean
 
     Set VBAEditor = Application.VBE
-    Set vbProj = ActiveWorkbook.VBProject
+    Set VBProj = ActiveWorkbook.VBProject
 
     CheckReference = False
-    For Each chkRef In vbProj.References
+    For Each chkRef In VBProj.References
         If chkRef.Name = refName Then
             CheckReference = True
             GoTo exitsub
@@ -747,7 +747,7 @@ Function CheckReference(refName As Variant) As Boolean
     Next
 exitsub:
     Set VBAEditor = Nothing
-    Set vbProj = Nothing
+    Set VBProj = Nothing
 End Function
 
 Function IsInArray(stringToBeFound As String, arr As Variant) As Boolean

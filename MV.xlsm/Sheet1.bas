@@ -30,26 +30,26 @@ Dim myParentFolder As Folder
         GoTo endsub
     End If
         
-    If ActiveSheet.Range("ONOFF").Value = "OFF" Then
+    If ActiveSheet.Range("ONOFF").value = "OFF" Then
         GoTo endsub
     End If
     
     On Error Resume Next
-    inputType = Target.offset(, -1).Value
+    inputType = Target.offset(, -1).value
     On Error GoTo 0
     If Not Intersect(ActiveSheet.Range("INPUT"), Target) Is Nothing Then
         If Not IsInArray(inputType, inputTypeArray) Then
             GoTo endsub
         End If
         
-        If Target.Value <> "" Then
-            Set myFolder = fso.GetFolder(Target.Value)
+        If Target.value <> "" Then
+            Set myFolder = fso.GetFolder(Target.value)
             initFolder = myFolder.Path
             selectedFolder = myFolder.Name
         Else
             initFolder = "c:\users"
         End If
-        Target.Value = GetFolderSelection(initFolder, selectedFolder)
+        Target.value = GetFolderSelection(initFolder, selectedFolder)
         ActiveSheet.Cells(1, 1).Select
 
     End If

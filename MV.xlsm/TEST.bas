@@ -173,11 +173,11 @@ Dim i As Integer
                 If boardid <> "" Then
                     CreateMondayItem boardid, groupid, newItemName, status, owner, rs, rt
                     newItemId = getResponseItemid(rt, "create_item")
-                    addedItemIdRange.Rows(i).Value = newItemId
+                    addedItemIdRange.Rows(i).value = newItemId
 
                     CreateMondaySubItem newItemId, newSubItemName, rs, rt
                     newItemId = getResponseItemid(rt, "create_subitem")
-                    addedItemIdRange.Rows(i).Value = newItemId
+                    addedItemIdRange.Rows(i).value = newItemId
                     
                 Else
                     Debug.Print "exiting from row #" & i & " as end of items to add"
@@ -186,7 +186,7 @@ Dim i As Integer
             ElseIf newSubItemName <> "" Then ' its a new sub item
                     CreateMondaySubItem itemId, newSubItemName, rs, rt
                     newItemId = getResponseItemid(rt, "create_subitem")
-                    addedItemIdRange.Rows(i).Value = newItemId
+                    addedItemIdRange.Rows(i).value = newItemId
             End If
             
             ' then post the description field as an update
@@ -266,8 +266,8 @@ result = ""
 For i = 0 To UBound(Columns)
     colName = Columns(i)
     colNum = Application.Match(colName, columnMapHeadersRange, 0)
-    oldColName = columnMapRange.Cells(oldBoardRowNum, colNum).Value
-    newColName = columnMapRange.Cells(newBoardRowNum, colNum).Value
+    oldColName = columnMapRange.Cells(oldBoardRowNum, colNum).value
+    newColName = columnMapRange.Cells(newBoardRowNum, colNum).value
     If i > 0 Then result = result + ","
     result = result & "{source:" & "\" & DDQ & oldColName & "\" & DDQ & ", target:" & "\" & DDQ & newColName & "\" & DDQ & "}"
     
@@ -471,17 +471,17 @@ End Function
 
 Public Function TestGetUsers(ByRef rs As String, ByRef rt As String) As Variant
 Dim userColl As Collection
-Dim user As Variant
+Dim User As Variant
 Dim userAcct As Dictionary
     
     Set userColl = GetUsers(rs, rt)
-    For Each user In userColl
-        Debug.Print user.item("email")
-        Debug.Print user.item("id")
-        Debug.Print user.item("name")
+    For Each User In userColl
+        Debug.Print User.item("email")
+        Debug.Print User.item("id")
+        Debug.Print User.item("name")
         'Set userAcct = user("account")
         'Debug.Print userAcct.Item("name")
-    Next user
+    Next User
     
 End Function
 Public Function TestGetGroupsForBoard(boardid As String, ByRef rs As String, ByRef rt As String) As Collection

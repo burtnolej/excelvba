@@ -60,7 +60,7 @@ Dim columnLink As Range, fillRange As Range, columnItemId As Range, ncolumnItemI
         
     Set fillRange = columnLink.Resize(numRows).offset(1)
     columnLink.Rows(2).Select
-    Selection.AutoFill Destination:=fillRange
+    Selection.AutoFill destination:=fillRange
         
     For Each userName In userNamesArray
     
@@ -72,7 +72,7 @@ Dim columnLink As Range, fillRange As Range, columnItemId As Range, ncolumnItemI
         columnLink.Cells(2, 1).Formula = "=IF(AND(ISERROR(FIND(" & DQ & origUserName & DQ & ",$J" & startContentRow & ")),ISERROR(FIND(" & DQ & origUserName & DQ & ",$J" & startContentRow & "))),0,1)"
         Set fillRange = columnLink.Resize(numRows).offset(1)
         columnLink.Rows(2).Select
-        Selection.AutoFill Destination:=fillRange
+        Selection.AutoFill destination:=fillRange
     Next userName
 
 exitsub:
@@ -146,7 +146,7 @@ Dim columnItemId As Range, columnUpdateUpdatesTime As Range
 
     Set fillRange = columnUpdatesStart.offset(1).Resize(numRows)
     fillRange.Rows(1).Select
-    Selection.AutoFill Destination:=fillRange, Type:=xlFillDefault
+    Selection.AutoFill destination:=fillRange, Type:=xlFillDefault
     
     ' fill in the update time column (will be a dupe of columnItemID), make the lookup col value dynamic so can fill right
     columnUpdateUpdatesTime.Rows(2).Formula = "=IF(ISERROR(INDEX(INDIRECT(" & columnUpdateUpdatesTime.Rows(1).Address(1, 0) & _
@@ -158,12 +158,12 @@ Dim columnItemId As Range, columnUpdateUpdatesTime As Range
     ' fill right across the update columns
     Set fillRange = columnUpdateUpdatesTime.Rows(2).Resize(, 5)
     fillRange.Cells(1, 1).Select
-    Selection.AutoFill Destination:=fillRange, Type:=xlFillDefault
+    Selection.AutoFill destination:=fillRange, Type:=xlFillDefault
 
     ' fill down
     Set fillRange = fillRange.Resize(numRows)
     fillRange.Rows(1).Select
-    Selection.AutoFill Destination:=fillRange, Type:=xlFillDefault
+    Selection.AutoFill destination:=fillRange, Type:=xlFillDefault
 
     
 Exit Sub:
@@ -192,8 +192,8 @@ Dim folderNamesCol As Range, itemIdCell As Range
     Set folderNamesCol = tmpWorkbook.Sheets("Folders").Range("FOLDERS_COLUMNS").Columns(1)
     
     For Each itemIdCell In folderNamesCol.Cells
-        If InStr(1, itemIdCell.Value, itemId) <> 0 Then
-            GetFolderFromID = itemIdCell.Value
+        If InStr(1, itemIdCell.value, itemId) <> 0 Then
+            GetFolderFromID = itemIdCell.value
             Exit Function
         End If
     Next itemIdCell
@@ -275,7 +275,7 @@ Dim folderNamesCol As Range, itemIdCell As Range
     Set folderNamesCol = tmpWorkbook.Sheets("Folders").Range("FOLDERS_COLUMNS").Columns(1)
     
     For Each itemIdCell In folderNamesCol.Cells
-        If InStr(1, itemIdCell.Value, itemId) <> 0 Then
+        If InStr(1, itemIdCell.value, itemId) <> 0 Then
             GoTo exitsub
         End If
     Next itemIdCell
@@ -329,7 +329,7 @@ Dim sectionFolderStart As Integer
     folderStartRange.Cells(2, 1).Formula = "=IF(ISERROR(MATCH(" & columnItemId2.Rows(2).Address(0, 0) & ",Folders!I:I,0)),-1,MATCH(" & columnItemId2.Rows(2).Address(0, 0) & ",Folders!I:I,0))"
     Set fillRange = folderStartRange.Resize(numRows).offset(1)
     folderStartRange.Rows(2).Select
-    Selection.AutoFill Destination:=fillRange
+    Selection.AutoFill destination:=fillRange
     
     Set folderDataRange = folderStartRange.offset(, 1).Resize(, 8)
     folderDataRange.Cells(2, 1).Formula = "=IF(" & folderStartRange.Cells(2, 1).Address(0, 1) & _
@@ -339,12 +339,12 @@ Dim sectionFolderStart As Integer
     ' fill across the row first
     Set fillRange = folderDataRange.Rows(1).offset(1)
     fillRange.Cells(1, 1).Select
-    Selection.AutoFill Destination:=fillRange, Type:=xlFillDefault
+    Selection.AutoFill destination:=fillRange, Type:=xlFillDefault
     
     ' fill down the row first
     Set fillRange = folderDataRange.Resize(numRows).offset(1)
     fillRange.Rows(1).Select
-    Selection.AutoFill Destination:=fillRange
+    Selection.AutoFill destination:=fillRange
     
     Set folderLinkRange = folderStartRange.offset(, 9)
     folderLinkRange.Cells(2, 1).Formula = "=hyperlink(IF(" & folderStartRange.Cells(2, 1).Address(0, 1) & _
@@ -353,7 +353,7 @@ Dim sectionFolderStart As Integer
     
     Set fillRange = folderLinkRange.Rows(2).Resize(numRows)
     fillRange.Rows(1).Select
-    Selection.AutoFill Destination:=fillRange
+    Selection.AutoFill destination:=fillRange
     
     emailLinkFormula = equals & doubleQuote & mondayPrefix & doubleQuote & ampersand & _
                             columnItemId.Cells(2, 1).Address(0, 1) & ampersand & _
@@ -362,7 +362,7 @@ Dim sectionFolderStart As Integer
     columnEmailStartCell.Formula = emailLinkFormula
     Set fillRange = columnEmailRange.Resize(numRows).offset(1)
     columnEmailStartCell.Select
-    Selection.AutoFill Destination:=fillRange
+    Selection.AutoFill destination:=fillRange
     
 
     'Set columnBoardName = columnBoardId.offset(, 1)
@@ -422,13 +422,13 @@ Dim sectionFolderStart As Integer
     Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
     boardNameFormula = "=INDEX(DATA_BOARDNAMES,MATCH(int(" & boardIdStartCell.Address(0, 1) & "),DATA_BOARDID,0),1)"
     Set columnBoardName = columnBoardName.offset(, -1)
-    columnBoardName.Rows(1).Value = "BOARD_NAME"
+    columnBoardName.Rows(1).value = "BOARD_NAME"
     Set boardNameStartCell = columnBoardName.Rows(2)
     boardNameStartCell.Select
     boardNameStartCell.Formula = boardNameFormula
     Set fillRange = columnBoardName.Resize(numRows).offset(1)
     boardNameStartCell.Select
-    Selection.AutoFill Destination:=fillRange
+    Selection.AutoFill destination:=fillRange
 
 exitsub:
 
@@ -447,7 +447,7 @@ Public Function GetUpdates(updateFileDir As String, ByVal updatesSheet As Worksh
 Dim oFSO As FileSystemObject
 Dim tmpWorkbook As Workbook
 
-    dataurl = ActiveWorkbook.Sheets("Reference").Range("dataurl").Value
+    dataurl = ActiveWorkbook.Sheets("Reference").Range("dataurl").value
     
     Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
             dataurl + "/Monday/updates.txt", _
@@ -708,7 +708,7 @@ Dim boardIdArray As Variant
     
         Debug.Print Now() & " HTTPDownloadFile " & boardName & ".txt"
         
-        dataurl = Workbooks("MV.xlsm").Sheets("Reference").Range("dataurl").Value
+        dataurl = Workbooks("MV.xlsm").Sheets("Reference").Range("dataurl").value
         
         'Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
         '            "http://172.22.237.138/datafiles/Monday/" & boardName & ".txt", _
@@ -874,19 +874,19 @@ Dim searchTermArray As Variant, outputArray As Variant
 
     Set searchTermRange = sourceBook.Sheets(configSheetName).Range(searchTermRangeString)
     Set searchTermColIndexRange = sourceBook.Sheets(configSheetName).Range(searchTermColIndexRangeString)
-    searchTermArray = Split(searchTermRange.Value, ",")
+    searchTermArray = Split(searchTermRange.value, ",")
 
-    Set targetColumnRange = targetSheet.Columns(searchTermColIndexRange.Value)
+    Set targetColumnRange = targetSheet.Columns(searchTermColIndexRange.value)
     
     For i = 1 To maxRow
         For j = LBound(searchTermArray) To UBound(searchTermArray)
             Set colValueRange = targetSheet.Range("COLUMN_" & searchTermArray(j))
-            outputArray(i - 1, 1) = outputArray(i - 1, 1) & colValueRange.Rows(i + 1).Value
+            outputArray(i - 1, 1) = outputArray(i - 1, 1) & colValueRange.Rows(i + 1).value
         Next j
     Next i
     
     Set targetColumnRange = targetColumnRange.Resize(maxRow).offset(startRow)
-    targetColumnRange.Value = outputArray
+    targetColumnRange.value = outputArray
     
     Set viewerColumnFilterRange = targetSheet.Range("E1")
     Set viewerColumnFilterName = targetWorkbook.Names.Add("COLUMN_FILTER_SEARCHSTR", RefersTo:=viewerColumnFilterRange)
@@ -982,10 +982,10 @@ Dim startRow As Integer, foldersStartRow As Integer, maxRow As Integer
     AddFilterCalbackSub viewerWorkbook, viewerSheet.Name
         
     For Each viewerGenColumnCell In viewerGenColumnNameRange
-        Debug.Print "Creating column " & viewerGenColumnCell.Value
+        Debug.Print "Creating column " & viewerGenColumnCell.value
         Set viewerColumnRange = viewerSheet.Range(Cells(startRow, viewerGenColumnCell.Row() - 1), Cells(2000, viewerGenColumnCell.Row() - 1))
-        viewerWorkbook.Names.Add "COLUMN_" & viewerGenColumnCell.Value, RefersTo:=viewerColumnRange
-        viewerColumnRange.Rows(1).Value = viewerGenColumnCell.Value
+        viewerWorkbook.Names.Add "COLUMN_" & viewerGenColumnCell.value, RefersTo:=viewerColumnRange
+        viewerColumnRange.Rows(1).value = viewerGenColumnCell.value
         
         ' set the column width
         viewerColumnRange.ColumnWidth = viewerGenColumnWidthRange.Rows(viewerGenColumnCell.Row() - 1)
@@ -1003,7 +1003,7 @@ Dim startRow As Integer, foldersStartRow As Integer, maxRow As Integer
         Set typeCell = viewerGenColumnTypeRange.Rows(viewerGenColumnCell.Row() - 1)
         If typeCell <> -1 Then ' -1 means a formula
             viewerColumnRange.Select
-            Selection.NumberFormat = typeCell.Value
+            Selection.NumberFormat = typeCell.value
         End If
         
         ' set column header format
@@ -1014,7 +1014,7 @@ Dim startRow As Integer, foldersStartRow As Integer, maxRow As Integer
         If viewerGenColumnFilterInputRange.Rows(viewerGenColumnCell.Row() - 1) = 1 Then
 
             Set viewerColumnFilterRange = viewerColumnRange.Resize(1).offset(-2)
-            Set viewerColumnFilterName = viewerWorkbook.Names.Add("COLUMN_FILTER_" & viewerGenColumnCell.Value, RefersTo:=viewerColumnFilterRange)
+            Set viewerColumnFilterName = viewerWorkbook.Names.Add("COLUMN_FILTER_" & viewerGenColumnCell.value, RefersTo:=viewerColumnFilterRange)
             viewerColumnFilterRange.Style = "input"
             'viewerGenColumnFilterInputRange.AddComment = "> for multiple values enter a comma separated list i.e. word1,word2" & vbNewLine & "> for wildcards add a asterisk as suffix/prefix i.e. *word* " & vbNewLine & "> to reset to no filters enter an empty string " & vbNewLine & "> for nonblanks enter <>"
         
@@ -1128,10 +1128,10 @@ Dim nextCell As Range, namedRange As Range, lastCell As Range
         Set groupsColl = GetGroupsForBoard(CStr(board("id")), rs, rt)
         If groupsColl.Count > 1 Then
             For i = 1 To groupsColl.Count
-                nextCell.Value = board("id")
-                nextCell.offset(, 1).Value = board("name")
-                nextCell.offset(, 2).Value = groupsColl(i)("title")
-                nextCell.offset(, 3).Value = groupsColl(i)("id")
+                nextCell.value = board("id")
+                nextCell.offset(, 1).value = board("name")
+                nextCell.offset(, 2).value = groupsColl(i)("title")
+                nextCell.offset(, 3).value = groupsColl(i)("id")
 
                 Set nextCell = nextCell.offset(1)
             Next i
@@ -1172,8 +1172,8 @@ Dim nextCell As Range
     Set tagsColl = GetTags(rs, rt)
     
     For i = 1 To tagsColl.Count
-        nextCell.Value = tagsColl(i)("id")
-        nextCell.offset(, 1).Value = tagsColl(i)("name")
+        nextCell.value = tagsColl(i)("id")
+        nextCell.offset(, 1).value = tagsColl(i)("name")
         Set nextCell = nextCell.offset(1)
     Next i
 

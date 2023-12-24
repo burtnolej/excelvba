@@ -529,10 +529,10 @@ Dim activityRange As Range
     lastUsedRow = activityRange.SpecialCells(xlCellTypeLastCell).Row
     
     
-    activityRange.Rows(lastUsedRow + 1).Columns(1).Value = Now()
-    activityRange.Rows(lastUsedRow + 1).Columns(2).Value = logMsg
-    activityRange.Rows(lastUsedRow + 1).Columns(3).Value = logFunction
-    activityRange.Rows(lastUsedRow + 1).Columns(4).Value = logMsgDescription
+    activityRange.Rows(lastUsedRow + 1).Columns(1).value = Now()
+    activityRange.Rows(lastUsedRow + 1).Columns(2).value = logMsg
+    activityRange.Rows(lastUsedRow + 1).Columns(3).value = logFunction
+    activityRange.Rows(lastUsedRow + 1).Columns(4).value = logMsgDescription
 
 endsub:
     Set activityRange = Nothing
@@ -551,17 +551,17 @@ Dim userIdRange As Range, tagNameRange As Range
 
     Set sourceColumn = ActiveSheet.Range("COLUMN_UPDATES_MONDAY_STATUS")
     For Each Target In sourceColumn.offset(1, 0).Cells
-        If Not Target.Value = vbNullString Then
-            itemId = ActiveSheet.Range("COLUMN_ITEMID").Rows(Target.Row - 3).Value
-            boardid = ActiveSheet.Range("COLUMN_BOARDID").Rows(Target.Row - 3).Value
-            itemType = ActiveSheet.Range("COLUMN_TYPE").Rows(Target.Row - 3).Value
+        If Not Target.value = vbNullString Then
+            itemId = ActiveSheet.Range("COLUMN_ITEMID").Rows(Target.Row - 3).value
+            boardid = ActiveSheet.Range("COLUMN_BOARDID").Rows(Target.Row - 3).value
+            itemType = ActiveSheet.Range("COLUMN_TYPE").Rows(Target.Row - 3).value
             If itemType = "subitem" Then boardid = GetBoardId(CStr(itemId), responseStatus, responseText)
-            If Target.Value = "Working" Then newStatus = "0" Else If Target.Value = "Completed" Then newStatus = "1" Else If Target.Value = "Duplicate" Then newStatus = "6" Else If Target.Value = "Ongoing" Then newStatus = "7" Else newStatus = "7"
+            If Target.value = "Working" Then newStatus = "0" Else If Target.value = "Completed" Then newStatus = "1" Else If Target.value = "Duplicate" Then newStatus = "6" Else If Target.value = "Ongoing" Then newStatus = "7" Else newStatus = "7"
             UpdateStatusMonday boardid, itemId, newStatus, responseStatus, responseText
             If responseStatus = "200" Then
-                Debug.Print "Successfullly updated [" & itemId & "] to " & Target.Value & "[" & responseText & "]"
+                Debug.Print "Successfullly updated [" & itemId & "] to " & Target.value & "[" & responseText & "]"
            Else
-                Debug.Print "Failed to update  [" & itemId & "] to " & Target.Value & "[" & responseText & "]"
+                Debug.Print "Failed to update  [" & itemId & "] to " & Target.value & "[" & responseText & "]"
            End If
        End If
 
@@ -581,23 +581,23 @@ Dim userIdRange As Range, tagNameRange As Range
     'Set sourceColumn = ActiveSheet.Range("COLUMN_UPDATES_MONDAY_OWNER")
     Set sourceColumn = Selection
     For Each Target In sourceColumn.offset(1, 0).Cells
-         If Not Target.Value = vbNullString Then
-            itemId = ActiveSheet.Range("COLUMN_ITEMID").Rows(Target.Row - 3).Value
-            boardid = ActiveSheet.Range("COLUMN_BOARDID").Rows(Target.Row - 3).Value
-            itemType = ActiveSheet.Range("COLUMN_TYPE").Rows(Target.Row - 3).Value
+         If Not Target.value = vbNullString Then
+            itemId = ActiveSheet.Range("COLUMN_ITEMID").Rows(Target.Row - 3).value
+            boardid = ActiveSheet.Range("COLUMN_BOARDID").Rows(Target.Row - 3).value
+            itemType = ActiveSheet.Range("COLUMN_TYPE").Rows(Target.Row - 3).value
             If itemType = "subitem" Then boardid = GetBoardId(CStr(itemId), responseStatus, responseText)
             Set userIdRange = Worksheets("Reference").Range("DATA_USERNAME")
-            If IsError(Application.Match(Target.Value, userIdRange, 0)) Then
-                Debug.Print Target.Value & "not found"
+            If IsError(Application.Match(Target.value, userIdRange, 0)) Then
+                Debug.Print Target.value & "not found"
             Else
-                userRow = Application.Match(Target.Value, userIdRange, 0)
-                userId = userIdRange.Rows(userRow).offset(, 3).Value
+                userRow = Application.Match(Target.value, userIdRange, 0)
+                userId = userIdRange.Rows(userRow).offset(, 3).value
             End If
             UpdateOwnerMonday boardid, itemId, userId, responseStatus, responseText
             If responseStatus = "200" Then
-                Debug.Print "Successfullly updated [" & itemId & "] to " & Target.Value & "[" & responseText & "]"
+                Debug.Print "Successfullly updated [" & itemId & "] to " & Target.value & "[" & responseText & "]"
            Else
-                Debug.Print "Failed to update  [" & itemId & "] to " & Target.Value & "[" & responseText & "]"
+                Debug.Print "Failed to update  [" & itemId & "] to " & Target.value & "[" & responseText & "]"
            End If
          End If
     Next Target
