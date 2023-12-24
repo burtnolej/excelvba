@@ -21,6 +21,27 @@ Dim boardIds() As Variant
 Dim itemIds() As Variant
 
 
+    
+
+Public Function OpenFile(sPath As String, iRWFlag As Integer) As Object
+Dim objFSO As Object
+Dim oFile As Object
+
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    Set oFile = objFSO.OpenTextFile(sPath, 1)
+    
+    Set OpenFile = oFile
+End Function
+
+Sub TestGetRangeFromFile()
+    RehydrateRangeFromFile "MV.xlsm", "Persist", "persistdata", "C:\Users\burtn\foo.csv"
+End Sub
+
+Sub TestPersistRangeToFile()
+    PersistRangeToFile "MV.xlsm", "Persist", "persistdata", "C:\Users\burtn\foo.csv"
+End Sub
+
+
 Sub TestHTTPDownloadFile2()
 Dim todayString As String, filterString As String
 

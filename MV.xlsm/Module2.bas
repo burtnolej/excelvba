@@ -33,6 +33,35 @@ End Sub
 
 'Callback for btns_btn2 onAction
 Sub btns_onAction(control As IRibbonControl)
+Dim tag As String, action As String, param As String
+Dim tagSplit As Variant, functionSplit As Variant
+    tag = control.tag
+    
+    tagSplit = Split(tag, "_")
+    action = tagSplit(0)
+    If UBound(tagSplit) > 0 Then
+        param = tagSplit(1)
+    Else
+        param = ""
+    End If
+
+    'CustomRibbon.Invalidate
+
+    Select Case action
+        Case "runfunction"
+            functionSplit = Split(param, "^")
+            functionSplit = Application.Run(functionSplit(0) & ".xlsm!" & functionSplit(1), functionSplit(2))
+    End Select
+
+Sub RehydrateConfig()
+    Set RV = New RibbonVariables
+    RV.Rehydrate
+    
+End Sub
+
+Sub PersistConfig()
+    Set RV = New RibbonVariables
+    RV.Persist
 End Sub
 
 'Callback for dropDown3 onAction

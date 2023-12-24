@@ -19,6 +19,10 @@ Private statusfilternotstartedval As String
 
 Private bookname As String
 Private sheetname As String
+Private persistfilename As String
+
+Private persistrangename As String
+Private persistrangelen As Long
 
 Private ribbonpointerval As IRibbonUI
 
@@ -177,11 +181,22 @@ Function GetVariableSheetValue(varname As String) As String
      Debug.Print "GetVariableSheetValue", varname
 End Function
 
+Sub Rehydrate()
+    Application.Run "vbautils.xlsm!RehydrateRangeFromFile", bookname, sheetname, persistrangename, persistfilename, persistrangelen
+End Sub
+
+Sub Persist()
+    Application.Run "vbautils.xlsm!PersistRangeToFile", bookname, sheetname, persistrangename, persistfilename
+End Sub
+
 
 Private Sub Class_Initialize()
     Debug.Print "Class_Initialize"
     sheetname = "Persist"
     bookname = "MV.xlsm"
+    persistfilename = Environ("USERPROFILE") & "Deploy/.MV_persist.csv"
+    persistrangename = "persistdata"
+    persistrangelen = Workbooks(bookname).Sheets(sheetname).Range(persistrangename).Rows.Count
     
     debugflagval = ""
     userval = ""
