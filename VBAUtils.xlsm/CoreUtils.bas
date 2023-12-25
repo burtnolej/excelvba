@@ -259,7 +259,7 @@ Sub CreateRefNamedRanges(refSheetName As String, configAddress As String, _
         Optional deleteCurrent As Boolean = True)
 Dim numRows As Integer
 Dim sheetname As String
-Dim rangeName As String, dataRangeName As String
+Dim rangename As String, dataRangeName As String
 Dim rangeHeight As Long, expRangeHeight As Long
 Dim inputRange As Range
 Dim sourceSheet As Worksheet
@@ -280,7 +280,7 @@ Dim i As Integer
     
     For i = 1 To numRows
         sheetname = inputRange.Cells(i, 1).value
-        rangeName = inputRange.Cells(i, 2).value
+        rangename = inputRange.Cells(i, 2).value
         rangeHeight = inputRange.Cells(i, 3).value
         
         Set sourceSheet = ActiveWorkbook.Sheets(sourceSheetName)
@@ -288,7 +288,7 @@ Dim i As Integer
         Set sourceHeaderRange = sourceSheet.Range(headerAddress)
         
         
-        dataColumnNum = Application.WorksheetFunction.Match(rangeName, sourceHeaderRange, 0)
+        dataColumnNum = Application.WorksheetFunction.Match(rangename, sourceHeaderRange, 0)
         
         Set dataTopCell = sourceSheet.Cells(1, dataColumnNum)
         Set dataTopCell = dataTopCell.Offset(rangeOffset)
@@ -312,7 +312,7 @@ Dim i As Integer
             dataTopCell.Select
         End If
         
-        dataRangeName = Replace(UCase(sheetname) & "_" & UCase(rangeName), " ", "_")
+        dataRangeName = Replace(UCase(sheetname) & "_" & UCase(rangename), " ", "_")
         
         If deleteCurrent = True Then
             On Error Resume Next
@@ -321,13 +321,13 @@ Dim i As Integer
         End If
         ActiveWorkbook.Names.Add Name:=dataRangeName, RefersTo:=Selection
         
-        Debug.Print sheetname, rangeName, dataColumnNum, dataRangeName, Selection.Address
+        Debug.Print sheetname, rangename, dataColumnNum, dataRangeName, Selection.Address
         
     Next i
     GoTo endsub
     
 err:
-     Debug.Print "error", sheetname, rangeName
+     Debug.Print "error", sheetname, rangename
      
 endsub:
     On Error GoTo 0

@@ -1,0 +1,192 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="rbx_onLoad">
+	<ribbon startFromScratch="false"> <!--Hide all default tabs-->
+		<tabs>
+			<tab id="tab1" label="Velox Docs" >
+				            
+                <group id="grp_splitBtn" label="Docs">
+                    <splitButton id="splitBtn" size="large">
+                        <button id="splitBtn_btn1" image="veloxemblem0" label="Home" supertip="This is a splitButton." onAction="splitBtn_onAction" />
+                     
+                        <menu id="splitBtn_menu" itemSize="large">
+                            <button id="splitBtn_btn2" imageMso="ChartAreaChart" label="Sheet1" onAction="btns_onAction" tag="runfunction_vbautils^LaunchBrowser^www.bbc.com"/>
+                        </menu>
+                      
+                    </splitButton>
+                    
+                </group>
+                    
+                <group id="grp_splitBtn2" label="Urls">
+                    <splitButton id="splitBtn2" size="large">
+                        <button id="splitBtn_btn4" image="veloxemblem0" label="One Drive Folders" supertip="This is a splitButton." onAction="splitBtn_onAction" />
+                     
+                        <menu id="splitBtn_menu2" itemSize="large">
+                            <button id="splitBtn_btn3" imageMso="ChartAreaChart" label="Sales Cycle [OD]" onAction="btns_onAction" tag="runurl_odsalescycle"/>
+                        </menu>
+                      
+                    </splitButton>
+                        
+                    <splitButton id="splitBtn3" size="large">
+                        <button id="splitBtn_btn5" image="veloxemblem0" label="White Papers" supertip="This is a splitButton." onAction="splitBtn_onAction" />
+                     
+                        <menu id="splitBtn_menu3" itemSize="large">
+                            <button id="splitBtn_btn6" imageMso="ChartAreaChart" label="Digital Transformation" onAction="btns_onAction" tag="runurl_wpdigtran"/>
+                            <button id="splitBtn_btn7" imageMso="ChartAreaChart" label="Performance Tuning" onAction="btns_onAction" tag="runurl_wpperftune"/>
+                            <button id="splitBtn_btn8" imageMso="ChartAreaChart" label="Modernization" onAction="btns_onAction" tag="runurl_wpmodern"/>
+                            <button id="splitBtn_btn9" imageMso="ChartAreaChart" label="Use Cases" onAction="btns_onAction" tag="runurl_wpusecase"/>
+                            
+                            
+                            
+                        </menu>
+                      
+                    </splitButton>
+                    
+                </group>  
+                    
+            </tab> 
+                       
+    <!--separator id="sep2"/--> 
+                           
+            <tab id="tab3" label="Velox Tools">
+                <group id="grp_btns" label="Add Monday Items">
+                    <button id="btns_btn1" label="Open" size="normal" onAction="btns_onAction" image="I_A1" tag="openbook_MO" supertip="This is a splitButton." />
+                    <button id="btns_btn2"   label="Close" size="normal" onAction="btns_onAction" image="I_A2" tag="closebook_MO"  description="This is a description."/>
+                    <button id="btns_btn3"  label="Min" size="normal" onAction="btns_onAction" image="I_A3" tag="minbook_MO"/>
+                    <button id="btns_btn4"  label="Max" size="normal" onAction="btns_onAction" image="I_A4" tag="maxbook_MO"/>
+                    <button id="btns_btn5"  label="Hide" size="normal" onAction="btns_onAction" image="I_A5" tag="hidebook_MO"/>
+                    <button id="btns_btn6"  label="Show" size="normal" onAction="btns_onAction" image="I_A6" tag="showbook_MO"/>
+                 </group>
+                     
+                 <group id="grp_btns2" label="Add Capsule Items">
+                    <button id="btns_btn7" label="Open" size="normal" onAction="btns_onAction" image="I_B1" tag="openbook_CA" supertip="This is a splitButton." />
+                    <button id="btns_btn8"   label="Close" size="normal" onAction="btns_onAction" image="I_B2" tag="closebook_CA"  description="This is a description."/>            
+                    <button id="btns_btn9"  label="Min" size="normal" onAction="btns_onAction" image="I_B3" tag="minbook_CA"/>
+                    <button id="btns_btn10"  label="Max" size="normal" onAction="btns_onAction" image="I_B4" tag="maxbook_CA"/>
+                    <button id="btns_btn11"  label="Hide" size="normal" onAction="btns_onAction" image="I_B5" tag="hidebook_CA"/>
+                    <button id="btns_btn12"  label="Show" size="normal" onAction="btns_onAction" image="I_B6" tag="showbook_CA"/>
+				</group>
+
+                 <group id="grp_btns3" label="Create Meeting Minutes">
+                    <button id="btns_btn13" label="Open" size="normal" onAction="btns_onAction" image="I_C1" tag="openbook_MM" supertip="This is a splitButton." />
+                    <button id="btns_btn14"   label="Close" size="normal" onAction="btns_onAction" image="I_C2" tag="closebook_MM"  description="This is a description."/>
+                    <button id="btns_btn15"  label="Min" size="normal" onAction="btns_onAction" image="I_C3" tag="minbook_MM"/>
+                    <button id="btns_btn16"  label="Max" size="normal" onAction="btns_onAction" image="I_C4" tag="maxbook_MM"/>
+                    <button id="btns_btn17"  label="Hide" size="normal" onAction="btns_onAction" image="I_C5" tag="hidebook_MM"/>
+                    <button id="btns_btn18"  label="Show" size="normal" onAction="btns_onAction" image="I_C6" tag="showbook_MM"/>
+				</group>
+				    
+                <group id="grp_btns4" label="View/Update Monday Items">
+                    <button id="btns_btn19" label="Open" size="normal" onAction="btns_onAction" image="I_D1" tag="openbook_MV" supertip="This is a splitButton." />
+                    <button id="btns_btn20"   label="Close" size="normal" onAction="btns_onAction" image="I_D2" tag="closebook_MV"  description="This is a description."/>
+                    <button id="btns_btn21"  label="Min" size="normal" onAction="btns_onAction" image="I_D3" tag="minbook_MV"/>
+                    <button id="btns_btn22"  label="Max" size="normal" onAction="btns_onAction" image="I_D4" tag="maxbook_MV"/>
+                    <button id="btns_btn23"  label="Hide" size="normal" onAction="btns_onAction" image="I_D5" tag="hidebook_MV"/>
+                    <button id="btns_btn24"  label="Show" size="normal" onAction="btns_onAction" image="I_D6" tag="showbook_MV"/>
+				</group>
+				    
+                <group id="grp_btns5" label="Email/Newsletter Sender">
+                    <button id="btns_btn25" label="Open" size="normal" onAction="btns_onAction" image="I_E1" tag="openbook_ES" supertip="This is a splitButton." />
+                    <button id="btns_btn26"   label="Close" size="normal" onAction="btns_onAction" image="I_E2" tag="closebook_ES"  description="This is a description."/>
+                    <button id="btns_btn27"  label="Min" size="normal" onAction="btns_onAction" image="I_E3" tag="minbook_ES"/>
+                    <button id="btns_btn28"  label="Max" size="normal" onAction="btns_onAction" image="I_E4" tag="maxbook_ES"/>
+                    <button id="btns_btn29"  label="Hide" size="normal" onAction="btns_onAction" image="I_E5" tag="hidebook_ES"/>
+                    <button id="btns_btn30"  label="Show" size="normal" onAction="btns_onAction" image="I_E6" tag="showbook_ES"/>
+				</group>
+				    
+                <group id="grp_btns6" label="Time Booking/Analysis">
+                    <button id="btns_btn31" label="Open" size="normal" onAction="btns_onAction" image="I_F1" tag="openbook_TA" supertip="This is a splitButton." />
+                    <button id="btns_btn32"   label="Close" size="normal" onAction="btns_onAction" image="I_F2" tag="closebook_TA"  description="This is a description."/>
+                    <button id="btns_btn33"  label="Min" size="normal" onAction="btns_onAction" image="I_F3" tag="minbook_TA"/>
+                    <button id="btns_btn34"  label="Max" size="normal" onAction="btns_onAction" image="I_F4" tag="maxbook_TA"/>
+                    <button id="btns_btn35"  label="Hide" size="normal" onAction="btns_onAction" image="I_F1" tag="hidebook_TA"/>
+                    <button id="btns_btn36"  label="Show" size="normal" onAction="btns_onAction" image="I_F2" tag="showbook_TA"/>
+				</group>
+				    
+                <group id="grp_btns8" label="Data Viewer">
+                    <button id="btns_btn48" label="Open" size="normal" onAction="btns_onAction" image="I_A1" tag="openbook_DV" supertip="This is a splitButton." />
+                    <button id="btns_btn49"   label="Close" size="normal" onAction="btns_onAction" image="I_A2" tag="closebook_DV"  description="This is a description."/>
+                    <button id="btns_btn50"  label="Min" size="normal" onAction="btns_onAction" image="I_A3" tag="minbook_DV"/>
+                    <button id="btns_btn51"  label="Max" size="normal" onAction="btns_onAction" image="I_A4" tag="maxbook_DV"/>
+                    <button id="btns_btn52"  label="Hide" size="normal" onAction="btns_onAction" image="I_A1" tag="hidebook_DV"/>
+                    <button id="btns_btn53"  label="Show" size="normal" onAction="btns_onAction" image="I_A2" tag="showbook_DV"/>
+				</group>
+				    				    
+				<group id="grp_chkBox" label="Running Apps">
+                     
+                    <labelControl id="lblCtrl_dummy1" /> <checkBox id="MO" label="MO" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <labelControl id="lblCtrl_dummy2" /> <checkBox id="CA" label="CA" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <labelControl id="lblCtrl_dummy3" /> <checkBox id="MM" label="MM" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <labelControl id="lblCtrl_dummy4" /> <checkBox id="MV" label="MV" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <labelControl id="lblCtrl_dummy5" /> <checkBox id="ES" label="ES" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <labelControl id="lblCtrl_dummy6" /> <checkBox id="TA" label="TA" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <labelControl id="lblCtrl_dummy7" /> <checkBox id="DV" label="DV" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                </group>   
+                    
+                    
+                 <group id="grp_btns7" label="Run Script">
+                    
+                    <button id="btns_btn37" label="RDF" size="normal" onAction="btns_onAction" image="veloxpurple" tag="runfunction_vbautils^RefreshDownloadFiles^"/>
+                      
+				</group>
+				    
+		
+		</tab>
+		<tab id="tab4" label="Velox Settings">
+                               
+               
+               <group id="grp_spinner" label="Window Size">
+                    <editBox id="editBox1" label="width" getText="editBox_getText" sizeString="xxxxxx" maxLength="4" onChange ="editBox_onChange" tag="width"/>
+                    <editBox id="editBox2" label="height" getText="editBox_getText" sizeString="xxxxxx" maxLength="4" onChange ="editBox_onChange" tag="height"/>
+                    <editBox id="editBox3" label="x" getText="editBox_getText" sizeString="xxxxxx" maxLength="4" onChange ="editBox_onChange" tag="x"/>
+                    <editBox id="editBox4" label="y" getText="editBox_getText" sizeString="xxxxxx" maxLength="4" onChange ="editBox_onChange" tag="y"/>
+                    
+               </group>
+              
+               <group id="grp_settings" label="Settings">
+                    <button id="btns_btn38" label="Root Folder"  size="large" onAction="btns_onAction" image="onedrive" tag="pickfolder"/>
+                    <editBox id="editBox5" getText="editBox_getText" sizeString="xxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" maxLength="100" onChange ="editBox_onChange" tag="rootpath"/>
+                    <button id="btns_btn58" label="Data URL"  size="large" onAction="btns_onAction" image="onedrive" tag="pickdataurl"/>
+                    <editBox id="editBox6" getText="editBox_getText" sizeString="xxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" maxLength="100" onChange ="editBox_onChange" tag="dataurl"/>
+               </group>
+
+           </tab>
+               
+ 		<tab id="tab5" label="Velox Admin">
+                               
+               
+                 <group id="grp_btns_admin" label="vbautils Admin">
+                    <button id="btns_btn39" label="Show Tools" size="normal" onAction="btns_onAction" image="I_B1" tag="showtools_vbautils" />
+                    <button id="btns_btn40" label="Hide Tools" size="normal" onAction="btns_onAction" image="I_B1" tag="hidetools_vbautils" />
+                    <button id="btns_btn41" label="Show VBE" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^DisplayVbe^"/>
+                    <button id="btns_btn42" label="Run Rib Editor" size="normal" onAction="btns_onAction" image="I_B1" tag="runapp_ribboneditor^"/>
+                    <button id="btns_btn43" label="Kill Rib Editor" size="normal" onAction="btns_onAction" image="I_B1" tag="killapp_ribboneditor^"/>
+                    <button id="btns_btn44" label="Edit Newsletter" size="normal" onAction="btns_onAction" image="I_B1" tag="runapp_editnewsletter^"/>
+                    <button id="btns_btn45" label="Window On Top" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^SetXLOnTop^"/>
+                    <button id="btns_btn46" label="Window Normal" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^SetXLNormal^"/>
+                    <button id="btns_btn47" label="Reset Location" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^ResizeVBAUtilsWindow^"/>
+                    <button id="btns_btn57" label="Check In Changes" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^CheckInChanges^DV.xlsm"/>
+                    
+				</group>
+                                
+            
+           </tab>
+               
+               
+            <!--Hide Default Tabs-->
+            		    
+            <!--tab idMso="TabHome" visible="false" />
+            <tab idMso="TabFile" visible="false" />
+            <tab idMso="TabInsert" visible="false" />
+            <tab idMso="TabFormulas" visible="false" />
+            <tab idMso="TabData" visible="false" />    
+            <tab idMso="TabReview" visible="false" />
+            <tab idMso="TabView" visible="false" />
+            <tab idMso="TabDeveloper" visible="false" />
+            <tab idMso="TabPageLayoutExcel" visible="false" />
+            <tab idMso="TabAutomate" visible="false" />
+            <tab idMso="HelpTab" visible="false" />
+            <tab idMso="AcrobatTab" visible="false" /-->
+            
+        </tabs>
+       
+	</ribbon>
+</customUI>

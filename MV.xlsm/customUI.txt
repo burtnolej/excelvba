@@ -1,0 +1,99 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="rbx_onLoad">
+	<ribbon startFromScratch="false">
+		<tabs>
+            <tab id="tab4" label="MV Config">
+                <group id="grp_dropdown" label="Config">
+                    <dropDown id="debugflag" label="Debug Flag" image ="I_A1" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="debugflag_On" label="On"  />
+                        <item id="debugflag_Off" label="Off" />
+                    </dropDown>
+                        
+                     <dropDown id="user" label="User" image ="I_B1" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="user__Jon_Butler" label="Jon Butler"  />
+                        <item id="user__Alison_Hood" label="Alison Hood" />
+                        <item id="user__All_Users" label="All Users" />
+                        <item id="user__Chris_Schuler" label="Chris Schuler" />
+                    </dropDown>
+
+                     <dropDown id="agefilter" label="Age Filter" image ="I_C1" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="agefilter__Last_Week" label="Last Week"  />
+                        <item id="agefilter__Last_Month" label="Last Month" />
+                    </dropDown>
+                        
+                      <dropDown id="sort" label="Sort" image ="I_E1" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="sort__Created_On" label="Created On"  />
+                        <item id="sort__Updated_On" label="Updated On" />
+                    </dropDown>
+                        
+                    <dropDown id="latest" label="Latest" image ="I_E2" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="latest__Yes" label="Yes"  />
+                        <item id="latest__No" label="No" />
+                    </dropDown>
+                        
+                    <dropDown id="subitemparent" label="Show Parent" image ="I_E3" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="subitemparent__Yes" label="Yes"  />
+                        <item id="subitemparent__No" label="No" />
+                    </dropDown>
+       
+                    <dropDown id="refreshupdates" label="Refresh Updates" image ="I_D1" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="refreshupdates__Yes" label="Yes"  />
+                        <item id="refreshupdates__no" label="No" />
+                    </dropDown>   
+                        
+                     <dropDown id="refreshfolders" label="Refresh Folders" image ="I_D2" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="refreshfolders__Yes" label="Yes"  />
+                        <item id="refreshfolders__No" label="No" />
+                    </dropDown>               
+  
+                     <dropDown id="savereport" label="Save Report" image ="I_D3" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="savereport__Yes" label="Yes"  />
+                        <item id="savereport__No" label="No" />
+                    </dropDown>   
+                        
+                     <dropDown id="openreport" label="Open Report" image ="I_D4" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="openreport__Yes" label="Yes"  />
+                        <item id="openreport__No" label="No" />
+                    </dropDown>       
+                        
+                     <dropDown id="batchupdate" label="Batch Update" image ="I_D5" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="batchupdate__Yes" label="Yes"  />
+                        <item id="batchupdate__No" label="No" />
+                    </dropDown>           
+                                                     
+                </group>
+                    
+                    
+                    
+                <group id="grp_chkbox" label="Status Filter">  
+                    <checkBox id="statusfilter__Working" label="Working" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <checkBox id="statusfilter__Not_Started" label="Not Started" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <checkBox id="statusfilter__Done" label="Done" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                    <checkBox id="statusfilter__Completed" label="Completed" onAction="chkBox_onAction" getPressed = "fncGetPressed"/>
+                </group>   
+                <group id="grp_btns" label="Actions">
+                    <button id="action__Persist_Config" label="Persist" size="normal" onAction="btns_onAction" image="I_A1" tag="runfunction_MV^PersistConfig^" />
+                    <button id="action__Rehydrate_Config" label="Rehydrate" size="normal" onAction="btns_onAction" image="I_A6" tag="runfunction_MV^RehydrateConfig^" />
+                    <button id="action__Events_On" label="Events On" size="normal" onAction="btns_onAction" image="I_B4" tag="runfunction_vbautils^EventsOn^" />
+                    <button id="action__Generate" label="Generate" size="normal" onAction="btns_onAction" image="I_C2" tag="runfunction_MV^GenerateReport^" />
+                    <button id="action__Checkin" label="CheckIn" size="normal" onAction="btns_onAction" image="I_D5" tag="runfunction_vbautils^TestCheckInChanges^" />
+                    <button id="action__Events_Off" label="Events Off" size="normal" onAction="btns_onAction" image="I_E3" tag="runfunction_vbautils^EventsOff^" />
+                </group>  
+                    
+               <group id="grp_cfg" label="Config">
+                    <editBox id="config__Working_Dir" label="Working Dir" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="editBox_onChange"/>
+                    <editBox id="config__Max_Monday_Items" label="Max Items" getText="editBox_getText" sizeString="xxxxxxxxxxx" maxLength="8" onChange ="editBox_onChange"/>
+                    <editBox id="config__Input_Date" label="Input Date" getText="editBox_getText" sizeString="xxxxxxxxxxx" maxLength="8" onChange ="editBox_onChange"/>
+               </group>
+                   
+                <group id="grp_search" label="Search">
+                    <editBox id="search__All" label="All Text Fields" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="editBox_onChange"/>
+                    <editBox id="search__Item_Names" label="Item Names" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="editBox_onChange"/>
+                    <editBox id="search__Sub_Item_Names" label="Sub Item Names" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="editBox_onChange"/>
+                    <button id="search__Do" label="Search" size="normal" onAction="btns_onAction" image="I_F3" tag="runfunction_MV^Search^" />
+                    <button id="search__Clear" label="Clear Search" size="normal" onAction="btns_onAction" image="I_F2" tag="runfunction_MV^ClearSearch^" />
+               </group>
+                   
+             </tab>  
+        </tabs>
+    </ribbon>
+</customUI>

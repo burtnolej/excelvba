@@ -14,7 +14,7 @@ Dim oFSO As FileSystemObject, oFile As File
     GetFilePath = left(fullpath, Len(fullpath) - Len(oFSO.GetFileName(fullpath)))
 End Function
 
-Sub TestCheckInChanges()
+Sub TestCheckInChanges(Optional param As String = "")
     CheckInChanges ActiveWorkbook.Name
 End Sub
 

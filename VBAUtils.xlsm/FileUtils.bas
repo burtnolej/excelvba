@@ -32,6 +32,79 @@ Attribute VB_Name = "FileUtils"
 'Public Function WriteFileObject(oFile As Object, sText As String)
 'Public Function FilesAreSame(ByVal fFirst As String, ByVal fSecond As String) As Boolean
 
+
+Sub RehydrateRangeFromFile(bookname As String, sheetname As String, rangename As String, filepath As String, rangeLength As Long)
+Dim oFile As Object
+Dim objFSO As Object
+Dim iLineNum As Long
+Dim fileArray() As String
+Dim lineSplit() As String
+Dim targetRange As Range
+
+    ReDim fileArray(1 To rangeLength, 1 To 3)
+    
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    Set oFile = objFSO.OpenTextFile(filepath, 1)
+    
+    Set targetRange = Workbooks(bookname).Sheets(sheetname).Range(rangename)
+    iLineNum = 1
+    Do While oFile.AtEndOfStream = False
+        lineSplit = Split(oFile.ReadLine, "^")
+        fileArray(iLineNum, 1) = lineSplit(0)
+        fileArray(iLineNum, 2) = lineSplit(1)
+        fileArray(iLineNum, 3) = lineSplit(2)
+        iLineNum = iLineNum + 1
+    Loop
+    oFile.Close
+    
+    targetRange = fileArray
+endsub:
+    Set oFile = Nothing
+    Set objFSO = Nothing
+    Set targetRange = Nothing
+    Erase fileArray
+End Sub
+
+
+Sub PersistRangeToFile(bookname As String, sheetname As String, rangename As String, filepath As String)
+Dim rangeRow As Range
+Dim writeString As String
+Dim oFile As Object
+Dim objFSO As Object
+Dim sourceRange As Range
+
+    Set sourceRange = Workbooks(bookname).Sheets(sheetname).Range(rangename)
+
+    For Each rangeRow In sourceRange.Rows
+        fieldTypeString = rangeRow.Columns(1)
+        fieldValueString = rangeRow.Columns(2)
+        
+        If writeString = "" Then
+            writeString = fieldTypeString & "^" & fieldValueString & "^" & fieldTypeString & "val"
+        Else
+            If fieldTypeString <> "" Then
+                writeString = writeString + vbNewLine + fieldTypeString & "^" & fieldValueString & "^" & fieldTypeString & "val"
+            Else
+                GoTo persist
+            End If
+        End If
+    Next rangeRow
+
+persist:
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    Set oFile = objFSO.CreateTextFile(filepath)
+    oFile.Write writeString
+    oFile.Close
+
+endsub:
+    Set oFile = Nothing
+    Set objFSO = Nothing
+    Set sourceRange = Nothing
+    
+End Sub
+
+
+
 Public Function GetFolderFiles(folderDir As String, folderSheet As Worksheet)
  
 Dim oFSO As Object, oFolders As Object, oFile As Object
@@ -325,14 +398,13 @@ Dim oFile As Object
 Dim sArray As String, sFuncName As String
 
 setup:
-    sFuncName = C_MODULE_NAME & "." & "WriteArray2File"
-    ' ASSERTIONS ----------------------------------------
+
     If FileExists(sFilePath) = False Then
         err.Raise ErrorMsgType.BAD_ARGUMENT, Description:="file does not exist"
     Else
         FuncLogIt sFuncName, "file [" & sFilePath & "] does not exist", C_MODULE_NAME, LogMsgType.Info
     End If
-    ' END ASSERTIONS -------------------------------------
+
 
     sArray = Array2String(vSource, sDelim:=vbNewLine)
     Set oFile = OpenFile(sFilePath, 2)

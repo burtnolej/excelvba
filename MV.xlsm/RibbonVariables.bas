@@ -11,18 +11,28 @@ Private debugflagval As String
 Private userval As String
 Private agefilterval As String
 Private sortval As String
-Private workingdirval As String
-Private maxmondayitemsval As String
+Private config__working_dirval As String
+Private config__max_monday_itemsval As String
+Private config__input_dateval As String
+
+Private batchupdateval As String
 
 Private refreshfoldersval As String
 Private refreshupdatesval As String
 Private subitemparentval As String
 Private latestval As String
+Private openreportval As String
+Private savereportval As String
 
-Private statusfiltercompletedval As String
-Private statusfilterdoneval As String
-Private statusfilterworkingval As String
-Private statusfilternotstartedval As String
+Private statusfilter__completedval As String
+Private statusfilter__doneval As String
+Private statusfilter__workingval As String
+Private statusfilter__not_startedval As String
+
+
+Private search__subitem_namesval As String
+Private search__item_namesval As String
+Private search__allval As String
 
 Private bookname As String
 Private sheetname As String
@@ -51,6 +61,90 @@ Property Let RibbonPointer(value As IRibbonUI)
     Debug.Print "LetRibbonPointer", ObjPtr(value)
     
     LetVariableSheetValue "ribbonpointerval", ObjPtr(value)
+End Property
+
+' Batch Update  ''''''''''''''''''''''''''''''
+Property Get BatchUpdate() As String
+    Debug.Print "BatchUpdate"
+    If batchupdateval = "" Then
+        BatchUpdate = GetVariableSheetValue("batchupdateval")
+    Else
+        BatchUpdate = batchupdateval
+    End If
+End Property
+Property Let BatchUpdate(value As String)
+    Debug.Print "LetBatchUpdate", value
+    LetVariableSheetValue "batchupdateval", value
+End Property
+
+' Search All  ''''''''''''''''''''''''''''''
+Property Get Search__All() As String
+    Debug.Print "Search__All"
+    If search__allval = "" Then
+        Search__All = GetVariableSheetValue("search__allval")
+    Else
+        Search__All = search__allval
+    End If
+End Property
+Property Let Search__All(value As String)
+    Debug.Print "LetSearch__All", value
+    LetVariableSheetValue "search__allval", value
+End Property
+
+' Search Item Names  ''''''''''''''''''''''''''''''
+Property Get Search__Item_Names() As String
+    Debug.Print "Search__Item_Names"
+    If search__item_namesval = "" Then
+        Search__Item_Names = GetVariableSheetValue("search__item_namesval")
+    Else
+        Search__Item_Names = search__item_namesval
+    End If
+End Property
+Property Let Search__Item_Names(value As String)
+    Debug.Print "LetSearch__Item_Names", value
+    LetVariableSheetValue "search__item_namesval", value
+End Property
+
+' Search Sub Item Names  ''''''''''''''''''''''''''''''
+Property Get Search__Sub_Item_Names() As String
+    Debug.Print "Search__Sub_Item_Names"
+    If search__sub_item_namesval = "" Then
+        Search__Sub_Item_Names = GetVariableSheetValue("search__sub_item_namesval")
+    Else
+        Search__Sub_Item_Names = search__sub_item_namesval
+    End If
+End Property
+Property Let Search__Sub_Item_Names(value As String)
+    Debug.Print "LetSearch__Sub_Item_Names", value
+    LetVariableSheetValue "search__sub_item_namesval", value
+End Property
+
+' Open Report  ''''''''''''''''''''''''''''''
+Property Get OpenReport() As String
+    Debug.Print "OpenReport"
+    If openreportval = "" Then
+        OpenReport = GetVariableSheetValue("openreportval")
+    Else
+        OpenReport = openreportval
+    End If
+End Property
+Property Let OpenReport(value As String)
+    Debug.Print "LetOpenReport", value
+    LetVariableSheetValue "openreportval", value
+End Property
+
+' Save Report  ''''''''''''''''''''''''''''''
+Property Get SaveReport() As String
+    Debug.Print "SaveReport"
+    If savereportval = "" Then
+        SaveReport = GetVariableSheetValue("savereportval")
+    Else
+        SaveReport = savereportval
+    End If
+End Property
+Property Let SaveReport(value As String)
+    Debug.Print "LetSaveReport", value
+    LetVariableSheetValue "savereportval", value
 End Property
 
 
@@ -110,92 +204,109 @@ Property Let SubItemParent(value As String)
     LetVariableSheetValue "subitemparentval", value
 End Property
 
-
-' Working Directory  ''''''''''''''''''''''''''''''
-Property Get WorkingDir() As String
-    Debug.Print "WorkingDir"
-    If workingdirval = "" Then
-        WorkingDir = GetVariableSheetValue("workingdirval")
+' Input Date  ''''''''''''''''''''''''''''''
+Property Get Config__Input_Date() As String
+    Debug.Print "config__Working_Dirval"
+    todaysdate = Application.Run("vbautils.xlsm!GetNow", "yyyymmdd")
+    
+    If config__input_dateval = "" Then
+        Config__Input_Date = todaysdate
+        'GetVariableSheetValue("config__Input_Dateval")
     Else
-        WorkingDir = workingdirval
+        Config__Input_Date = config__input_dateval
     End If
 End Property
-Property Let WorkingDir(value As String)
-    Debug.Print "LetWorkingDir", value
-    LetVariableSheetValue "workingdirval", value
+Property Let Config__Input_Date(value As String)
+    Debug.Print "LetConfig__Input_Date", value
+    LetVariableSheetValue "config__Input_Dateval", value
+End Property
+
+
+' Working Directory  ''''''''''''''''''''''''''''''
+Property Get Config__Working_Dir() As String
+    Debug.Print "config__Working_Dirval"
+    If config__working_dirval = "" Then
+        Config__Working_Dir = GetVariableSheetValue("config__Working_Dirval")
+    Else
+        Config__Working_Dir = config__working_dirval
+    End If
+End Property
+Property Let Config__Working_Dir(value As String)
+    Debug.Print "LetConfig__Working_Dir", value
+    LetVariableSheetValue "config__Working_Dirval", value
 End Property
 
 ' Max Monday Items  ''''''''''''''''''''''''''''''
-Property Get MaxMondayItems() As String
-    Debug.Print "MaxMondayItems"
-    If maxmondayitemsval = "" Then
-        MaxMondayItems = GetVariableSheetValue("maxmondayitemsval")
+Property Get Config__Max_Monday_Items() As String
+    Debug.Print "Config__Max_Monday_Items"
+    If config__max_monday_itemsval = "" Then
+        Config__Max_Monday_Items = GetVariableSheetValue("config__Max_Monday_Itemsval")
     Else
-        MaxMondayItems = maxmondayitemsval
+        Config__Max_Monday_Items = config__max_monday_itemsval
     End If
 End Property
-Property Let MaxMondayItems(value As String)
-    Debug.Print "LetMaxMondayItems", value
-    LetVariableSheetValue "maxmondayitemsval", value
+Property Let Config__Max_Monday_Items(value As String)
+    Debug.Print "LetConfig__Max_Monday_Items", value
+    LetVariableSheetValue "config__Max_Monday_Itemsval", value
 End Property
 
 ' Status Filter Completed  ''''''''''''''''''''''''''''''
-Property Get StatusFilterCompleted() As String
-    Debug.Print "StatusFilterCompleted"
-    If statusfiltercompletedval = "" Then
-        StatusFilterCompleted = GetVariableSheetValue("statusfiltercompletedval")
+Property Get StatusFilter__Completed() As String
+    Debug.Print "StatusFilter__Completed"
+    If statusfilter__completedval = "" Then
+        StatusFilter__Completed = GetVariableSheetValue("statusfilter__Completedval")
     Else
-        StatusFilterCompleted = statusfiltercompletedval
+        StatusFilter__Completed = statusfilter__completedval
     End If
 End Property
-Property Let StatusFilterCompleted(value As String)
-    Debug.Print "LetStatusFilterCompleted", value
-    LetVariableSheetValue "statusfiltercompletedval", value
+Property Let StatusFilter__Completed(value As String)
+    Debug.Print "LetStatusFilter__Completed", value
+    LetVariableSheetValue "statusfilter__Completedval", value
 End Property
 
 
 ' Status Filter Done ''''''''''''''''''''''''''''''
-Property Get StatusFilterDone() As String
-    Debug.Print "StatusFilterDone"
-    If statusfiltercompletedval = "" Then
-        StatusFilterDone = GetVariableSheetValue("statusfilterdoneval")
+Property Get StatusFilter__Done() As String
+    Debug.Print "StatusFilter__Done"
+    If statusfilter__doneval = "" Then
+        StatusFilter__Done = GetVariableSheetValue("statusfilter__Doneval")
     Else
-        StatusFilterDone = statusfilterdoneval
+        StatusFilter__Done = statusfilter__doneval
     End If
 End Property
-Property Let StatusFilterDone(value As String)
-    Debug.Print "LetStatusFilterDone", value
-    LetVariableSheetValue "statusfilterdoneval", value
+Property Let StatusFilter__Done(value As String)
+    Debug.Print "LetStatusFilter__Done", value
+    LetVariableSheetValue "statusfilter__Doneval", value
 End Property
 
 
 ' Status Filter Working ''''''''''''''''''''''''''''''
-Property Get StatusFilterWorking() As String
-    Debug.Print "StatusFilterWorking"
-    If statusfilterworkingval = "" Then
-        StatusFilterWorking = GetVariableSheetValue("statusfilterworkingval")
+Property Get StatusFilter__Working() As String
+    Debug.Print "StatusFilter__Working"
+    If statusfilter__workingval = "" Then
+        StatusFilter__Working = GetVariableSheetValue("statusfilter__Workingval")
     Else
-        StatusFilterWorking = statusfilterworkingval
+        StatusFilter__Working = statusfilter__workingval
     End If
 End Property
-Property Let StatusFilterWorking(value As String)
-    Debug.Print "LetStatusFilterWorking", value
-    LetVariableSheetValue "statusfilterworkingval", value
+Property Let StatusFilter__Working(value As String)
+    Debug.Print "LetStatusFilter__Working", value
+    LetVariableSheetValue "statusfilter__Workingval", value
 End Property
 
 
 ' Status Filter Not Started ''''''''''''''''''''''''''''''
-Property Get StatusFilterNotStarted() As String
-    Debug.Print "StatusFilterWorking"
-    If statusfilternotstartedval = "" Then
-        StatusFilterNotStarted = GetVariableSheetValue("statusfilternotstartedval")
+Property Get StatusFilter__Not_Started() As String
+    Debug.Print "StatusFilter__Not_Started"
+    If statusfilter__not_startedval = "" Then
+        StatusFilter__Not_Started = GetVariableSheetValue("statusfilter__Not_Startedval")
     Else
-        StatusFilterNotStarted = statusfilternotstartedval
+        StatusFilter__Not_Started = statusfilter__not_startedval
     End If
 End Property
-Property Let StatusFilterNotStarted(value As String)
-    Debug.Print "LetStatusFilterNotStarted", value
-    LetVariableSheetValue "statusfilternotstartedval", value
+Property Let StatusFilter__Not_Started(value As String)
+    Debug.Print "LetStatusFilter__Not_Started", value
+    LetVariableSheetValue "statusfilter__Not_Startedval", value
 End Property
 
 ' Debug Flag ''''''''''''''''''''''''''''''

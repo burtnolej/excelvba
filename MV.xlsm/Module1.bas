@@ -582,7 +582,12 @@ exitsub:
      Set colSortRange = Nothing
 End Sub
 
-
+Function GetConfig(RV, configName) As String
+    GetConfig = CallByName(RV, configName, VbGet)
+    On Error Resume Next
+    GetConfig = Replace(Split(GetConfig, "__")(1), "_", " ")
+    On Error GoTo 0
+End Function
 Public Sub GenerateReport(Optional param As String = "")
 Dim dirnameString As String, fileNameSuffix As String, parentDirnameString As String, datafileDirname As String
 Dim targetSheetName As String, targetFileName As String, dataFile As String, targetDirName As String, inputUser As String, boardName As String
@@ -596,9 +601,11 @@ Dim offsetFactor As Integer, i As Integer, numRows As Integer, sectionFolderStar
 Dim columnLink As Range, startItemsCell As Range
 Dim fs As Object
 Dim boardIdArray As Variant
+Dim RV As RibbonVariables
 
     'On Error GoTo err
-    
+    Set RV = New RibbonVariables
+
     SetEventsOff
     
     offsetFactor = 0
@@ -616,10 +623,13 @@ Dim boardIdArray As Variant
 
     Set codeWorkbook = ThisWorkbook
         
-    inputUserName = ActiveSheet.Range("INPUT_USER")
-    inputDate = ActiveSheet.Range("INPUT_DATE")
+    'inputUserName = ActiveSheet.Range("INPUT_USER")
+    'inputDate = ActiveSheet.Range("INPUT_DATE")
+    'inputGDrive = ActiveSheet.Range("SELECTED_GDRIVE")
     
-    inputGDrive = ActiveSheet.Range("SELECTED_GDRIVE")
+    inputUserName = GetConfig(RV, "User")
+    inputDate = GetConfig(RV, "Config__Input_Date")
+    inputGDrive = GetConfig(RV, "Config__Working_Dir")
     
     If DirExist(inputGDrive) = False Then
         MsgBox "Cannot find GDrive " & inputGDrive
@@ -845,6 +855,7 @@ exitsub:
     Set startItemsCell = Nothing
     Set tmpWorkbook = Nothing
     Set tmpWorksheet = Nothing
+    Set RV = Nothing
     
     If inputOpenFlag = True Then
         Workbooks.Open targetFileName, UpdateLinks:=0
