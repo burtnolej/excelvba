@@ -636,33 +636,48 @@ Dim RV As RibbonVariables
         GoTo err
     End If
     
-    inputFolder = ActiveSheet.Range("SELECTED_INPUT_FOLDER")
+    'inputFolder = ActiveSheet.Range("SELECTED_INPUT_FOLDER")
 
-    If DirExist(inputFolder) = False Then
-        MsgBox "Cannot find Monday folder" & inputFolder
-        GoTo err
-    End If
+    'If DirExist(inputFolder) = False Then
+    '    MsgBox "Cannot find Monday folder" & inputFolder
+    '    GoTo err
+    'End If
 
     outputFolder = ActiveSheet.Range("SELECTED_OUTPUT_FOLDER")
+    outputFolder = GetConfig(RV, "Config__Working_Dir")
     
     If DirExist(outputFolder) = False Then
-        MsgBox "Cannot find " & inputFolder
+        MsgBox "Cannot find " & outputFolder
         GoTo err
     End If
     
-    inputOpenFlag = ActiveSheet.Range("INPUT_OPENFLAG")
-    refreshUpdatesFlag = ActiveSheet.Range("REFRESH_UPDATE_FLAG")
-    refreshFolderFlag = ActiveSheet.Range("REFRESH_FOLDER_FLAG")
-    outputFolderSheet = ActiveSheet.Range("OUTPUT_FOLDER_SHEET")
-    mondayPrefix = ActiveSheet.Range("MONDAY_PREFIX")
-    mondaySuffix = ActiveSheet.Range("MONDAY_SUFFIX")
-    subitemParentFlag = ActiveSheet.Range("SUBITEM_PARENT_FLAG")
-    statusFilterFlag = ActiveSheet.Range("STATUS_FILTER_FLAG")
-    inputUser = ActiveSheet.Range("INPUT_USER")
-    templateFile = ActiveSheet.Range("TEMPLATE_FILE")
-    latestFlag = ActiveSheet.Range("LATEST_FLAG")
     
-
+    'inputOpenFlag = ActiveSheet.Range("INPUT_OPENFLAG")
+    'refreshUpdatesFlag = ActiveSheet.Range("REFRESH_UPDATE_FLAG")
+    'refreshFolderFlag = ActiveSheet.Range("REFRESH_FOLDER_FLAG")
+    'outputFolderSheet = ActiveSheet.Range("OUTPUT_FOLDER_SHEET")
+    'mondayPrefix = ActiveSheet.Range("MONDAY_PREFIX")
+    'mondaySuffix = ActiveSheet.Range("MONDAY_SUFFIX")
+    'subitemParentFlag = ActiveSheet.Range("SUBITEM_PARENT_FLAG")
+    'statusFilterFlag = ActiveSheet.Range("STATUS_FILTER_FLAG")
+    'inputUser = ActiveSheet.Range("INPUT_USER")
+    'templateFile = ActiveSheet.Range("TEMPLATE_FILE")
+    'latestFlag = ActiveSheet.Range("LATEST_FLAG")
+    
+    inputOpenFlag = GetConfig(RV, "OpenReport")
+    refreshUpdatesFlag = GetConfig(RV, "RefreshUpdates")
+    refreshFolderFlag = GetConfig(RV, "RefreshFolders")
+    outputFolderSheet = GetConfig(RV, "Config__Output_Folder_Sheet")
+    mondayPrefix = GetConfig(RV, "Config__Monday_Email_Prefix")
+    mondaySuffix = GetConfig(RV, "Config__Monday_Email_Suffix")
+    subitemParentFlag = GetConfig(RV, "SubItemParent")
+    
+    inputUser = GetConfig(RV, "User")
+    latestFlag = GetConfig(RV, "Latest")
+    
+    statusFilterFlag = GetConfig(RV, "Config__Status_Filter")
+    templateFile = GetConfig(RV, "Config__Template_File")
+    
     ' build input absolute path and filename
     parentDirnameString = inputGDrive
     'datafileDirname = fs.BuildPath(parentDirnameString, "datafiles")

@@ -11,9 +11,16 @@ Private debugflagval As String
 Private userval As String
 Private agefilterval As String
 Private sortval As String
+
 Private config__working_dirval As String
 Private config__max_monday_itemsval As String
 Private config__input_dateval As String
+Private Config__monday_email_suffixval As String
+Private config__monday_email_prefixval As String
+Private config__output_folder_sheetval As String
+Private config__template_fileval As String
+Private config__status_filterval As String
+
 
 Private batchupdateval As String
 
@@ -248,6 +255,91 @@ End Property
 Property Let Config__Max_Monday_Items(value As String)
     Debug.Print "LetConfig__Max_Monday_Items", value
     LetVariableSheetValue "config__Max_Monday_Itemsval", value
+End Property
+
+
+' Status Filter String  ''''''''''''''''''''''''''''''
+Property Get Config__Status_Filter() As String
+Dim tmpstring As String
+Dim filterStatusArray As Variant
+Dim filterValue As String
+
+    filterStatusArray = Array("Completed", "Done", "Not_Started", "Working")
+    For i = 0 To UBound(filterStatusArray)
+        filterValue = CallByName(Me, "StatusFilter__" + filterStatusArray(i), VbGet)
+        If filterValue = "True" Then
+            If tmpstring = "" Then
+                tmpstring = filterStatusArray(i)
+            Else
+                tmpstring = tmpstring + "," + filterStatusArray(i)
+            End If
+        End If
+    Next i
+    Debug.Print "Config__Status_Filter"
+
+    Config__Status_Filter = tmpstring
+
+End Property
+Property Let Config__Status_Filter(value As String)
+    Debug.Print "LetConfig__Status_Filter", value
+    LetVariableSheetValue "config__status_filterval", value
+End Property
+
+
+' Template File  ''''''''''''''''''''''''''''''
+Property Get Config__Template_File() As String
+    Debug.Print "Config__Template_File"
+    If config__template_fileval = "" Then
+        Config__Template_File = GetVariableSheetValue("config__template_fileval")
+    Else
+        Config__Template_File = config__template_fileval
+    End If
+End Property
+Property Let Config__Template_File(value As String)
+    Debug.Print "LetConfig__Template_File", value
+    LetVariableSheetValue "config__template_fileval", value
+End Property
+
+' Monday Email Suffix  ''''''''''''''''''''''''''''''
+Property Get Config__Monday_Email_Suffix() As String
+    Debug.Print "Config__Monday_Email_Suffix"
+    If Config__monday_email_suffixval = "" Then
+        Config__Monday_Email_Suffix = GetVariableSheetValue("config__monday_email_suffixval")
+    Else
+        Config__Monday_Email_Suffix = Config__monday_email_suffixval
+    End If
+End Property
+Property Let Config__Monday_Email_Suffix(value As String)
+    Debug.Print "LetConfig__Monday_Email_Suffix", value
+    LetVariableSheetValue "config__monday_email_suffixval", value
+End Property
+
+' Monday Email Prefix  ''''''''''''''''''''''''''''''
+Property Get Config__Monday_Email_Prefix() As String
+    Debug.Print "Config__Monday_Email_Prefix"
+    If config__monday_email_prefixval = "" Then
+        Config__Monday_Email_Prefix = GetVariableSheetValue("config__monday_email_prefixval")
+    Else
+        Config__Monday_Email_Prefix = config__monday_email_prefixval
+    End If
+End Property
+Property Let Config__Monday_Email_Prefix(value As String)
+    Debug.Print "LetConfig__Monday_Email_Prefix", value
+    LetVariableSheetValue "config__monday_email_prefixval", value
+End Property
+
+' Output Folder Sheet  ''''''''''''''''''''''''''''''
+Property Get Config__Output_Folder_Sheet() As String
+    Debug.Print "Config__Output_Folder_Sheet"
+    If config__output_folder_sheetval = "" Then
+        Config__Output_Folder_Sheet = GetVariableSheetValue("config__output_folder_sheetval")
+    Else
+        Config__Output_Folder_Sheet = config__output_folder_sheetval
+    End If
+End Property
+Property Let Config__Output_Folder_Sheet(value As String)
+    Debug.Print "LetConfig__Output_Folder_Sheet", value
+    LetVariableSheetValue "config__output_folder_sheetval", value
 End Property
 
 ' Status Filter Completed  ''''''''''''''''''''''''''''''

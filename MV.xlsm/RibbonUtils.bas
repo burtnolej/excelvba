@@ -79,7 +79,9 @@ Sub chkBox_onAction(control As IRibbonControl, pressed As Boolean)
     Debug.Print "chkBox_onAction"
     Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, CStr(pressed)
+    RV.RibbonPointer.InvalidateControl "config__Status_Filter"
     Set RV = Nothing
+    
 End Sub
 
 'Callback for workingdir getText
@@ -124,6 +126,7 @@ Dim ribbonpointerval As IRibbonUI
     ribbonpointerval.InvalidateControl "sort"
     ribbonpointerval.InvalidateControl "workingdir"
     ribbonpointerval.InvalidateControl "maxmondayitems"
+    ribbonpointerval.InvalidateControl "config__Status_Filter"
     Set RV = Nothing
     Set ribbonpointerval = Nothing
 End Sub
