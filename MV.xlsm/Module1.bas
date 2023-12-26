@@ -615,6 +615,7 @@ Dim RV As RibbonVariables
     mondayPrefix = GetConfig(RV, "Config__Monday_Email_Prefix")
     mondaySuffix = GetConfig(RV, "Config__Monday_Email_Suffix")
     subitemParentFlag = GetConfig(RV, "SubItemParent")
+    userFilterFlag = GetConfig(RV, "UserFilter")
     
     inputUser = GetConfig(RV, "User")
     latestFlag = GetConfig(RV, "Latest")
@@ -751,13 +752,18 @@ Dim RV As RibbonVariables
     AddBoardNameColumn boardWorksheet, offsetFactor + 1, mondayPrefix, mondaySuffix
     
     Debug.Print Now() & "Applying sorts"
-    'ApplySort boardWorksheet, "COLUMN_UPDATED_ON"
     sortValue = "COLUMN_" & Split(RV.Sort, "__")(1)
     ApplySort boardWorksheet, sortValue
     
     Debug.Print Now() & "Applying filters"
     statusFilterFlag = Replace(statusFilterFlag, "_", " ")
     ApplyFilter boardWorksheet, "COLUMN_STATUS", Split(statusFilterFlag, ",")
+    If inputUserName <> "All Users" Then
+        If userFilterFlag = "contains" Then
+            inputUserName = "*" & inputUserName & "*"
+        End If
+        ApplyFilter boardWorksheet, "COLUMN_OWNER", Array(inputUserName)
+    End If
     
     If subitemParentFlag = "No" Then
         ApplyFilter boardWorksheet, "COLUMN_TYPE", Array("item", "subitem")

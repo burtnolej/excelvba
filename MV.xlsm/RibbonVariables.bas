@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Private debugflagval As String
 Private userval As String
+Private userfilterval As String
 Private agefilterval As String
 Private sortval As String
 
@@ -431,6 +432,22 @@ End Property
 Property Let User(value As String)
     Debug.Print "LetUser", value
     LetVariableSheetValue "userval", value
+    
+End Property
+
+' User Filter''''''''''''''''''''''''''''''
+Property Get UserFilter() As String
+    Debug.Print "GetUserFilter"
+    If userval = "" Then
+        UserFilter = GetVariableSheetValue("userfilterval")
+    Else
+        UserFilter = userfilterval
+    End If
+    
+End Property
+Property Let UserFilter(value As String)
+    Debug.Print "LetUserFilter", value
+    LetVariableSheetValue "userfilterval", value
     
 End Property
 
