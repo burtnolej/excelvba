@@ -625,11 +625,7 @@ Dim RV As RibbonVariables
     Set fs = CreateObject("Scripting.FileSystemObject")
 
     Set codeWorkbook = ThisWorkbook
-        
-    'inputUserName = ActiveSheet.Range("INPUT_USER")
-    'inputDate = ActiveSheet.Range("INPUT_DATE")
-    'inputGDrive = ActiveSheet.Range("SELECTED_GDRIVE")
-    
+
     inputUserName = GetConfig(RV, "User")
     inputDate = GetConfig(RV, "Config__Input_Date")
     inputGDrive = GetConfig(RV, "Config__Working_Dir")
@@ -638,15 +634,7 @@ Dim RV As RibbonVariables
         MsgBox "Cannot find GDrive " & inputGDrive
         GoTo err
     End If
-    
-    'inputFolder = ActiveSheet.Range("SELECTED_INPUT_FOLDER")
 
-    'If DirExist(inputFolder) = False Then
-    '    MsgBox "Cannot find Monday folder" & inputFolder
-    '    GoTo err
-    'End If
-
-    'outputFolder = ActiveSheet.Range("SELECTED_OUTPUT_FOLDER")
     outputFolder = GetConfig(RV, "Config__Working_Dir")
     inputFolder = GetConfig(RV, "Config__Working_Dir")
     
@@ -654,19 +642,6 @@ Dim RV As RibbonVariables
         MsgBox "Cannot find " & outputFolder
         GoTo err
     End If
-    
-    
-    'inputOpenFlag = ActiveSheet.Range("INPUT_OPENFLAG")
-    'refreshUpdatesFlag = ActiveSheet.Range("REFRESH_UPDATE_FLAG")
-    'refreshFolderFlag = ActiveSheet.Range("REFRESH_FOLDER_FLAG")
-    'outputFolderSheet = ActiveSheet.Range("OUTPUT_FOLDER_SHEET")
-    'mondayPrefix = ActiveSheet.Range("MONDAY_PREFIX")
-    'mondaySuffix = ActiveSheet.Range("MONDAY_SUFFIX")
-    'subitemParentFlag = ActiveSheet.Range("SUBITEM_PARENT_FLAG")
-    'statusFilterFlag = ActiveSheet.Range("STATUS_FILTER_FLAG")
-    'inputUser = ActiveSheet.Range("INPUT_USER")
-    'templateFile = ActiveSheet.Range("TEMPLATE_FILE")
-    'latestFlag = ActiveSheet.Range("LATEST_FLAG")
     
     inputOpenFlag = GetConfig(RV, "OpenReport")
     refreshUpdatesFlag = GetConfig(RV, "RefreshUpdates")
@@ -684,8 +659,6 @@ Dim RV As RibbonVariables
     
     ' build input absolute path and filename
     parentDirnameString = inputGDrive
-    'datafileDirname = fs.BuildPath(parentDirnameString, "datafiles")
-    'datafileDirname = fs.BuildPath(datafileDirname, inputDate)
     datafileDirname = parentDirnameString
     targetDirName = outputFolder
     targetFileName = fs.BuildPath(targetDirName, viewerFileNameSuffix & "_" & inputDate & "_" & Replace(inputUserName, " ", "") & fileExtension)
@@ -703,7 +676,6 @@ Dim RV As RibbonVariables
         targetUpdatesSheet.Name = "updates"
         targetUpdatesSheet.Visible = xlSheetHidden
     Else:
-        'Set summaryWorkbook = Workbooks.Open("E:\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools\MondayViewUpdate_Template.xlsm")
         Set summaryWorkbook = Workbooks.Open(templateFile)
         Set targetUpdatesSheet = summaryWorkbook.Sheets("updates")
     End If
@@ -721,7 +693,7 @@ Dim RV As RibbonVariables
     End If
     
     Debug.Print Now() & " GetUpdates " & boardName & ".txt"
-    If refreshUpdatesFlag = True Then
+    If refreshUpdatesFlag = "Yes" Then
         GetUpdates datafileDirname, sourceUpdatesSheet
     End If
     
@@ -734,15 +706,8 @@ Dim RV As RibbonVariables
     For i = 0 To UBound(boardIdArray)
     
         boardName = boardIdArray(i)
-    
-        Debug.Print Now() & " HTTPDownloadFile " & boardName & ".txt"
         
         dataurl = Workbooks("MV.xlsm").Sheets("Reference").Range("dataurl").value
-        
-        'Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
-        '            "http://172.22.237.138/datafiles/Monday/" & boardName & ".txt", _
-        '            codeWorkbook, _
-        '            "A", "REFERENCE", 0, "start-of-day", boardName, False
         
         Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
                     dataurl + "/Monday/" & boardName & ".txt", _
@@ -764,7 +729,6 @@ Dim RV As RibbonVariables
         offsetFactor = offsetFactor + Selection.Rows.Count
 
         Application.CutCopyMode = False
-        'tmpWorkbook.Close
     Next i
 
     ' copy from temp and paste into main output report, then delete the temp sheet
@@ -825,16 +789,11 @@ Dim RV As RibbonVariables
     ApplySort boardWorksheet, "COLUMN_UPDATED_ON"
     
     Debug.Print Now() & "Applying filters"
-    'ApplyFilter boardWorksheet, "COLUMN_OWNER", "Jon Butler"
-    'ApplyFilter boardWorksheet, "COLUMN_OWNER", inputUser
-    'ApplyFilter boardWorksheet, "COLUMN_STATUS", Array("Working", "Not Started")
     ApplyFilter boardWorksheet, "COLUMN_STATUS", Split(statusFilterFlag, ",")
     
-    If subitemParentFlag = False Then
+    If subitemParentFlag = "No" Then
         ApplyFilter boardWorksheet, "COLUMN_TYPE", Array("item", "subitem")
     End If
-    
-    'boardWorksheet.Cells(3, 1).Formula = "=SUBTOTAL(3,C:C)"
 
     summaryWorkbook.Activate
     summaryWorkbook.SaveAs FileFormat:=xlOpenXMLWorkbookMacroEnabled, filename:=targetFileName
