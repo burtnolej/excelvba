@@ -467,52 +467,55 @@ End Function
 Public Function GetSandboxFolder(sandboxDir As String, sandboxSheet As Worksheet)
  
 Dim oFSO As Object, oFolders As Object, oFolder As Object, oFile As Object
-Dim resultArray() As String, fileList As String
+Dim folderArray() As String, fileList As String
 Dim outputRange As Range, columnLink As Range, fillRange As Range, itemLink As Range
 Dim i As Integer
+'Dim folderArray As Variant
 
 'On Error GoTo err
     i = 0
 
     ' clear previous data but leave headers intact
+    folderArray = Application.Run("vbautils.xlsm!GetMondayFolders", sandboxDir)
     sandboxSheet.UsedRange.offset(1).ClearContents
 
-    ReDim resultArray(0 To 600, 0 To 8)
-    Set oFSO = CreateObject("Scripting.FileSystemObject")
-    Set oFolders = oFSO.GetFolder(sandboxDir).SubFolders
+    'ReDim resultArray(0 To 600, 0 To 8)
+    'Set oFSO = CreateObject("Scripting.FileSystemObject")
+    'Set oFolders = oFSO.GetFolder(sandboxDir).SubFolders
      
-    For Each oFolder In oFolders
-        resultArray(i, 0) = oFolder.Name
-        resultArray(i, 1) = Format(CDate(oFolder.DateCreated), "YYYY/MM/DD")
-        resultArray(i, 2) = Format(CDate(oFolder.DateLastModified), "YYYY/MM/DD")
-        resultArray(i, 3) = oFolder.Path
-        On Error Resume Next
-        resultArray(i, 4) = oFolder.Size
-        On Error GoTo 0
-        
-        fileList = ""
-        'On Error Resume Next
-        For Each oFile In oFolder.Files
-            fileList = fileList & oFile.Name & ","
-        Next oFile
-       ' On Error GoTo err
-        
-        resultArray(i, 5) = oFolder.Files.Count
-        resultArray(i, 6) = fileList
-        resultArray(i, 8) = "a" & CStr(Left(oFolder.Name, 10))
-        
-        i = i + 1
-    Next oFolder
+    'For Each oFolder In oFolders
+    '    resultArray(i, 0) = oFolder.Name
+    ''    resultArray(i, 1) = Format(CDate(oFolder.DateCreated), "YYYY/MM/DD")
+    '    resultArray(i, 2) = Format(CDate(oFolder.DateLastModified), "YYYY/MM/DD")
+    '    resultArray(i, 3) = oFolder.Path
+    '    On Error Resume Next
+    '    resultArray(i, 4) = oFolder.Size
+    '    On Error GoTo 0
+    '
+    '    fileList = ""
+    '    'On Error Resume Next
+    '    For Each oFile In oFolder.Files
+    '        fileList = fileList & oFile.Name & ","
+    '    Next oFile
+    '   ' On Error GoTo err
+    '
+    '    resultArray(i, 5) = oFolder.Files.Count
+    '    resultArray(i, 6) = fileList
+    '    resultArray(i, 8) = "a" & CStr(Left(oFolder.Name, 10))
+    '
+    '    i = i + 1
+    'Next oFolder
     
     sandboxSheet.Activate
     With sandboxSheet
-        Set outputRange = .Range(Cells(2, 1), Cells(oFolders.Count + 1, 9))
-        outputRange = resultArray
-        Set columnLink = .Range("FOLDER_COLUMN_LINK")
-        columnLink.Cells(2, 1).Formula = "=hyperlink(D2)"
-        Set fillRange = columnLink.Resize(oFolders.Count).offset(1)
-        fillRange.Formula = "=hyperlink(D2)"
-        columnLink.Rows(2).Select
+        Set outputRange = .Range(Cells(2, 1), Cells(UBound(folderArray) + 1, 9))
+        outputRange = folderArray
+        'Set columnLink = .Range("FOLDER_COLUMN_LINK")
+
+        'columnLink.Cells(2, 1).Formula = "=hyperlink(D2)"
+        'Set fillRange = columnLink.Resize(oFolders.Count).offset(1)
+        'fillRange.Formula = "=hyperlink(D2)"
+        'columnLink.Rows(2).Select
         'Selection.AutoFill Destination:=fillRange
     End With
     
@@ -534,7 +537,7 @@ exitsub:
     Set columnLink = Nothing
     Set fillRange = Nothing
     Set oFolders = Nothing
-    Erase resultArray
+    Erase folderArray
     
 End Function
 
@@ -643,8 +646,9 @@ Dim RV As RibbonVariables
     '    GoTo err
     'End If
 
-    outputFolder = ActiveSheet.Range("SELECTED_OUTPUT_FOLDER")
+    'outputFolder = ActiveSheet.Range("SELECTED_OUTPUT_FOLDER")
     outputFolder = GetConfig(RV, "Config__Working_Dir")
+    inputFolder = GetConfig(RV, "Config__Working_Dir")
     
     If DirExist(outputFolder) = False Then
         MsgBox "Cannot find " & outputFolder
@@ -712,7 +716,7 @@ Dim RV As RibbonVariables
 
 
     Debug.Print Now() & " GetSandboxFolder "
-    If refreshFolderFlag = True Then
+    If refreshFolderFlag = "Yes" Then
         GetSandboxFolder inputFolder, sourceFolderSheet
     End If
     

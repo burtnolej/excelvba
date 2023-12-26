@@ -1,6 +1,5 @@
 ﻿ param (
-    [string]$working_dir = "C:\Users\burtn\Development\ps",
-    [string]$desktop_folder
+    [string]$outputfile = "C:\Users\burtn\Deploy\.folders.csv"
  )
 
 #$utils_file = Join-Path -Path $working_dir -ChildPath "Tools-Utils.ps1"
@@ -52,11 +51,11 @@ function Get-OneDriveSubFolders {
 
     if (Test-Path -Path $CLIENTDLL) {
         Log-Output -result ([ref]$output) -status "OK" -action "Check Onedrive DLLs" -object $CLIENTDLL -message "Found!"
-        write-host  $output
+        #Write-Information  $output
     }
     else {
         Log-Output -result ([ref]$output) -status "ERROR" -action "Check Onedrive DLLs" -object $CLIENTDLL -message "Install : https://www.microsoft.com/en-us/download/details.aspx?id=42038"
-        write-host  $output
+        Write-Error  $output
     }
 
     Add-Type -Path $CLIENTDLL
@@ -82,7 +81,7 @@ function Get-OneDriveSubFolders {
     }
     catch {
         Log-Output -result ([ref]$output) -status "ERROR" -action "Get Credential" -object $AdminName -message "Failed" -errormsg  $_
-        Write-host $output
+        Write-Error $output
         exit
     }
 
@@ -93,16 +92,48 @@ function Get-OneDriveSubFolders {
         $Context.Load($Folder)
         #$Context.Load($Folder.Files)
         $Context.Load($Folder.Folders)
+        #$Context.Load($Folder.Author)
+        #$Context.Load($Folder.ModifiedBy)        
         $Context.ExecuteQuery()
  
         $sb = New-Object -TypeName System.Text.StringBuilder
+        $sb2 = New-Object -TypeName System.Text.StringBuilder
 
         #Iterate through each File in the folder
         #Foreach($File in $Folder.Files)
         Foreach($Subfolder in $Folder.Folders)
         {
-            #$null = $sb.Append($File.Name)
-            $null = $sb.Append($Subfolder.Name + "^")
+
+            $date1 = Get-Date "2023/10/01"
+            if ($Subfolder.TimeLastModified -gt $date1) {
+                $Context.Load($Subfolder.Files)
+                $Context.ExecuteQuery()
+                
+                $null = $sb2.Clear()
+                Foreach($file in $Subfolder.Files)
+                {
+                    $null = $sb2.Append($file.Name)
+                    $null = $sb2.Append(";;")
+                }
+
+                $null = $sb.Append($Subfolder.Name)
+                $null = $sb.Append(",")
+                $null = $sb.Append($Subfolder.TimeCreated)
+                $null = $sb.Append(",")
+                $null = $sb.Append($Subfolder.TimeLastModified)
+                $null = $sb.Append(",")
+                $null = $sb.Append($Subfolder.ServerRelativeURL)
+                $null = $sb.Append(",")
+                $null = $sb.Append("") #Size
+                $null = $sb.Append(",")
+                $null = $sb.Append($Subfolder.ItemCount)
+                $null = $sb.Append(",")
+                $null = $sb.Append($sb2.ToString())
+                $null = $sb.Append("`n")
+                #Write-Host  $Subfolder.Name
+                #Write-Host  $sb2.ToString()
+            }
+
         }
     }
     Catch{
@@ -112,15 +143,32 @@ function Get-OneDriveSubFolders {
                 -object $FileFolder `
                 -message "Failed" `
                 -errormsg  $_
-        write-host $output
+        Write-Error $output
         exit
     }
 
-    Write-Host $sb
+    return $sb.ToString()
 }
 
-$folderstring = Get-OneDriveSubFolders "jon.butler@veloxfintech.com" `
-    "https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive" `
-    "/sites/VeloxSharedDrive/Shared%20Documents/General/Monday"
+$output=$null
 
-Write-Host  $folderstring
+Read-Host "Installing ..... Press RETURN to continue"
+
+Log-Output -result ([ref]$output) `
+                -status "OK" `
+                -action "Argument passed" `
+                -object $outputfile `
+                -message "output file"
+
+Write-Host $output
+
+#$MYHOME=Get-Content -Path Env:\HOMEPATH
+
+#$folderfile=Join-Path -Path $MYHOME -ChildPath "Deploy\.folders.csv"
+
+Get-OneDriveSubFolders "jon.butler@veloxfintech.com" `
+    "https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive" `
+    "/sites/VeloxSharedDrive/Shared%20Documents/General/Monday" `
+    | Out-File -FilePath $outputfile -encoding utf7
+
+Read-Host "Installing ..... Press RETURN to continue"
