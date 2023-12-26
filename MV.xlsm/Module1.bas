@@ -470,7 +470,6 @@ Dim oFSO As Object, oFolders As Object, oFolder As Object, oFile As Object
 Dim folderArray() As String, fileList As String
 Dim outputRange As Range, columnLink As Range, fillRange As Range, itemLink As Range
 Dim i As Integer
-'Dim folderArray As Variant
 
 'On Error GoTo err
     i = 0
@@ -479,44 +478,10 @@ Dim i As Integer
     folderArray = Application.Run("vbautils.xlsm!GetMondayFolders", sandboxDir)
     sandboxSheet.UsedRange.offset(1).ClearContents
 
-    'ReDim resultArray(0 To 600, 0 To 8)
-    'Set oFSO = CreateObject("Scripting.FileSystemObject")
-    'Set oFolders = oFSO.GetFolder(sandboxDir).SubFolders
-     
-    'For Each oFolder In oFolders
-    '    resultArray(i, 0) = oFolder.Name
-    ''    resultArray(i, 1) = Format(CDate(oFolder.DateCreated), "YYYY/MM/DD")
-    '    resultArray(i, 2) = Format(CDate(oFolder.DateLastModified), "YYYY/MM/DD")
-    '    resultArray(i, 3) = oFolder.Path
-    '    On Error Resume Next
-    '    resultArray(i, 4) = oFolder.Size
-    '    On Error GoTo 0
-    '
-    '    fileList = ""
-    '    'On Error Resume Next
-    '    For Each oFile In oFolder.Files
-    '        fileList = fileList & oFile.Name & ","
-    '    Next oFile
-    '   ' On Error GoTo err
-    '
-    '    resultArray(i, 5) = oFolder.Files.Count
-    '    resultArray(i, 6) = fileList
-    '    resultArray(i, 8) = "a" & CStr(Left(oFolder.Name, 10))
-    '
-    '    i = i + 1
-    'Next oFolder
-    
     sandboxSheet.Activate
     With sandboxSheet
         Set outputRange = .Range(Cells(2, 1), Cells(UBound(folderArray) + 1, 9))
         outputRange = folderArray
-        'Set columnLink = .Range("FOLDER_COLUMN_LINK")
-
-        'columnLink.Cells(2, 1).Formula = "=hyperlink(D2)"
-        'Set fillRange = columnLink.Resize(oFolders.Count).offset(1)
-        'fillRange.Formula = "=hyperlink(D2)"
-        'columnLink.Rows(2).Select
-        'Selection.AutoFill Destination:=fillRange
     End With
     
     GoTo exitsub
@@ -592,7 +557,7 @@ Function GetConfig(RV, configName) As String
     On Error GoTo 0
 End Function
 Public Sub GenerateReport(Optional param As String = "")
-Dim dirnameString As String, fileNameSuffix As String, parentDirnameString As String, datafileDirname As String
+Dim dirnameString As String, fileNameSuffix As String, parentDirnameString As String, datafileDirname As String, sortValue As String
 Dim targetSheetName As String, targetFileName As String, dataFile As String, targetDirName As String, inputUser As String, boardName As String
 Dim inputUserName As String, inputDate As String, inputGDrive As String, inputFolder As String, folderSheetName As String, outputFolder As String
 Dim fileExtension As String, inputFileExtension As String, outputFolderSheet As String, configSheetName As String, tmpPath As String
@@ -786,9 +751,12 @@ Dim RV As RibbonVariables
     AddBoardNameColumn boardWorksheet, offsetFactor + 1, mondayPrefix, mondaySuffix
     
     Debug.Print Now() & "Applying sorts"
-    ApplySort boardWorksheet, "COLUMN_UPDATED_ON"
+    'ApplySort boardWorksheet, "COLUMN_UPDATED_ON"
+    sortValue = "COLUMN_" & Split(RV.Sort, "__")(1)
+    ApplySort boardWorksheet, sortValue
     
     Debug.Print Now() & "Applying filters"
+    statusFilterFlag = Replace(statusFilterFlag, "_", " ")
     ApplyFilter boardWorksheet, "COLUMN_STATUS", Split(statusFilterFlag, ",")
     
     If subitemParentFlag = "No" Then
