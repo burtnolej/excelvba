@@ -12,6 +12,17 @@
                     <button id="search__Do" label="Search" size="normal" onAction="btns_onAction" image="I_F3" tag="runfunction_MV^Search^" />
                     <button id="search__Clear" label="Clear Search" size="normal" onAction="btns_onAction" image="I_F2" tag="runfunction_MV^ClearSearch^" />
                </group>
+                <group id="grp_dropdown" label="Config">   
+                     <dropDown id="batchupdate" label="Batch Update" image ="I_D5" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                        <item id="batchupdate__Yes" label="Yes"  />
+                        <item id="batchupdate__No" label="No" />
+                    </dropDown>
+                </group>
+                    
+                <group id="grp_status" label="Status">
+                    <editBox id="status" label="Last Status Message" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" maxLength="200" onChange ="editBox_onChange"/>
+                </group>
+                        
              </tab> 
                  
         </tabs>
