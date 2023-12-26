@@ -21,6 +21,137 @@ Dim boardIds() As Variant
 Dim itemIds() As Variant
 
 
+Sub Batch_Process_Updates()
+Dim updateTypeArray() As Variant
+Dim tmpCell As Range
+    updateTypeArray = Array("WRITE", "STATUS", "NAME", "OWNER", "TAGS")
+    For i = 0 To UBound(updateTypeArray)
+        For Each Cell In ActiveSheet.Range("COLUMN_UPDATES_MONDAY_" & updateTypeArray(i))
+            If Cell.value <> vbNullString Then
+                Application.Run "Process_UPDATES_MONDAY_" & updateTypeArray(i), Cell.Row
+            End If
+        Next Cell
+    Next i
+End Sub
+
+
+Sub Process_UPDATES_MONDAY_WRITE(rowNum As Long)
+       
+     tmpVal = ActiveSheet.Range("COLUMN_ITEMID").Rows(rowNum - 3).value
+     PostUpdateMonday tmpVal, Target.value, responseStatus, responseText
+     If responseStatus = "200" Then
+         Application.StatusBar = "Successfullly updated [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(Target.Row - 3).value = Format(Now(), "YYYY-MM-DD" & "T" & "hh:mm:ss" & "Z")
+         ActiveSheet.Range("COLUMN_UPDATES_FIRSTLINE").Rows(Target.Row - 3).value = Target.value
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(Target.Row - 3).Font.Color = RGB(255, 0, 0)
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(Target.Row - 3).Font.Bold = True
+         ActiveSheet.Range("COLUMN_UPDATES_FIRSTLINE").Rows(Target.Row - 3).Font.Color = RGB(255, 0, 0)
+         ActiveSheet.Range("COLUMN_UPDATES_FIRSTLINE").Rows(Target.Row - 3).Font.Bold = True
+         Target.value = ""
+    Else
+         Application.StatusBar = "Failed to update  [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+    End If
+
+End Sub
+
+Sub Process_UPDATES_MONDAY_Status(rowNum As Long)
+
+    itemId = ActiveSheet.Range("COLUMN_ITEMID").Rows(rowNum - 3).value
+    boardid = ActiveSheet.Range("COLUMN_BOARDID").Rows(rowNum - 3).value
+    itemType = ActiveSheet.Range("COLUMN_TYPE").Rows(rowNum - 3).value
+    If itemType = "subitem" Then boardid = GetBoardId(CStr(itemId), responseStatus, responseText)
+    If Target.value = "Working" Then newStatus = "0" Else If Target.value = "Completed" Then newStatus = "1" Else If Target.value = "Duplicate" Then newStatus = "6" Else If Target.value = "Ongoing" Then newStatus = "7" Else newStatus = "7"
+    UpdateStatusMonday boardid, itemId, newStatus, responseStatus, responseText
+    If responseStatus = "200" Then
+        Application.StatusBar = "Successfullly updated [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+        ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).value = Format(Now(), "YYYY-MM-DD" & "T" & "hh:mm:ss" & "Z")
+        ActiveSheet.Range("COLUMN_STATUS").Rows(rowNum - 3).value = Target.value
+        ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).Font.Color = RGB(255, 0, 0)
+        ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).Font.Bold = True
+        ActiveSheet.Range("COLUMN_STATUS").Rows(rowNum - 3).Font.Color = RGB(255, 0, 0)
+        ActiveSheet.Range("COLUMN_STATUS").Rows(rowNum - 3).Font.Bold = True
+        Target.value = ""
+    Else
+        Application.StatusBar = "Failed to update  [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+    End If
+End Sub
+
+
+Sub Process_UPDATES_MONDAY_Name(rowNum As Long)
+
+     itemId = ActiveSheet.Range("COLUMN_ITEMID").Rows(rowNum - 3).value
+     boardid = ActiveSheet.Range("COLUMN_BOARDID").Rows(rowNum - 3).value
+     UpdateItemAttributeMonday boardid, itemId, "name", Target.value, responseStatus, responseText
+     If responseStatus = "200" Then
+         Application.StatusBar = "Successfullly updated [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).value = Format(Now(), "YYYY-MM-DD" & "T" & "hh:mm:ss" & "Z")
+         ActiveSheet.Range("COLUMN_ITEM_NAME").Rows(rowNum - 3).value = Target.value
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).Font.Color = RGB(255, 0, 0)
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(TrowNum - 3).Font.Bold = True
+         ActiveSheet.Range("COLUMN_ITEM_NAME").Rows(rowNum - 3).Font.Color = RGB(255, 0, 0)
+         ActiveSheet.Range("COLUMN_ITEM_NAME").Rows(rowNum - 3).Font.Bold = True
+         Target.value = ""
+    Else
+         Application.StatusBar = "Failed to update  [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+    End If
+
+End Sub
+    
+Sub Process_UPDATES_MONDAY_Owner()
+     itemId = ActiveSheet.Range("COLUMN_ITEMID").Rows(rowNum - 3).value
+     boardid = ActiveSheet.Range("COLUMN_BOARDID").Rows(rowNum - 3).value
+     itemType = ActiveSheet.Range("COLUMN_TYPE").Rows(rowNum - 3).value
+     If itemType = "subitem" Then boardid = GetBoardId(CStr(itemId), responseStatus, responseText)
+     Set userIdRange = Worksheets("Reference").Range("DATA_USERNAME")
+     If IsError(Application.Match(Target.value, userIdRange, 0)) Then
+         MsgBox (Target.value & "not found")
+         GoTo exitsub
+     Else
+         userRow = Application.Match(Target.value, userIdRange, 0)
+         userId = userIdRange.Rows(userRow).offset(, 3).value
+     End If
+     UpdateOwnerMonday boardid, itemId, userId, responseStatus, responseText
+     If responseStatus = "200" Then
+         Application.StatusBar = "Successfullly updated [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).value = Format(Now(), "YYYY-MM-DD" & "T" & "hh:mm:ss" & "Z")
+         ActiveSheet.Range("COLUMN_OWNER").Rows(rowNum - 3).value = Target.value
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(TrowNum - 3).Font.Color = RGB(255, 0, 0)
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).Font.Bold = True
+         ActiveSheet.Range("COLUMN_OWNER").Rows(rowNum - 3).Font.Color = RGB(255, 0, 0)
+         ActiveSheet.Range("COLUMN_OWNER").Rows(rowNum - 3).Font.Bold = True
+         Target.value = ""
+    Else
+         Application.StatusBar = "Failed to update  [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+    End If
+End Sub
+
+     
+     
+Sub Process_UPDATES_MONDAY_Tags()
+
+     itemId = ActiveSheet.Range("COLUMN_ITEMID").Rows(rowNum - 3).value
+     boardid = ActiveSheet.Range("COLUMN_BOARDID").Rows(rowNum - 3).value
+     itemType = ActiveSheet.Range("COLUMN_TYPE").Rows(rowNum - 3).value
+     If itemType = "subitem" Then boardid = GetBoardId(CStr(itemId), responseStatus, responseText)
+     Set tagNameRange = Worksheets("Reference").Range("DATA_TAGNAME")
+     tagRow = Application.Match(Target.value, tagNameRange, 0)
+     tag = tagNameRange.Rows(tagRow).offset(, -1).value
+     UpdateTagsMonday boardid, itemId, tag, responseStatus, responseText
+     If responseStatus = "200" Then
+         Application.StatusBar = "Successfullly updated [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).value = Format(Now(), "YYYY-MM-DD" & "T" & "hh:mm:ss" & "Z")
+         ActiveSheet.Range("COLUMN_STATUS").Rows(rowNum - 3).value = Target.value
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).Font.Color = RGB(255, 0, 0)
+         ActiveSheet.Range("COLUMN_UPDATES_UPDATETIME").Rows(rowNum - 3).Font.Bold = True
+         ActiveSheet.Range("COLUMN_STATUS").Rows(rowNum - 3).Font.Color = RGB(255, 0, 0)
+         ActiveSheet.Range("COLUMN_STATUS").Rows(rowNum - 3).Font.Bold = True
+         Target.value = ""
+    Else
+         Application.StatusBar = "Failed to update  [" & itemId & "] to " & Target.value & "[" & responseText & "]"
+    End If
+
+
+End Sub
     
 
 Public Function OpenFile(sPath As String, iRWFlag As Integer) As Object
