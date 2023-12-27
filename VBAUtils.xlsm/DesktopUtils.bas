@@ -77,9 +77,21 @@ Dim objShell As Object
 
     execStr = psexepath & " " & execpath & " " & startdir
     
-    Debug.Print execStr
     objShell.Run execStr, vbHide
     
+End Sub
+
+Public Sub LaunchPackupTools(Optional startdir As String = "C:\Users\burtn\Development")
+Dim execStr As String
+Dim objShell As Object
+    
+    psexepath = "POWERSHELL.exe"
+    execpath = """C:\Users\burtn\Development\ps\Packup-Tools.ps1"""
+    Set objShell = VBA.CreateObject("Wscript.Shell")
+
+    ChDir "C:\Users\burtn\Development"
+    execStr = psexepath & " " & execpath
+    objShell.Run execStr
     
 End Sub
 
