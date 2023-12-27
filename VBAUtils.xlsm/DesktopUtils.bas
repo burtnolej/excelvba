@@ -76,6 +76,8 @@ Dim objShell As Object
     Set objShell = VBA.CreateObject("Wscript.Shell")
 
     execStr = psexepath & " " & execpath & " " & startdir
+    
+    Debug.Print execStr
     objShell.Run execStr, vbHide
     
     
@@ -211,6 +213,62 @@ Dim PSExe, PSScript As String
     objShell.Run PythonExe & " " & PythonScript & " " & arg1
 
 End Sub
+
+Function GetMondayFolders(workingdir As String) As Variant
+Dim objShell As Object
+Dim PSExe, PSScript As String
+Dim folderString As String
+Dim outputfilepath As String
+Dim outputFileArray() As String
+Dim linecount As Long
+Dim lineSplit() As String
+
+    Set objShell = VBA.CreateObject("Wscript.Shell")
+
+    outputfilepath = workingdir & "\.folders.csv"
+    
+    PSExe = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+    PSScript = "" & workingdir & "\GetFolder-Monday-Nodep.ps1 " & outputfilepath
+    
+    Debug.Print PSExe & " " & PSScript
+    objShell.Run PSExe & " " & PSScript, 1, True
+    
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    Set File = FSO.OpenTextFile(outputfilepath, 1, True)
+    
+    ReDim outputFileArray(1 To 1000, 1 To 9)
+    linecount = 1
+    Do While File.AtEndOfStream = False
+        lineSplit = Split(File.ReadLine, ",")
+        If UBound(lineSplit) = 6 Then
+            outputFileArray(linecount, 1) = lineSplit(0)
+            outputFileArray(linecount, 2) = lineSplit(1)
+            outputFileArray(linecount, 3) = lineSplit(2)
+            outputFileArray(linecount, 4) = lineSplit(3)
+            outputFileArray(linecount, 5) = lineSplit(4)
+            outputFileArray(linecount, 6) = lineSplit(5)
+            outputFileArray(linecount, 7) = lineSplit(6)
+            outputFileArray(linecount, 8) = "https://veloxfintechcom.sharepoint.com/" & lineSplit(3)
+            outputFileArray(linecount, 9) = "a" & left(lineSplit(0), 10)
+                    
+            'outputFileArray(linecount, 8) = lineSplit(7)
+            
+            linecount = linecount + 1
+        End If
+    Loop
+    'ReDim Preserve outputFileArray(1 To linecount - 1, 1 To 5)
+    
+    GetMondayFolders = outputFileArray
+    File.Close
+
+endsub:
+    Set FSO = Nothing
+    Set File = Nothing
+    Set objShell = Nothing
+    Erase outputFileArray
+    
+End Function
+
 Public Sub LaunchApp(appname As String, param As String)
 Dim execStr As String
 

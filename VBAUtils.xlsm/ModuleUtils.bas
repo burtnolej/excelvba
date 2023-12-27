@@ -21,6 +21,8 @@ End Sub
 Sub CheckInChanges(Optional bookname As String)
 Dim sourcepath As String
 
+    ActiveWorkbook.Save
+    
     If bookname = "" Then
         bookname = ActiveWorkbook.Name
     End If
