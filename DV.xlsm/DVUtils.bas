@@ -36,23 +36,44 @@ Dim outputRange As Range
     tmpSheet.Names.Add UCase(sheetname) & "_DATA_HEADER", outputRange.Rows(1)
     
     DVCreateCustomNamedRanges outputRange, tmpSheet
+    DVUpdateAvailableSheets left(sheetname, 30)
+    
 exitsub:
     Set tmpSheet = Nothing
     Set outputRange = Nothing
     
 End Sub
 
+Sub DVUpdateAvailableSheets(newSheetName As String)
+Dim availableSheetsRange As Range, tmpCell As Range
+    Set availableSheetsRange = ActiveWorkbook.Sheets("SHEETS").Range("AVAILABLE_SHEETS")
+
+    For Each tmpCell In availableSheetsRange.Columns(1).Rows
+        If tmpCell.value = newSheetName Then
+            tmpCell.Offset(, 1).value = Now()
+            GoTo endsub
+        ElseIf tmpCell.value = "" Then
+            tmpCell.value = newSheetName
+            tmpCell.Offset(, 1).value = Now()
+            GoTo endsub
+        End If
+    Next tmpCell
+endsub:
+    Set availableSheetsRange = Nothing
+End Sub
 Sub DVCreateCustomNamedRanges(dataRows As Range, tmpSheet As Worksheet)
 Dim tmpCell As Range, headerRow As Range
-Dim rangeName As String
+Dim rangeName As String, newHeaderName As String
 Dim colCount As Integer
 
     Set headerRow = dataRows.Rows(1)
     Set dataRows = dataRows.Offset(1).Resize(dataRows.Rows.count - 1)
     
     For colCount = 1 To headerRow.Columns.count
-        rangeName = tmpSheet.Name & "_" & Replace(UCase(headerRow.Columns(colCount).value), " ", "_")
+        newHeaderName = Replace(UCase(headerRow.Columns(colCount).value), " ", "_")
+        rangeName = tmpSheet.Name & "_" & newHeaderName
         tmpSheet.Names.Add rangeName, dataRows.Columns(colCount)
+        headerRow.Columns(colCount).value = newHeaderName ' make the header rows spelling same as actual named range
     Next colCount
 
 exitsub:
