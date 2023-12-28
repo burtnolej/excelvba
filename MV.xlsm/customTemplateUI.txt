@@ -1,26 +1,26 @@
-<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="rbx_onLoad">
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="MVTrbx_onLoad">
 	<ribbon startFromScratch="false">
 		<tabs>
-             <tab id="tab5" label="MV Runtime">
-                 <group id="grp_btns" label="Actions">
-                     <button id="action__Process_Updates" label="Process Updates" size="normal" onAction="btns_onAction" image="I_E3" />
+             <tab id="tab51" label="MV Runtime">
+                 <group id="grp_btns1" label="Actions">
+                     <button id="action__Process_Updates" label="Process Updates" size="normal" onAction="MVTbtns_onAction" image="I_E3" />
                 </group>  
-                 <group id="grp_search" label="Search">
-                    <editBox id="search__All" label="All Text Fields" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="editBox_onChange"/>
-                    <editBox id="search__Item_Names" label="Item Names" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="editBox_onChange"/>
-                    <editBox id="search__Sub_Item_Names" label="Sub Item Names" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="editBox_onChange"/>
-                    <button id="search__Do" label="Search" size="normal" onAction="btns_onAction" image="I_F3" tag="runfunction_MV^Search^" />
-                    <button id="search__Clear" label="Clear Search" size="normal" onAction="btns_onAction" image="I_F2" tag="runfunction_MV^ClearSearch^" />
+                 <group id="grp_search1" label="Search">
+                    <editBox id="search__All" label="All Text Fields" getText="MVTeditBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="MVTeditBox_onChange"/>
+                    <editBox id="search__Item_Names" label="Item Names" getText="MVTeditBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="MVTeditBox_onChange"/>
+                    <editBox id="search__Sub_Item_Names" label="Sub Item Names" getText="MVTeditBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="MVTeditBox_onChange"/>
+                    <button id="search__Do" label="Search" size="normal" onAction="MVTbtns_onAction" image="I_F3" tag="runfunction_MV^Search^" />
+                    <button id="search__Clear" label="Clear Search" size="normal" onAction="MVTbtns_onAction" image="I_F2" tag="runfunction_MV^ClearSearch^" />
                </group>
-                <group id="grp_dropdown" label="Config">   
-                     <dropDown id="batchupdate" label="Batch Update" image ="I_D5" onAction="dropDown_onAction" getSelectedItemID ="dropDown_getText">
+                <group id="grp_dropdown1" label="Config">   
+                     <dropDown id="batchupdate" label="Batch Update" image ="I_D5" onAction="MVTdropDown_onAction" getSelectedItemID ="MVTdropDown_getText">
                         <item id="batchupdate__Yes" label="Yes"  />
                         <item id="batchupdate__No" label="No" />
                     </dropDown>
                 </group>
                     
-                <group id="grp_status" label="Status">
-                    <editBox id="status" label="Last Status Message" getText="editBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" maxLength="200" onChange ="editBox_onChange"/>
+                <group id="grp_status1" label="Status">
+                    <editBox id="status" label="Last Status Message" getText="MVTeditBox_getText" sizeString="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" maxLength="200" onChange ="MVTeditBox_onChange"/>
                 </group>
                         
              </tab> 

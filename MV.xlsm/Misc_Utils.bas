@@ -2,7 +2,7 @@ Attribute VB_Name = "Misc_Utils"
 Public EVENTSON As Boolean
 Public Sub WriteToMondayAPI(itemId As String, msg As String)
 apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjExMTgyMDkwNiwidWlkIjoxNTE2MzEwNywiaWFkIjoiMjAyMS0wNS0zMFQxMTowMDo1OS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NjY5MDk4NSwicmduIjoidXNlMSJ9.zIeOeoqeaZ2Q8NuKBPPw2LQFh2JRPvPwIkhhn4e5Q08"
-Url = "https://api.monday.com/v2"
+url = "https://api.monday.com/v2"
 
 Dim objHTTP As Object
 Dim postData As String
@@ -15,7 +15,7 @@ postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { create_update (it
 
 
 Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
-objHTTP.Open "POST", Url, False
+objHTTP.Open "POST", url, False
 objHTTP.setRequestHeader "Authorization", apiKey
 objHTTP.setRequestHeader "Content-Type", "application/json"
 objHTTP.send postData

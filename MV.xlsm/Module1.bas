@@ -675,8 +675,7 @@ Dim RV As RibbonVariables
         
         dataurl = Workbooks("MV.xlsm").Sheets("Reference").Range("dataurl").value
         
-        Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
-                    dataurl + "/Monday/" & boardName & ".txt", _
+        HTTPDownloadFile dataurl & "/Monday/" & boardName & ".txt", _
                     codeWorkbook, _
                     "A", "REFERENCE", 0, "start-of-day", boardName, False
                     

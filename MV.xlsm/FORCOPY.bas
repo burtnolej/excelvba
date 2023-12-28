@@ -497,13 +497,13 @@ End Sub
 
 Public Sub WriteToMondayAPI(postData As String, ByRef responseStatus As String, ByRef responseText As String)
 Dim objHTTP As Object
-Dim DDQ As String, apiKey As String, Url As String
+Dim DDQ As String, apiKey As String, url As String
     DDQ = Chr(34)
     
     apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjExMTgyMDkwNiwidWlkIjoxNTE2MzEwNywiaWFkIjoiMjAyMS0wNS0zMFQxMTowMDo1OS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NjY5MDk4NSwicmduIjoidXNlMSJ9.zIeOeoqeaZ2Q8NuKBPPw2LQFh2JRPvPwIkhhn4e5Q08"
-    Url = "https://api.monday.com/v2"
+    url = "https://api.monday.com/v2"
     Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
-    objHTTP.Open "POST", Url, False
+    objHTTP.Open "POST", url, False
     objHTTP.setRequestHeader "Authorization", apiKey
     objHTTP.setRequestHeader "Content-Type", "application/json"
     objHTTP.setRequestHeader "API-Version", "2023-10"

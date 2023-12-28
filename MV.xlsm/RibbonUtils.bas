@@ -9,7 +9,7 @@ Public Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" ( _
     source As Any, _
     ByVal length As Long)
     
-Sub dropDown_getText(control As IRibbonControl, ByRef returnedVal)
+Sub MVdropDown_getText(control As IRibbonControl, ByRef returnedVal)
 
     Debug.Print "dropDown_getText"
     Set RV = New RibbonVariables
@@ -18,7 +18,7 @@ Sub dropDown_getText(control As IRibbonControl, ByRef returnedVal)
 End Sub
 
 'Callback for customUI.onLoad
-Sub rbx_onLoad(ribbon As IRibbonUI)
+Sub MVrbx_onLoad(ribbon As IRibbonUI)
     Debug.Print "rbx_onLoad"
     Set RV = New RibbonVariables
     
@@ -33,7 +33,7 @@ Sub rbx_onLoad(ribbon As IRibbonUI)
 End Sub
 
 'Callback for btns_btn2 onAction
-Sub btns_onAction(control As IRibbonControl)
+Sub MVbtns_onAction(control As IRibbonControl)
 Dim tag As String, action As String, param As String
 Dim tagSplit As Variant, functionSplit As Variant
     tag = control.tag
@@ -67,7 +67,7 @@ Sub PersistConfig(Optional param As String = "")
 End Sub
 
 'Callback for dropDown3 onAction
-Sub dropDown_onAction(control As IRibbonControl, id As String, index As Integer)
+Sub MVdropDown_onAction(control As IRibbonControl, id As String, index As Integer)
     Debug.Print "dropDown_onAction", id, index
     Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, id
@@ -75,7 +75,7 @@ Sub dropDown_onAction(control As IRibbonControl, id As String, index As Integer)
 End Sub
 
 'Callback for working onAction
-Sub chkBox_onAction(control As IRibbonControl, pressed As Boolean)
+Sub MVchkBox_onAction(control As IRibbonControl, pressed As Boolean)
     Debug.Print "chkBox_onAction"
     Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, CStr(pressed)
@@ -85,7 +85,7 @@ Sub chkBox_onAction(control As IRibbonControl, pressed As Boolean)
 End Sub
 
 'Callback for workingdir getText
-Sub editBox_getText(control As IRibbonControl, ByRef returnedVal)
+Sub MVeditBox_getText(control As IRibbonControl, ByRef returnedVal)
     Debug.Print "editBox_getText"
     Set RV = New RibbonVariables
     returnedVal = CallByName(RV, control.id, VbGet)
@@ -94,7 +94,7 @@ Sub editBox_getText(control As IRibbonControl, ByRef returnedVal)
 End Sub
 
 'Callback for workingdir onChange
-Sub editBox_onChange(control As IRibbonControl, text As String)
+Sub MVeditBox_onChange(control As IRibbonControl, text As String)
     Debug.Print "editBox_onChange"
     Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, text
@@ -103,7 +103,7 @@ End Sub
 
 
 'Callback for working getPressed
-Sub fncGetPressed(control As IRibbonControl, ByRef returnedVal)
+Sub MVfncGetPressed(control As IRibbonControl, ByRef returnedVal)
     Debug.Print "fncGetPressed"
     Set RV = New RibbonVariables
     returnedVal = CallByName(RV, control.id, VbGet)

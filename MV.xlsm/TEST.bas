@@ -69,7 +69,7 @@ Set tmpWorkbook = ActiveWorkbook
 Set tmpSheet = tmpWorkbook.Sheets.Add
 tmpSheet.Name = newSheetName
 
-Url = "http://bumblebee/datafiles/prod_data_clients_20230601.055501.txt"
+url = "http://bumblebee/datafiles/prod_data_clients_20230601.055501.txt"
 
 Dim objHTTP As Object
 Dim postData As String
@@ -79,7 +79,7 @@ DDQ = Chr(34)
 
 
 Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
-objHTTP.Open "GET", Url, False
+objHTTP.Open "GET", url, False
 objHTTP.setRequestHeader "Content-Type", "text/csv"
 objHTTP.send
 
