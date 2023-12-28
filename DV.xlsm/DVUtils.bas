@@ -28,15 +28,12 @@ Dim outputRange As Range
     On Error Resume Next
     Set tmpSheet = ActiveWorkbook.Sheets(left(sheetname, 30))
     On Error GoTo 0
-    'If tmpSheet Is Nothing Then
-    '    Set tmpSheet = ActiveWorkbook.Sheets.Add
-    '    tmpSheet.Name = left(sheetname, 30)
-    'End If
-    tmpSheet.Names.Add UCase(sheetname) & "_DATA", outputRange
-    tmpSheet.Names.Add UCase(sheetname) & "_DATA_HEADER", outputRange.Rows(1)
+
+    tmpSheet.Names.Add left(UCase(sheetname), 30) & "_DATA", outputRange
+    tmpSheet.Names.Add left(UCase(sheetname), 30) & "_DATA_HEADER", outputRange.Rows(1)
     
     DVCreateCustomNamedRanges outputRange, tmpSheet
-    DVUpdateAvailableSheets left(sheetname, 30)
+    DVUpdateAvailableSheets left(sheetname, 30), outputRange
     
 exitsub:
     Set tmpSheet = Nothing
@@ -44,24 +41,27 @@ exitsub:
     
 End Sub
 
-Sub DVUpdateAvailableSheets(newSheetName As String)
+Sub DVUpdateAvailableSheets(newSheetName As String, dataRange As Range)
 Dim availableSheetsRange As Range, tmpCell As Range
     Set availableSheetsRange = ActiveWorkbook.Sheets("SHEETS").Range("AVAILABLE_SHEETS")
 
     For Each tmpCell In availableSheetsRange.Columns(1).Rows
         If tmpCell.value = newSheetName Then
-            tmpCell.Offset(, 1).value = Now()
+            ' found it so updating
             GoTo endsub
         ElseIf tmpCell.value = "" Then
+            ' not found so adding a row
             tmpCell.value = newSheetName
-            tmpCell.Offset(, 1).value = Now()
             GoTo endsub
         End If
     Next tmpCell
 endsub:
+    tmpCell.Offset(, 1).value = Now()
+    tmpCell.Offset(, 2).value = dataRange.Rows.count
+    tmpCell.Offset(, 3).value = dataRange.Columns.count
     Set availableSheetsRange = Nothing
 End Sub
-Sub DVCreateCustomNamedRanges(dataRows As Range, tmpSheet As Worksheet)
+Sub DVCreateCustomNamedRanges(ByVal dataRows As Range, tmpSheet As Worksheet)
 Dim tmpCell As Range, headerRow As Range
 Dim rangeName As String, newHeaderName As String
 Dim colCount As Integer
