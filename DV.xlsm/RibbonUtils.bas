@@ -198,7 +198,8 @@ Dim colArray() As Variant
     Application.Run "DV.xlsm!AddNamedRange", outputRange.Worksheet, outputRange, 1, "FILENAME"
 
     'manifestFiles = outputRange.Offset(1).Resize(outputRange.Rows.count)
-    Set outputRange = outputRange.Resize(, outputRange.Columns.count - 1)
+    'Set outputRange = outputRange.Resize(, outputRange.Columns.count - 1)
+    'Set outputRange = outputRange.Resize(, outputRange.Columns.count)
     manifestFiles = outputRange
     
     'manifestFiles = Application.Run("vbautils.xlsm!RangeToArray", ActiveWorkbook, "FILE_ALLDATA", "FILE_FULLNAME", manifestFiles)
@@ -538,7 +539,7 @@ End Sub
 Sub Combo3_getItemLabel(control As IRibbonControl, index As Integer, ByRef returnedVal)
     'returnedVal = "Item" & index + 1
     
-    returnedVal = manifestFiles(index + 1, 1)
+    returnedVal = manifestFiles(index + 1, 3)
     selectedDatafile = returnedVal
     'MsgBox selectedDatafile
 End Sub
@@ -553,8 +554,11 @@ Sub Combo3_onChange(control As IRibbonControl, filename As String)
 Dim textSplit As Variant
 Dim sheetname As String, url As String
 Dim outputRange As Range
+Dim filenameSplit As Variant
 
-    Application.Run "DV.xlsm!DVGetDataFile", filename
+    
+    filenameSplit = Split(filename, " ")
+    Application.Run "DV.xlsm!DVGetDataFile", filenameSplit(0)
     selectedDatafile = filename
     'sheetname = UCase(Split(fileName, ".")(0))
     

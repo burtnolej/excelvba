@@ -9,7 +9,7 @@ Public Sub DVGetDataFile(filename)
 Dim tmpSheet As Worksheet
 Dim outputRange As Range
     sheetname = UCase(Split(filename, ".")(0))
-    
+    filename = filename & ".csv"
     url = RetrieveCheckEnvUrl()
     'If envUrl = "" Then
     '    url = "http://172.22.237.138/datafiles/"
@@ -20,12 +20,18 @@ Dim outputRange As Range
 
     Application.Run "DV.xlsm!SetEventsOff"
     
-    Set outputRange = Application.Run("DV.xlsm!HTTPDownloadFile", url + filename, _
+    Set outputRange = Application.Run("DV.xlsm!HTTPDownloadFile", url + "/" + filename, _
                 ActiveWorkbook, _
                 "", "", 0, "start-of-day", sheetname, False, 0)
     Application.Run "DV.xlsm!SetEventsOn"
     
-    Set tmpSheet = ActiveWorkbook.Sheets(sheetname)
+    On Error Resume Next
+    Set tmpSheet = ActiveWorkbook.Sheets(left(sheetname, 30))
+    On Error GoTo 0
+    'If tmpSheet Is Nothing Then
+    '    Set tmpSheet = ActiveWorkbook.Sheets.Add
+    '    tmpSheet.Name = left(sheetname, 30)
+    'End If
     tmpSheet.Names.Add UCase(sheetname) & "_DATA", outputRange
     tmpSheet.Names.Add UCase(sheetname) & "_DATA_HEADER", outputRange.Rows(1)
     

@@ -1,0 +1,128 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="rbx_onLoad">
+	<ribbon startFromScratch="false"> <!--Hide all default tabs-->
+		<tabs>
+
+                       
+            <tab id="tab2" label="Velox Data">
+                 <group id="grp_btns4" label=" ">
+                    <button id="btns_btn50" label="Refrsh" size="large" onAction="btns_onAction" image="I_B1" tag="runfunction_DV^RefreshQuery^"/>
+                 </group>
+                    
+				    
+				    
+				    
+                 <group 
+                    id="Group1"
+                    label="    ">
+                    <comboBox 
+                        id="Combo3"
+                        label="Database Files"
+                        getItemCount="Combo3_getItemCount"
+                        getItemID="Combo3_getItemID"
+                        getItemLabel="Combo3_getItemLabel"
+                        getText="Combo3_getText"
+                        onChange="Combo3_onChange"
+                        sizeString="xxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                        />
+                    <comboBox 
+                        id="Combo4"
+                        label="Query Files"
+                        getItemCount="Combo3_getItemCount"
+                        getItemID="Combo3_getItemID"
+                        getItemLabel="Combo3_getItemLabel"
+                        getText="Combo3_getText"
+                        onChange="Combo3_onChange"
+                        sizeString="xxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                        />
+                        
+                    </group> 
+                    <group 
+                    id="Group2"
+                    label="    ">
+                        
+                     <!--https://bettersolutions.com/vba/ribbon/dropdown.htm-->
+                     <box id="MyBox1" boxStyle="horizontal">
+                   
+                    <labelControl id="lblCtrl_dummy2" label=" " />  
+                    <!--dropDown id="dropDown2" label="Settings_____" image ="I_D1" onAction="dropDown_onAction" getSelectedItemID="InitializeDropdown"-->
+                    <dropDown id="dropDown2" label="Settings_____" image ="I_D1" onAction="dropDown_onAction">
+                        <item id="dev" label="Dev"  />
+                        <item id="prod" label="Prod" />
+                        
+                    </dropDown>
+                    </box>    
+                        
+                    <box id="MyBox2" boxStyle="horizontal" >
+                    <labelControl id="lblCtrl_dummy3" label=" " />  
+                    
+                    <dropDown id="dropDown3" label="Sheet Mode" image ="I_E1" onAction="dropDown_onAction">
+                    <!--dropDown id="dropDown3" label="Sheet Mode" image ="I_E1" onAction="dropDown_onAction" getSelectedItemID="InitializeDropdown"-->
+                        <item id="singlesheet" label="Single Sheet"  />
+                        <item id="movetosheet" label="Move to Sheet" />
+                    </dropDown>
+                    </box>
+                    
+                    <box id="MyBox3" boxStyle="horizontal" >
+                    <labelControl id="lblCtrl_dummy4" label=" " />  
+                    <dropDown id="dropDown4" label="Focus Mode" image ="I_C1" onAction="dropDown_onAction">
+                    <!--dropDown id="dropDown4" label="Focus Mode" image ="I_C1" onAction="dropDown_onAction" getSelectedItemID="InitializeDropdown"-->
+                        <item id="dynamic" label="Dynamic Focus"  />
+                        <item id="manualfocus" label="Manual Focus" />
+                    </dropDown>
+                        </box>
+                        
+                </group> 
+                    
+            </tab> 
+                
+  		<tab id="tab5" label="Velox Admin">
+                 <group id="grp_btns_admin" label="vbautils Admin">
+                    <button id="btns_btn39" label="Show Tools" size="normal" onAction="btns_onAction" image="I_B1" tag="showtools_DV" />
+                    <button id="btns_btn40" label="Hide Tools" size="normal" onAction="btns_onAction" image="I_B1" tag="hidetools_DV" />
+                    <button id="btns_btn41" label="Show VBE" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_DV^DisplayVbe^"/>
+                    <button id="btns_btn42" label="Run Rib Editor" size="normal" onAction="btns_onAction" image="I_B1" tag="runapp_ribboneditor^"/>
+                    <button id="btns_btn43" label="Kill Rib Editor" size="normal" onAction="btns_onAction" image="I_B1" tag="killapp_ribboneditor^"/>
+                    <button id="btns_btn44" label="Edit Newsletter" size="normal" onAction="btns_onAction" image="I_B1" tag="runapp_editnewsletter^"/>
+                    <button id="btns_btn45" label="Window On Top" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_DV^SetXLOnTop^"/>
+                    <button id="btns_btn46" label="Window Normal" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_DV^SetXLNormal^"/>
+                    <button id="btns_btn47" label="Reset Location" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_DV^ResizeVBAUtilsWindow^"/>
+                    <button id="btns_btn48" label="Save Workbook" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_DV^ThisWorkbook.CustomSave^DV.xlsm"/>
+                    
+                    
+                    
+				</group>
+                                
+                <group id="grp_btns" label="Actiobs">
+                    <box id="box1" boxStyle="vertical">
+                        <button id="btns_btn7"  label="Enable Events" size="large" onAction="btns_onAction" image="I_A2" tag="runfunction_DV^SetEventsOn^"/>
+                        <button id="btns_btn10"  label="Disable Events" size="large" onAction="btns_onAction" image="I_D2" tag="runfunction_DV^SetEventsOff^"/>
+                        <button id="btns_btn8" label="Export Modules" size="large" onAction="btns_onAction" image="I_B2" tag="runfunction_DV^ExportAllModules^"/>
+                        <button id="btns_btn11" label="Check In Changes" size="large" onAction="btns_onAction" image="I_D2" tag="runfunction_DV^CheckInChanges^DV.xlsm"/>
+                        <!--separator id="separator1"/-->
+                    </box>
+                      
+                 </group>
+            
+           </tab>
+               
+
+               
+            <!--Hide Default Tabs-->
+            		    
+            <!--tab idMso="TabHome" visible="false" />
+            <tab idMso="TabFile" visible="false" />
+            <tab idMso="TabInsert" visible="false" />
+            <tab idMso="TabFormulas" visible="false" />
+            <tab idMso="TabData" visible="false" />    
+            <tab idMso="TabReview" visible="false" />
+            <tab idMso="TabView" visible="false" />
+            <tab idMso="TabDeveloper" visible="false" />
+            <tab idMso="TabPageLayoutExcel" visible="false" />
+            <tab idMso="TabAutomate" visible="false" />
+            <tab idMso="HelpTab" visible="false" />
+            <tab idMso="AcrobatTab" visible="false" /-->
+            
+        </tabs>
+       
+	</ribbon>
+</customUI>

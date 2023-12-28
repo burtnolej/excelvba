@@ -320,12 +320,12 @@ Dim origWorksheet As Worksheet
             Set tmpSheet = tmpWorkbook.Sheets.Add
             tmpSheet.Name = newSheetName
         Else
-            If SheetExists(newSheetName, tmpWorkbook) = False Then
+            If SheetExists(left(newSheetName, 30), tmpWorkbook) = False Then
                 Set tmpSheet = ActiveWorkbook.Sheets.Add
-                tmpSheet.Name = newSheetName
+                tmpSheet.Name = left(newSheetName, 30)
             Else
                 
-                Set tmpSheet = tmpWorkbook.Sheets(newSheetName)
+                Set tmpSheet = tmpWorkbook.Sheets(left(newSheetName, 30))
                 tmpSheet.Range("1:1048576").ClearContents
             End If
         End If
@@ -347,6 +347,7 @@ Dim origWorksheet As Worksheet
         fileArray = Split(objHTTP.responseText, Chr(10))
         fileLength = UBound(fileArray)
         
+        'ReDim lineArray(1 To fileLength, 1 To 3)
         For i = 0 To fileLength - 1
             'j = i - startRow
             lineArray = Split(fileArray(i), "^")
