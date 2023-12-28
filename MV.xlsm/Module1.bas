@@ -45,7 +45,7 @@ End Function
 
 Public Sub AddFormulas(sumaryWorkbook As Workbook, boardWorksheet As Worksheet, numRows As Integer, startContentRow As Integer)
 Dim tmpWorkbook As Workbook
-Dim userName As Variant
+Dim UserName As Variant
 Dim origUserName As String, hlinkString As String
 
 Dim columnLink As Range, fillRange As Range, columnItemId As Range, ncolumnItemIdFirstCell As Range
@@ -62,18 +62,18 @@ Dim columnLink As Range, fillRange As Range, columnItemId As Range, ncolumnItemI
     columnLink.Rows(2).Select
     Selection.AutoFill destination:=fillRange
         
-    For Each userName In userNamesArray
+    For Each UserName In userNamesArray
     
-        origUserName = userName
-        userName = UCase(userName)
-        userName = Replace(userName, SPACE, UNDERLINE)
+        origUserName = UserName
+        UserName = UCase(UserName)
+        UserName = Replace(UserName, SPACE, UNDERLINE)
         
-        Set columnLink = boardWorksheet.Range("COLUMN_" & userName)
+        Set columnLink = boardWorksheet.Range("COLUMN_" & UserName)
         columnLink.Cells(2, 1).Formula = "=IF(AND(ISERROR(FIND(" & DQ & origUserName & DQ & ",$J" & startContentRow & ")),ISERROR(FIND(" & DQ & origUserName & DQ & ",$J" & startContentRow & "))),0,1)"
         Set fillRange = columnLink.Resize(numRows).offset(1)
         columnLink.Rows(2).Select
         Selection.AutoFill destination:=fillRange
-    Next userName
+    Next UserName
 
 exitsub:
  
