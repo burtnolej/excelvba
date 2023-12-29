@@ -89,7 +89,18 @@ Sub MVeditBox_getText(control As IRibbonControl, ByRef returnedVal)
     Debug.Print "editBox_getText"
     Set RV = New RibbonVariables
     returnedVal = CallByName(RV, control.id, VbGet)
-    Debug.Print "returnedval=" & returnedVal
+    
+    If control.id = "config__Working_Dir" And returnedVal = "" Then
+        Debug.Print "defaulting config__Working_Dir"
+        CallByName RV, control.id, VbLet, Environ("USERPROFILE") & "\Deploy"
+        returnedVal = Environ("USERPROFILE") & "\Deploy"
+    ElseIf control.id = "config__Template_File" And returnedVal = "" Then
+        Debug.Print "defaulting config__Template_File"
+        CallByName RV, control.id, VbLet, Environ("USERPROFILE") & "\Deploy\MondayViewUpdate_Template.xlsm"
+        returnedVal = Environ("USERPROFILE") & "\Deploy\MondayViewUpdate_Template.xlsm"
+    Else
+        Debug.Print "returnedval=" & returnedVal
+    End If
     Set RV = Nothing
 End Sub
 

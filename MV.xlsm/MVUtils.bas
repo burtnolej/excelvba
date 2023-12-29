@@ -1,7 +1,5 @@
 Attribute VB_Name = "MVUtils"
-Public Function GetEnviron(value As String)
-    GetEnviron = Environ(value)
-End Function
+
 Public Function SheetExists(sheetname As String, book As Workbook) As Boolean
 
     SheetExists = False
