@@ -1,0 +1,39 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="CArbx_onLoad">
+	<ribbon startFromScratch="false"> <!--Hide all default tabs-->
+		<tabs>
+            <tab id="tab23" label="Capsule Add/Change/Delete">
+                <group id="grp_btns" label="Actions">
+                    <button id="action_refresh_capsuledata" label="Refresh Capsule Data" size="large" onAction="CAbtns_onAction" image="I_A1" tag="runfunction_CA^RefreshCapsuleData^"  />
+                    <button id="action_addrecord" label="Add Record" size="large" onAction="CAbtns_onAction" image="I_B1" tag="runfunction_CA^AddRecord^"  />
+                    <button id="action_deleterecord" label="Delete Record" size="large" onAction="CAbtns_onAction" image="I_C1" tag="runfunction_CA^DeleteRecord^"/>
+                    <button id="action_getrecord" label="Get Record" size="large" onAction="CAbtns_onAction" image="I_D1" tag="runfunction_CA^GetRecord^"/>
+                    <button id="action_updaterecord" label="Update Record" size="large" onAction="CAbtns_onAction" image="I_E1" tag="runfunction_CA^UpdateRecord^"/>
+                    <button id="action_checkinchanges" label="Check In Changes" size="large" onAction="CAbtns_onAction" image="I_E1" tag="runfunction_vbautils^CheckInChanges^"/>
+                </group>
+                    
+                 <group id="grp_btns2" label="Pick">
+                    <button id="pick_entityopportunity" image="I_F2" label="Opportunity" onAction="CAbtns_onAction" tag="runfunction_CA^EntityOpportunity^opportunity"/>
+                    <button id="pick_entityperson" image="I_F2" label="Person" onAction="CAbtns_onAction" tag="runfunction_CA^EntityPerson^person"/>
+                    <button id="pick_entityorganistion" image="I_F2" label="Organisation" onAction="CAbtns_onAction"  tag="runfunction_CA^EntityOrganisation^organisation"/>
+                 </group>
+                 <group id="grp_cfg" label="Person Search By">
+                     <dropDown id="searchbytype" label="Object Type" image ="I_D5" onAction="CAdropDown_onAction" getSelectedItemID ="CAdropDown_getText">
+                        <item id="searchby__type_person" label="Person"/>
+                        <item id="searchby__type_opportunity" label="Opportunity"/>
+                        <item id="searchby__type_organisation" label="Organisation"/>
+                    </dropDown>    
+                    <editBox id="searchby__id" label="Capsule ID" getText="CAeditBox_getText" sizeString="xxxxxxxxxxxxxxx" maxLength="10" onChange ="CAeditBox_onChange"/>
+                    <editBox id="searchby__name" label="Full Name" getText="CAeditBox_getText" sizeString="xxxxxxxxxxxxxxxxxx" maxLength="20" onChange ="CAeditBox_onChange"/>
+                 </group>  
+                  <group id="grp_cfg2" label="Config">
+                        <editBox id="config__dataurl" label="Data URL" getText="CAeditBox_getText" sizeString="xxxxxxxxxxxxxxxxxx" maxLength="40" onChange ="CAeditBox_onChange"/>
+                 </group> 
+                 <group id="grp_btns3" label="Fast Add">
+                    <button id="fastadd__organisation" image="I_F2" label="Organisation" onAction="CAbtns_onAction" tag="runfunction_CA^EntityOpportunity^opportunity"/>
+                    <button id="fastadd__opportunity" image="I_F2" label="Opportunity" onAction="CAbtns_onAction" tag="runfunction_CA^EntityPerson^person"/>
+                    <button id="fastadd__person" image="I_F2" label="People" onAction="CAbtns_onAction"  tag="runfunction_CA^EntityOrganisation^organisation"/>
+                 </group>
+            </tab>
+        </tabs>
+    </ribbon>
+</customUI>

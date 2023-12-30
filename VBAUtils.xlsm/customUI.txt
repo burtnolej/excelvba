@@ -164,6 +164,9 @@
                     <button id="btns_btn46" label="Window Normal" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^SetXLNormal^"/>
                     <button id="btns_btn47" label="Reset Location" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^ResizeVBAUtilsWindow^"/>
                     <button id="btns_btn57" label="Check In Changes" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^CheckInChanges^DV.xlsm"/>
+                    <button id="btns_btn59" label="Packup Tools" size="normal" onAction="btns_onAction" image="I_B1" tag="runfunction_vbautils^LaunchPackupTools^"/>
+                    
+                    
                     
 				</group>
                                 
