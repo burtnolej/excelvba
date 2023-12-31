@@ -85,12 +85,12 @@ Dim sourceRange As Range
             If fieldTypeString <> "" Then
                 writeString = writeString + vbNewLine + fieldTypeString & "^" & fieldValueString & "^" & fieldTypeString & "val"
             Else
-                GoTo persist
+                GoTo Persist
             End If
         End If
     Next rangeRow
 
-persist:
+Persist:
     Set objFSO = CreateObject("Scripting.FileSystemObject")
     Set oFile = objFSO.CreateTextFile(filepath)
     oFile.Write writeString

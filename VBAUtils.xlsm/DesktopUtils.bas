@@ -1,12 +1,52 @@
 Attribute VB_Name = "DesktopUtils"
+'Sub ShowXLOnTop(ByVal OnTop As Boolean)
+'Sub SetXLOnTopExec(Optional param As Variant)
+'Sub SetXLNormalExec(Optional param As Variant)
+'Public Sub LaunchExplorer(foldername As String, Optional param As String)
+'Public Sub LaunchGitBash(Optional startdir As String = "C:\Users\burtn\Development")
+'Public Sub LaunchPackupTools(Optional startdir As String = "C:\Users\burtn\Development")
+'Function IsCapitalized(char As String) As Boolean
+'Sub CreateCustomNamedRanges(headerRange As Range, targetRange As Range, targetSheet As Worksheet)
+'Public Sub LaunchBrowser(urlname As String, x As Long, y As Long, width As Long, height As Long)
+'Public Sub GetDataFile(filename)
+'Sub RunPython()
+'Sub RunPowershell(arg1 As String)
+'Function GetMondayFolders(workingdir As String) As Variant
+'Public Sub LaunchApp(appname As String, param As String)
+'Public Sub ShowHideables()
+'Public Sub HideHideables()
+'Public Sub HideFormulaBar(bookname As String)
+'Public Sub ShowFormulaBar(bookname As String)
+'Public Sub HideDisplayables(bookname As String)
+'Sub HideSheets(bookname As String, Optional visibleSheet As String = "BLANK")
+'Public Sub ShowSheets(Optional bookname As String = "")
+'Public Sub ShowDisplayables(bookname As String)
+'Public Sub HideMenuBar(bookname As String)
+'Public Sub ShowMenuBar(bookname As String)
+'Public Sub CloseWorkbook(bookname As String)
+'Public Function OpenWorkbook(bookFullPath As String) As String
+'Public Sub DisplayCommandBars()
+'Public Sub DisplayWindow(bookname As String)
+'Public Sub ZoomWindow(bookname As String, zoom As Double)
+'Public Sub HideWindow(bookname As String)
+'Public Sub HideBook(bookname As String)
+'Public Sub ShowBook(bookname As String)
+'Public Sub ResizeWindow(bookname As String, Optional width As Long = 1000, Optional height As Long = 1000)
+'Public Sub MoveWindow(bookname As String, Optional top As Long = 0, Optional left As Long = 0)
+'Public Function GetWorkbooks() As Variant
 
-
-'python3.11.exe  .\resize_window.py x=1, y=1,width=200,height=200,proctitle='Mozilla Firefox',launch=True, execproc="C:\\Program Files\\Mozilla Firefox\\firefox.exe"
-'python3.11.exe  .\resize_window.py x=1, y=1,width=200,height=200,proctitle='VBAUtils - Excel'
-'python3.11.exe  .\resize_window.py x=1, y=1,width=200,height=200,proctitle='Mozilla Firefox'
-
-
-
+'Sub KillApp(sTaskName As String)
+'Sub ToolActionOpenExec(appname As String)
+'Sub ToolActionCloseExec(appname As String)
+'Public Sub MaxBookExec(param As String, width As Long, height As Long)
+'Public Sub MinBookExec(param As String, width As Long, height As Long, x As Long, y As Long)
+'Public Sub HideBookExec(param As String)
+'Public Sub ShowBookExec(param As String, width As Long, height As Long, x As Long, y As Long)
+'Public Sub ShowToolsExec(param As String)
+'Public Sub HideToolsExec(param As String)
+'Sub DisplayVBEExec(Optional param As Variant)
+'Sub RunRibbonEditorExec(bookname As String)
+'Sub CloseRibbonEditorExec()
 
 
 Public Declare PtrSafe Function SetWindowPos _
@@ -22,6 +62,13 @@ Public Const SWP_NOSIZE = &H1
 Public Const SWP_NOMOVE = &H2
 Public Const HWND_TOPMOST = -1
 Public Const HWND_NOTOPMOST = -2
+
+
+Function KillApp(sTaskName As String) As Variant
+Dim result As Variant
+    result = CreateObject("WScript.Shell").Run("taskkill /f /im " & sTaskName, 0, True)
+End Function
+
 Sub ShowXLOnTop(ByVal OnTop As Boolean)
     Dim xStype As Long
     #If Win64 Then
@@ -36,35 +83,54 @@ Sub ShowXLOnTop(ByVal OnTop As Boolean)
     End If
     Call SetWindowPos(Application.hWnd, xStype, 0, 0, 0, 0, SWP_NOSIZE Or SWP_NOMOVE)
 End Sub
-Sub SetXLOnTop(Optional param As Variant)
+Sub SetXLOnTopExec(Optional param As Variant)
     ShowXLOnTop True
 End Sub
-Sub SetXLNormal(Optional param As Variant)
+Sub SetXLNormalExec(Optional param As Variant)
     ShowXLOnTop False
 End Sub
 
-Sub temp()
+Sub ToolActionOpenExec(appname As String)
+Dim bookname As String, controlid As String
+Dim RV As RibbonVariables
+    Set RV = New RibbonVariables
+    
+    SetEventsOff
+    controlid = "RunningApps__" & appname
+    
+    CallByName RV, controlid, VbLet, True
+    RV.RibbonPointer.Invalidate
+    
+    Application.Wait Now + #12:00:01 AM#
 
-CommandBars.ExecuteMso "MaximizeRibbon"
-
+    bookname = OpenWorkbook(RV.Settings__rootpath & "\" & appname & ".xlsm")
+    ResizeWindowExec bookname, RV.WindowSize__Width, RV.WindowSize__Height
+    MoveWindow bookname, RV.WindowSize__X, RV.WindowSize__Y
+    SetEventsOn
+    
+    On Error Resume Next ' moving over the location of these values to the Persist sheet
+    Workbooks(bookname).Sheets("REFERENCE").Range("dataurl").value = RV.Settings__dataurl
+    Workbooks(bookname).Sheets("Persist").Range("dataurl").value = RV.Settings__dataurl
+    On Error GoTo 0
 End Sub
 
+Sub ToolActionCloseExec(appname As String)
+Dim bookname As String, controlid As String
+    SetEventsOff
+    controlid = "RunningApps__" & appname
+    
+    Set RV = New RibbonVariables
+    CallByName RV, controlid, VbLet, False
+    RV.RibbonPointer.Invalidate
+    
+    CloseWorkbook appname & ".xlsm"
+
+    SetEventsOn
+End Sub
 Public Sub LaunchExplorer(foldername As String, Optional param As String)
-
-
-Shell "C:\WINDOWS\explorer.exe """ & foldername & "", vbNormalFocus
+    Shell "C:\WINDOWS\explorer.exe """ & foldername & "", vbNormalFocus
 End Sub
 
-'Sub TestLaunchBrowser()
-'    LaunchBrowser "www.bbc.com", 1, 500, 3000, 1000, """Mozilla Firefox""", """C:\\Program Files\\Mozilla Firefox\\firefox.exe""", _
-'        """E:\new_onedrive\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools\py\resize_window.py""", _
-'        """C:\Users\burtn\AppData\Local\Microsoft\WindowsApps\python3.11.exe"""
-'End Sub
-
-
-Sub TestLaunchGitBash()
-    LaunchGitBash "C:\Users\burtn\Development\py"
-End Sub
 Public Sub LaunchGitBash(Optional startdir As String = "C:\Users\burtn\Development")
 
 Dim execStr As String
@@ -72,16 +138,13 @@ Dim objShell As Object
     
     psexepath = "POWERSHELL.exe -noexit"
     execpath = """C:\Users\burtn\Development\ps\Launch-GitBash.ps1"""
-    'startdir = """C:\Users\burtn\Development"""
     Set objShell = VBA.CreateObject("Wscript.Shell")
-
     execStr = psexepath & " " & execpath & " " & startdir
-    
     objShell.Run execStr, vbHide
     
 End Sub
 
-Public Sub LaunchPackupTools(Optional startdir As String = "C:\Users\burtn\Development")
+Public Sub LaunchPackupToolsExec(Optional startdir As String = "C:\Users\burtn\Development")
 Dim execStr As String
 Dim objShell As Object
     
@@ -95,10 +158,6 @@ Dim objShell As Object
     
 End Sub
 
-Sub TestLaunchBrowser()
-    Debug.Print IsCapitalized("ddsdsd")
-    'LaunchBrowser "www.bbc.com", 1, 312, 2566, 1389
-End Sub
 
 Function IsCapitalized(char As String) As Boolean
 Dim theChar As String
@@ -145,8 +204,7 @@ Dim outputRange As Range
     Set tmpSheet = ActiveWorkbook.Sheets(sheetname)
     tmpSheet.Names.Add UCase(sheetname) & "_DATA", outputRange
     tmpSheet.Names.Add UCase(sheetname) & "_DATA_HEADER", outputRange.Rows(1)
-    
-    'CreateCustomNamedRanges outputRange.Rows(1), outputRange, tmpSheet
+
 exitsub:
     Set tmpSheet = Nothing
     
@@ -154,12 +212,9 @@ End Sub
 
 
 Public Sub LaunchBrowser(urlname As String, x As Long, y As Long, width As Long, height As Long)
-'Public Sub LaunchBrowser(urlname As String, x As Long, y As Long, width As Long, height As Long, proctitle As String, execproc As String, pyLauncher As String, pypath As String)
 Dim execStr As String
 Dim objShell As Object
-    'Shell "C:\Program Files\Google\Chrome\Application\chrome" & " " & urlname
-    
-    
+
     pypath = """C:\Users\burtn\AppData\Local\Microsoft\WindowsApps\python3.11.exe"""
     proctitle = """Mozilla Firefox"""
     pyLauncher = """E:\new_onedrive\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools\py\resize_window.py"""
@@ -167,8 +222,6 @@ Dim objShell As Object
     args = """-foreground -tab """ & urlname
 
     Set objShell = VBA.CreateObject("Wscript.Shell")
-    
-    'execStr = execStr & """C:\Users\burtn\AppData\Local\Microsoft\WindowsApps\python3.11.exe"""
     execStr = execStr & pypath
     execStr = execStr & " "
     execStr = execStr & pyLauncher
@@ -189,8 +242,6 @@ Dim objShell As Object
     execStr = execStr & " "
     execStr = execStr & "args=" & args
     
-    'Debug.Print execStr
-    'objShell.Run execStr
     objShell.Run execStr, vbHide
 
 End Sub
@@ -207,7 +258,6 @@ Dim PythonExe, PythonScript As String
     PythonScript = """E:\new_onedrive\Velox Financial Technology\Velox Shared Drive - Documents\General\Tools\py\resize_window.py"""
     
     objShell.Run PythonExe & " " & PythonScript
-    'PythonExe & PythonScript
     
 End Sub
 
@@ -262,13 +312,12 @@ Dim lineSplit() As String
             outputFileArray(linecount, 7) = lineSplit(6)
             outputFileArray(linecount, 8) = "https://veloxfintechcom.sharepoint.com/" & lineSplit(3)
             outputFileArray(linecount, 9) = "a" & left(lineSplit(0), 10)
-                    
-            'outputFileArray(linecount, 8) = lineSplit(7)
+
             
             linecount = linecount + 1
         End If
     Loop
-    'ReDim Preserve outputFileArray(1 To linecount - 1, 1 To 5)
+
     
     GetMondayFolders = outputFileArray
     File.Close
@@ -281,29 +330,21 @@ endsub:
     
 End Function
 
+Public Sub EditNewsletterExec()
+
+    LaunchApp "C:\Program Files\Notepad++\notepad++.exe", _
+        "\\wsl.localhost\Ubuntu\home\burtnolej\sambashare\veloxmon\websitepy\output_articles\generated_docs.html"
+
+End Sub
 Public Sub LaunchApp(appname As String, param As String)
 Dim execStr As String
 
     execStr = appname & " " & """" & param & """"
     Shell execStr, vbNormalFocus
 
-End Sub
-
-Sub Test()
-    If TaskKill("OfficeRibbonXEditor.exe") = 0 Then MsgBox "Terminated" Else MsgBox "Failed"
-End Sub
-
-Sub KillApp(sTaskName As String)
-Dim result As Variant
-    result = CreateObject("WScript.Shell").Run("taskkill /f /im " & sTaskName, 0, True)
-End Sub
-
-Sub testcommandbars()
-
-    CommandBars("Document Recovery").Visible = False
-    Debug.Print CommandBars("Document Recovery").Name
     
 End Sub
+
 
 Public Sub ShowHideables()
 Dim controls As CommandBarControls
@@ -317,9 +358,7 @@ Dim thiscontrol As Variant
     For Each thiscontrol In controls
          Debug.Print thiscontrol.Caption
     Next thiscontrol
-    
-    'CommandBars.ExecuteMso "MaximizeRibbon"
-    
+
 End Sub
 
 Public Sub HideHideables()
@@ -331,35 +370,13 @@ Dim thiscontrol As Variant
     HideMenuBar "vbautils.xlsm"
     Set controls = CommandBars.FindControls
     
-    
-    
     For Each thiscontrol In controls
          Debug.Print thiscontrol.Caption
     Next thiscontrol
-    
-    'CommandBars.ExecuteMso "MaximizeRibbon"
+
     
 End Sub
 
-Public Sub Workspace()
-Dim books As Variant
-Dim tmpWindow As Window
-Dim tmpWorkbook As Workbook
-
-    books = GetWorkbooks
-
-    For i = 0 To UBound(books)
-        ResizeWindow CStr(books(i))
-        ToggleDisplayables CStr(books(i))
-        HideMenuBar CStr(books(i))
-        DisplayWindow CStr(books(i))
-        WaitSecs (4)
-    Next i
-
-exitsub:
-    Erase books
-
-End Sub
 
 Public Sub HideFormulaBar(bookname As String)
 Dim tmpWindow As Window
@@ -370,7 +387,6 @@ Dim tmpWindow As Window
 End Sub
 Public Sub ShowFormulaBar(bookname As String)
 Dim tmpWindow As Window
-    'Set tmpWindow = Windows(bookname)
 
     If Right(bookname, 4) <> "xlsm" Then
         Set tmpWindow = Windows(bookname & ".xlsm")
@@ -398,7 +414,7 @@ exitsub:
     
 End Sub
 
-Sub DisplayVbe(Optional param As Variant)
+Sub DisplayVBEExec(Optional param As Variant)
     Dim isEnabled As Boolean
     ' where 21 is the "Visual Basic" CommandBar and 4 is the "Visual Basic Editor" CommandBarButton
     With Application.CommandBars(21).controls(4)
@@ -408,6 +424,15 @@ Sub DisplayVbe(Optional param As Variant)
         .Enabled = isEnabled
     End With
 End Sub
+
+Sub RunRibbonEditorExec(bookname As String)
+    execStr = "C:\Program Files\Office RibbonX Editor\OfficeRibbonXEditor.exe" & " " & """" & bookname & """"
+    Shell execStr, vbNormalFocus
+End Sub
+Sub CloseRibbonEditorExec()
+    If KillApp("OfficeRibbonXEditor.exe") = 0 Then MsgBox "Terminated" Else MsgBox "Failed"
+End Sub
+
 
 Sub HideSheets(bookname As String, Optional visibleSheet As String = "BLANK")
 
@@ -425,12 +450,8 @@ Dim tmpBook As Workbook
 End Sub
 
 Public Sub ShowSheets(Optional bookname As String = "")
-
 Dim tmpBook As Workbook
 
-    
-        'Set tmpBook = Workbooks(bookname)
-        
     If bookname <> "" Then
         If Right(bookname, 4) <> "xlsm" Then
             Set tmpBook = Workbooks(bookname & ".xlsm")
@@ -447,10 +468,42 @@ Dim tmpBook As Workbook
     Next i
     
 End Sub
+
+Public Sub MaxBookExec(param As String, width As Long, height As Long)
+    GetScreenRes width, height
+    ResizeWindowExec param, width, height
+    MoveWindow param, 0, 0
+End Sub
+Public Sub MinBookExec(param As String, width As Long, height As Long, x As Long, y As Long)
+    ResizeWindowExec param, width, height
+    MoveWindow param, x, y
+End Sub
+Public Sub HideBookExec(param As String)
+    HideBook param
+End Sub
+Public Sub ShowBookExec(param As String, width As Long, height As Long, x As Long, y As Long)
+    ShowBook param
+    ResizeWindowExec param, width, height
+    MoveWindow param, x, y
+End Sub
+            
+Public Sub ShowToolsExec(param As String)
+    ShowDisplayables param
+    ShowMenuBar param
+    ShowSheets param
+    ShowFormulaBar param
+End Sub
+
+Public Sub HideToolsExec(param As String)
+    HideDisplayables param
+    HideMenuBar param
+    HideSheets param
+    HideFormulaBar param
+End Sub
+
+            
 Public Sub ShowDisplayables(bookname As String)
 Dim tmpWindow As Window
-
-    
 
     If Right(bookname, 4) <> "xlsm" Then
         Set tmpWindow = Windows(bookname & ".xlsm")
@@ -486,12 +539,6 @@ Public Sub ShowMenuBar(bookname As String)
 Dim tmpWorkbook As Workbook
 Dim tmpCommandBar As CommandBar
 
-
-    
-
-    
-    'Set tmpWorkbook = Application.Workbooks(bookname)
-
     If Right(bookname, 4) <> "xlsm" Then
         Set tmpWorkbook = Workbooks(bookname & ".xlsm")
     Else
@@ -509,7 +556,6 @@ End Sub
 
 Public Sub CloseWorkbook(bookname As String)
 Dim tmpWorkbook As Workbook
-    'Set tmpWorkbook = Application.Workbooks(bookname)
     
     If Right(bookname, 4) <> "xlsm" Then
         Set tmpWorkbook = Workbooks(bookname & ".xlsm")
@@ -524,19 +570,7 @@ exitsub:
     Set tmpWorkbook = Nothing
 
 End Sub
-'Public Function OpenWorkbook(bookFullPath As String) As String
-'Dim tmpWorkbook As Workbook
-'Dim currentWorkbook As Workbook
 
-'    Set currentWorkbook = ActiveWorkbook
-'    Set tmpWorkbook = Application.Workbooks.Open(bookFullPath)
-'    currentWorkbook.Activate
-    
-'exitsub:
-'    OpenWorkbook = tmpWorkbook.Name
-'    Set tmpWorkbook = Nothing
-
-'End Function
 
 Public Function OpenWorkbook(bookFullPath As String) As String
 Dim tmpWorkbook As Workbook
@@ -567,8 +601,7 @@ Dim tmpCommandBar As CommandBar
         Set tmpCommandBar = CommandBars(i)
         Debug.Print tmpCommandBar.Name
     Next i
-    
-    'CommandBars("Worksheet Menu Bar").Enabled = False
+
 exitsub:
     Set tmpCommandBar = Nothing
     
@@ -594,7 +627,6 @@ End Sub
 Public Sub HideWindow(bookname As String)
 Dim tmpWindow As Window
     Set tmpWindow = Windows(bookname)
-    'ActiveWorkbook.Windows(1).Visible = False
     tmpWindow.Visible = False
 
 exitsub:
@@ -605,7 +637,6 @@ Public Sub HideBook(bookname As String)
 Dim tmpWorkbook As Workbook
 Dim filename As String
     Set tmpWorkbook = ActiveWorkbook
-    'ActiveWorkbook.Windows(1).Visible = False
     
     filename = bookname & ".xlsm"
     Workbooks(filename).Activate
@@ -620,7 +651,6 @@ Dim tmpWorkbook As Workbook
 Dim filename As String
 
     Set tmpWorkbook = ActiveWorkbook
-    'ActiveWorkbook.Windows(1).Visible = False
     filename = bookname & ".xlsm"
     Workbooks(filename).Activate
     ActiveWindow.WindowState = xlMaximized
@@ -629,7 +659,7 @@ exitsub:
     Set tmpWorkbook = Nothing
 
 End Sub
-Public Sub ResizeWindow(bookname As String, Optional width As Long = 1000, Optional height As Long = 1000)
+Public Sub ResizeWindowExec(bookname As String, Optional width As Long = 1000, Optional height As Long = 1000)
 Dim tmpWindow As Window
 Dim tmpWorkbook As Workbook
 

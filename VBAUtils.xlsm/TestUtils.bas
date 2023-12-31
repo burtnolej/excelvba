@@ -74,7 +74,9 @@ Dim emailContent As String
             "foo", emailContent, True
 End Sub
 
-
+Sub Test()
+    Debug.Print "any"
+End Sub
 Sub TestIsInStr()
 
     Debug.Print IsInStr("foo", "barfooda")

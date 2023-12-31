@@ -7,34 +7,3 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Private Sub CommandButton1_Click()
-
-    TestWriteToRESTAPIFromSheet
-    
-End Sub
-
-Private Sub CommandButton2_Click()
-
-    TestDeleteEntity
-    
-End Sub
-
-Private Sub Worksheet_SelectionChange(ByVal Target As Range)
-
-    If ActiveSheet.Range("DEBUG") = "ON" Then
-        GoTo exitsub
-    End If
-    
-    If (Target.Rows.count > 1 Or Target.Columns.count > 1) And Target.MergeCells = False Then
-        GoTo exitsub
-    End If
-    
-    
-    If Intersect(Target, ActiveSheet.Range("RECORD_TYPE")) Is Nothing Then
-    Else
-        SetupRecordDefaults
-        GoTo exitsub
-    End If
-exitsub:
-
-End Sub
