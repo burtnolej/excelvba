@@ -18,8 +18,8 @@ Attribute VB_Name = "RibbonUtils"
 
 Option Explicit
 
-Dim rbxUI As IRibbonUI
-Dim RV As RibbonVariables
+'Dim rbxUI As IRibbonUI
+'Dim RV As RibbonVariables
 Dim SpinValue As Long
 Dim manifestFiles() As Variant
 Dim folderListDict As Dictionary, appListDict As Dictionary, urlListDict As Dictionary, checkboxVals As Dictionary
@@ -78,7 +78,8 @@ End Sub
 Sub rbx_onLoad(ribbon As IRibbonUI)
 Dim persistedVars() As Variant
 Dim varValues As Dictionary
-    
+Dim rbxUI As IRibbonUI
+Dim RV As RibbonVariables
     Set rbxUI = ribbon
     
     On Error Resume Next
@@ -99,11 +100,14 @@ Dim varValues As Dictionary
     Set RV = New RibbonVariables
     
     CallByName RV, "RibbonPointer", VbLet, rbxUI
+    Set rbxUI = Nothing
+    Set RV = Nothing
 
 End Sub
 
 'Callback for choosetool onAction
 Sub dropDown_onAction(control As IRibbonControl, id As String, index As Integer)
+Dim RV As RibbonVariables
     Debug.Print "dropDown_onAction", id, index
     Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, id
@@ -112,6 +116,7 @@ End Sub
 
 'Callback for choosetool getSelectedItemID
 Sub dropDown_getText(control As IRibbonControl, ByRef returnedVal)
+Dim RV As RibbonVariables
     Set RV = New RibbonVariables
     returnedVal = CallByName(RV, control.id, VbGet)
     Set RV = Nothing
@@ -121,6 +126,7 @@ End Sub
 ' Set default value of editBox to 0
 
 Sub editBox_onChange(control As IRibbonControl, Text As String)
+Dim RV As RibbonVariables
     Debug.Print "editBox_onChange", Text
     Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, Text
@@ -130,6 +136,7 @@ End Sub
 ' Return value of editBox
 
 Sub editBox_getText(control As IRibbonControl, ByRef returnedVal)
+Dim RV As RibbonVariables
     Set RV = New RibbonVariables
     returnedVal = CallByName(RV, control.id, VbGet)
     Set RV = Nothing
@@ -139,12 +146,14 @@ End Sub
 
 
 Sub chkBox_onAction(control As IRibbonControl, isPressed As Boolean)
+Dim RV As RibbonVariables
     Set RV = New RibbonVariables
     CallByName RV, control.id, VbLet, isPressed
     Set RV = Nothing
 End Sub
 
 Public Sub fncGetPressed(control As IRibbonControl, ByRef bolReturn)
+Dim RV As RibbonVariables
 
     Set RV = New RibbonVariables
     bolReturn = CallByName(RV, control.id, VbGet)
@@ -155,6 +164,7 @@ End Sub
 Sub btns_onAction(control As IRibbonControl)
 Dim tag As String, action As String, param As String
 Dim tagSplit As Variant, functionSplit As Variant
+Dim RV As RibbonVariables
     Debug.Print "CAbtns_onAction", control.id, control.tag
     tag = control.tag
     
@@ -183,6 +193,7 @@ Dim w As Long, h As Long
 Dim persistedVars() As Variant
 Dim varValues As Dictionary
 Dim args() As Variant
+Dim RV As RibbonVariables
 
 
     foldername = RootPathValue

@@ -47,7 +47,7 @@ Attribute VB_Name = "DesktopUtils"
 'Sub DisplayVBEExec(Optional param As Variant)
 'Sub RunRibbonEditorExec(bookname As String)
 'Sub CloseRibbonEditorExec()
-
+Option Explicit
 
 Public Declare PtrSafe Function SetWindowPos _
     Lib "USER32" ( _
@@ -93,37 +93,61 @@ End Sub
 Sub ToolActionOpenExec(appname As String)
 Dim bookname As String, controlid As String
 Dim RV As RibbonVariables
+Dim rootpath As String, dataurl As String
+Dim width As Long, height As Long, x As Long, y As Long
+
     Set RV = New RibbonVariables
     
     SetEventsOff
-    controlid = "RunningApps__" & appname
+    controlid = "runningapps__" & UCase(appname)
     
     CallByName RV, controlid, VbLet, True
-    RV.RibbonPointer.Invalidate
+    'RV.RibbonPointer.InvalidateControl controlid
+    rootpath = RV.Settings__rootpath
+    width = RV.WindowSize__Width
+    height = RV.WindowSize__Height
+    x = RV.WindowSize__X
+    y = RV.WindowSize__Y
+    dataurl = RV.Settings__dataurl
+    Set RV = Nothing
     
     Application.Wait Now + #12:00:01 AM#
 
-    bookname = OpenWorkbook(RV.Settings__rootpath & "\" & appname & ".xlsm")
-    ResizeWindowExec bookname, RV.WindowSize__Width, RV.WindowSize__Height
-    MoveWindow bookname, RV.WindowSize__X, RV.WindowSize__Y
+    bookname = OpenWorkbook(rootpath & "\" & appname & ".xlsm")
+    ResizeWindowExec bookname, width, height
+    MoveWindow bookname, x, y
     SetEventsOn
     
     On Error Resume Next ' moving over the location of these values to the Persist sheet
-    Workbooks(bookname).Sheets("REFERENCE").Range("dataurl").value = RV.Settings__dataurl
-    Workbooks(bookname).Sheets("Persist").Range("dataurl").value = RV.Settings__dataurl
+    Workbooks(bookname).Sheets("REFERENCE").Range("dataurl").value = dataurl
+    Workbooks(bookname).Sheets("Persist").Range("dataurl").value = dataurl
     On Error GoTo 0
+    
+    Workbooks("VBAUtils.xlsm").Activate
+    Set RV = New RibbonVariables
+    CallByName RV, controlid, VbLet, True
+    RV.RibbonPointer.InvalidateControl controlid
+    Set RV = Nothing
 End Sub
 
 Sub ToolActionCloseExec(appname As String)
 Dim bookname As String, controlid As String
+Dim RV As RibbonVariables
     SetEventsOff
-    controlid = "RunningApps__" & appname
+    controlid = "runningapps__" & UCase(appname)
     
-    Set RV = New RibbonVariables
-    CallByName RV, controlid, VbLet, False
-    RV.RibbonPointer.Invalidate
+    'Set RV = New RibbonVariables
+    'CallByName RV, controlid, VbLet, False
+    'RV.RibbonPointer.InvalidateControl controlid
+    'Set RV = Nothing
     
     CloseWorkbook appname & ".xlsm"
+    
+    Workbooks("VBAUtils.xlsm").Activate
+    Set RV = New RibbonVariables
+    CallByName RV, controlid, VbLet, False
+    'RV.RibbonPointer.InvalidateControl controlid
+    Set RV = Nothing
 
     SetEventsOn
 End Sub
