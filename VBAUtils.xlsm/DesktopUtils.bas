@@ -123,11 +123,11 @@ Dim width As Long, height As Long, x As Long, y As Long
     Workbooks(bookname).Sheets("Persist").Range("dataurl").value = dataurl
     On Error GoTo 0
     
-    Workbooks("VBAUtils.xlsm").Activate
-    Set RV = New RibbonVariables
-    CallByName RV, controlid, VbLet, True
-    RV.RibbonPointer.InvalidateControl controlid
-    Set RV = Nothing
+    'Workbooks("VBAUtils.xlsm").Activate
+    'Set RV = New RibbonVariables
+    'CallByName RV, controlid, VbLet, True
+    'RV.RibbonPointer.InvalidateControl controlid
+    'Set RV = Nothing
 End Sub
 
 Sub ToolActionCloseExec(appname As String)
@@ -136,18 +136,17 @@ Dim RV As RibbonVariables
     SetEventsOff
     controlid = "runningapps__" & UCase(appname)
     
+    
+
+    
+    CloseWorkbook appname & ".xlsm"
+    
+    'Workbooks("VBAUtils.xlsm").Activate
     'Set RV = New RibbonVariables
     'CallByName RV, controlid, VbLet, False
     'RV.RibbonPointer.InvalidateControl controlid
     'Set RV = Nothing
     
-    CloseWorkbook appname & ".xlsm"
-    
-    Workbooks("VBAUtils.xlsm").Activate
-    Set RV = New RibbonVariables
-    CallByName RV, controlid, VbLet, False
-    'RV.RibbonPointer.InvalidateControl controlid
-    Set RV = Nothing
 
     SetEventsOn
 End Sub
@@ -159,11 +158,12 @@ Public Sub LaunchGitBash(Optional startdir As String = "C:\Users\burtn\Developme
 
 Dim execStr As String
 Dim objShell As Object
-    
+Dim psexepath As String, execPath As String
+
     psexepath = "POWERSHELL.exe -noexit"
-    execpath = """C:\Users\burtn\Development\ps\Launch-GitBash.ps1"""
+    execPath = """C:\Users\burtn\Development\ps\Launch-GitBash.ps1"""
     Set objShell = VBA.CreateObject("Wscript.Shell")
-    execStr = psexepath & " " & execpath & " " & startdir
+    execStr = psexepath & " " & execPath & " " & startdir
     objShell.Run execStr, vbHide
     
 End Sub
@@ -173,11 +173,11 @@ Dim execStr As String
 Dim objShell As Object
     
     psexepath = "POWERSHELL.exe"
-    execpath = """C:\Users\burtn\Development\ps\Packup-Tools.ps1"""
+    execPath = """C:\Users\burtn\Development\ps\Packup-Tools.ps1"""
     Set objShell = VBA.CreateObject("Wscript.Shell")
 
     ChDir "C:\Users\burtn\Development"
-    execStr = psexepath & " " & execpath
+    execStr = psexepath & " " & execPath
     objShell.Run execStr
     
 End Sub

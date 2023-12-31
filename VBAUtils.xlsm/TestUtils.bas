@@ -15,7 +15,7 @@ Attribute VB_Name = "TestUtils"
 '    ByRef tmpDict As Dictionary, Optional ByRef length As Long, Optional ByRef width As Long) As Variant
 
 Public Sub GenerateRibbon()
-    LoadCustRibbon
+    Debug.Print "foo"
 End Sub
 
 Public Sub OpenDesktop()
