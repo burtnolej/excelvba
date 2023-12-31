@@ -569,10 +569,10 @@ Dim offsetFactor As Integer, i As Integer, numRows As Integer, sectionFolderStar
 Dim columnLink As Range, startItemsCell As Range
 Dim fs As Object
 Dim boardIdArray As Variant
-Dim RV As RibbonVariables
+Dim RV As MVRibbonVariables
 
     'On Error GoTo err
-    Set RV = New RibbonVariables
+    Set RV = New MVRibbonVariables
 
     SetEventsOff
     
