@@ -25,6 +25,8 @@ Dim RV As MVRibbonVariables
     Set RV = New MVRibbonVariables
     
     CallByName RV, "RibbonPointer", VbLet, ribbon
+    
+    ribbon.ActivateTab "MVtab4"
     Set RV = Nothing
 End Sub
 

@@ -22,7 +22,7 @@ Function GetBoardIdArray(latest_flag As Boolean)
     If latest_flag = True Then
         GetBoardIdArray = Array("5555786972")
     Else
-        GetBoardIdArray = Array("1140656959", "2193345626", "2259144314", "2763786972", "4973959122", "4974012540", "4909340518", "4973204278")
+        GetBoardIdArray = Array("1140656959", "2193345626", "2259144314", "2763786972", "4973959122", "4974012540", "4909340518", "4973204278", "4977328922")
     End If
 End Function
 Function userNamesArray()
