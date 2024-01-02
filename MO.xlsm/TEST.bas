@@ -143,6 +143,43 @@ Dim tagsDict As New Dictionary
         End If
     Next j
 End Function
+
+Public Sub NewItemExec()
+Dim tmpSheet As Worksheet
+
+    Set tmpSheet = Workbooks("MO.xlsm").Sheets("AddNewItems")
+    
+    tmpSheet.Range("ADD_ITEM_ITEM_NAMES").value = "NEW_ITEM"
+
+    tmpSheet.Range("ADDITEM_BOARD_NAME").value = "SELECT_ONE"
+    tmpSheet.Range("ADD_ITEM_GROUP_NAMES").value = "SELECT_ONE"
+    tmpSheet.Range("NEWITEM_NEWITEM_NAME").value = "INPUT_ONE"
+    tmpSheet.Range("NEWSUBITEM_NEWSUBITEM_NAME").value = "SELECT_ONE"
+    tmpSheet.Range("NEWITEM_TAG").value = "SELECT_ONE"
+    tmpSheet.Range("NEWITEM_TAG2").value = "SELECT_ONE"
+    
+    tmpSheet.Range("NEWSUBITEM_TAG").value = "SELECT_ONE"
+    tmpSheet.Range("NEWSUBITEM_TAG2").value = "SELECT_ONE"
+    tmpSheet.Range("NEWITEM_OWNER").value = "SELECT_ONE"
+    tmpSheet.Range("NEWSUBITEM_OWNER").value = "SELECT_ONE"
+    
+    tmpSheet.Range("NEWITEM_ADDEDITEMID").value = ""
+    tmpSheet.Range("NEWITEM_ADDEDSUBITEMID").value = ""
+    tmpSheet.Range("NEWITEM_ADDEDITEMURL").value = ""
+    tmpSheet.Range("NEWITEM_ADDEDITEMFOLDER").value = ""
+    
+    tmpSheet.Range("NEWITEM_NEWITEM_UPDATE").value = "INPUT_ONE"
+    tmpSheet.Range("NEWSUBITEM_NEWSUBITEM_UPDATE").value = "INPUT_ONE"
+    
+    
+    
+    tmpSheet.Range("NEWSUBITEM_STATUS").value = "SELECT_ONE"
+    tmpSheet.Range("NEWITEM_STATUS").value = "SELECT_ONE"
+    
+
+Set tmpSheet = Nothing
+
+End Sub
 Public Sub AddItemExec(ByRef rs As String, ByRef rt As String, ByRef sirs As String, ByRef sirt As String)
 Dim dataRange As Range, dataRow As Range
 Dim groupid As String, boardid As String, itemName As String, tags_string As String, tag_name As String, subitemStatus As String, ownerEnum As String, subitemtags_string As String

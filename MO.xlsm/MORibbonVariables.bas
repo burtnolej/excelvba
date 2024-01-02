@@ -13,7 +13,9 @@ Private persistrangename As String
 Private persistrangelen As String
 Private bookname As String
 
-Private actions__sddItemval As String
+Private actions__addItemval As String
+Private actions__newItemval As String
+
 Private refreshdata__usersval As String
 Private refreshdata__tagsval As String
 Private refreshdata__groupsval As String
@@ -47,10 +49,10 @@ End Property
 ' Actions__AddItem  ''''''''''''''''''''''''''''''
 Property Get Actions__AddItem() As String
     Debug.Print "Actions__AddItem"
-    If Actions__AddItemval = "" Then
+    If actions__addItemval = "" Then
         Actions__AddItem = GetVariableSheetValue("actions__additemval")
     Else
-        Actions__AddItem = Actions__AddItemval
+        Actions__AddItem = actions__addItemval
     End If
 End Property
 Property Let Actions__AddItem(value As String)
@@ -68,6 +70,24 @@ Dim resultsDict As New Dictionary
 End Property
 
 
+
+' Actions__NewItem  ''''''''''''''''''''''''''''''
+Property Get Actions__NewItem() As String
+    Debug.Print "Actions__NewItem"
+    If actions__newItemval = "" Then
+        Actions__NewItem = GetVariableSheetValue("actions__newItemval")
+    Else
+        Actions__NewItem = actions__newItemval
+    End If
+End Property
+Property Let Actions__NewItem(value As String)
+Dim rs As String, rt As String, sirs As String, sirt As String
+Dim resultsDict As New Dictionary
+
+    Debug.Print "actions__newItemval", value
+    NewItemExec
+    LetVariableSheetValue "actions__newItemval", value
+End Property
 
 
 ' RefreshData__Users  ''''''''''''''''''''''''''''''

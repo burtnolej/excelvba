@@ -16,6 +16,7 @@ Dim subItemRangeString As String: subItemRangeString = "ADD_ITEM_SUBITEM_NAMES"
 
 Dim boardRange As Range, dropDownTarget As Range, groupRange As Range, itemRange As Range, subItemRange As Range
 
+    GoTo exitsub
     If target.Rows.Count > 1 Then
         Exit Sub
     End If
@@ -77,7 +78,8 @@ Dim boardRange As Range, dropDownTarget As Range, groupRange As Range, itemRange
         'set new sub item name to blank
         ActiveSheet.Range("NEWSUBITEM_NEWSUBITEM_NAME").Rows(target.Row - 3).value = "N/A"
     End If
-    
+exitsub:
+
     'SetEventsOn
 End Sub
 
