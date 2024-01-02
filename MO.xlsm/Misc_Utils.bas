@@ -1,6 +1,29 @@
 Attribute VB_Name = "Misc_Utils"
+'Public Sub WriteToMondayAPI(itemID As String, msg As String)
+'Public Sub ShowMODisplayables()
+'Public Sub myParseJson(responseText)
+'Public Function getResponseItemid(responseText, Optional itemType As String = "create_item") As String
+'Public Function DirExist(filename As String) As Boolean
+'Public Sub SetEventsOn()
+'Public Sub SetEventsOff()
+'Public Sub SetRangeFormat(myRange As Range, bgColor As Variant, fontColor As Variant)
+'Public Sub GetCellFormat(myCell As Range, ByRef bgColor As Variant, fontColor As Variant)
+'Public Sub CopyCellFormat(fromCell As Range, toRange As Range)
+'Public Sub AddFilterCalbackSub(targetBook As Workbook, sheetName As String)
+'Public Sub AddFilterCode(targetBook As Workbook, sheetName As String, filterRange As Range, filterName As Name, Optional filterRangeDepth As Long = 2000)
+'Public Function GetMondayTimestamp() As String
+'Public Sub AddMondayCallbackCode(targetBook As Workbook)
+'Public Sub AddSendMondayUpdateCode(sourceBook As Workbook, targetBook As Workbook, Optional tmpFileName As String = "C:\Users\burtn")
+'Public Sub AddVBReferences(targetBook As Workbook)
+'Public Sub CopyCodeModule(sourceBook As Workbook, targetBook As Workbook, fromModule As String, fromProc As String, toModule As String)
+'Public Sub CopyModule(sourceBook As Workbook, targetBook As Workbook, fromModule As String, tmpFileName As String)
+'Sub AddReference(targetBook As Workbook, refName As String, refFileName As String)
+'Public Sub BatchUpdateDropdownRefData()
+'Public Sub UpdateDropdownRefData(ownerString As String, sourceWBStr As String, sourceWSStr As String, initRowNum As Long, initColNum As Long, targetRangeName As String, targetWBStr As String, targetWSStr As String, ByRef prevCopyRowCount As Long, ByRef prevCopyPasteCount As Long, Optional parentOnlyFlag As Boolean = True, Optional overrideCopySizeFlag As Boolean = False)
+'Public Sub CreateGroupNameDropdown(dropDownTarget As Range, inputRangeAddress As String, inputSheetName As String)
+
 Public EVENTSON As Boolean
-Public Sub WriteToMondayAPI(itemID As String, msg As String)
+Public Sub WriteToMondayAPI(itemid As String, msg As String)
 apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjExMTgyMDkwNiwidWlkIjoxNTE2MzEwNywiaWFkIjoiMjAyMS0wNS0zMFQxMTowMDo1OS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NjY5MDk4NSwicmduIjoidXNlMSJ9.zIeOeoqeaZ2Q8NuKBPPw2LQFh2JRPvPwIkhhn4e5Q08"
 Url = "https://api.monday.com/v2"
 
@@ -11,7 +34,7 @@ Dim DDQ As String
 DDQ = Chr(34)
 
 'postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "query {updates (limit: 3) { text_body id item_id created_at creator { name id } } }" & DDQ & "}"
-postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { create_update (item_id: " & itemID & ", body: " & "\" & DDQ & msg & "\" & DDQ & ") {id}}" & DDQ & "}"
+postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { create_update (item_id: " & itemid & ", body: " & "\" & DDQ & msg & "\" & DDQ & ") {id}}" & DDQ & "}"
 
 
 Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
@@ -43,14 +66,14 @@ Public Sub myParseJson(responseText)
 Dim Json As Object
 Dim d As Dictionary
 Dim l As Variant
-Dim itemID As String
+Dim itemid As String
 
 Dim i As Integer
 Set Json = JsonConverter.ParseJson(responseText)
 
 Set d = Json("data")
 Set c = d("create_subitem")
-itemID = c("id")
+itemid = c("id")
 For i = 1 To l.Count
     Set d = l(i)
     Debug.Print d("text_body")
@@ -58,25 +81,40 @@ Next i
 
 End Sub
 
-Public Function getResponseItemid(responseText, Optional itemType As String = "create_item") As String
+Public Function getResponseItemid(responseText, Optional itemType As String = "create_item", Optional param As String = "id") As String
 
 Dim Json As Object
-Dim d As Dictionary
+Dim d As Dictionary, c As Dictionary
 Dim l As Variant
-Dim itemID As String
+Dim itemid As String
 Dim i As Integer
 
     Set Json = JsonConverter.ParseJson(responseText)
     
     Set d = Json("data")
     Set c = d(itemType)
+    If param <> "id" Then
+        Set c = c(param)
+    End If
     getResponseItemid = c("id")
+    
+   '{
+   '"data": {
+   '  "create_subitem": {
+   '    "id": "5768407847",
+   '    "board": {
+   '      "id": "4978854654"
+   '    }
+   '  }
+   '},
+   '"account_id": 6690985
+   '}
 End Function
 
-Public Function DirExist(filename As String) As Boolean
+Public Function DirExist(fileName As String) As Boolean
  
     DirExist = True
-    If Dir(filename, vbDirectory) = "" Then
+    If Dir(fileName, vbDirectory) = "" Then
         DirExist = False
     End If
 
@@ -94,9 +132,9 @@ End Sub
 Public Sub SetEventsOff()
 
     Application.ScreenUpdating = False
-    Application.EnableEvents = False
-    Application.DisplayAlerts = False
-    EVENTSON = False
+    'Application.EnableEvents = False
+    'Application.DisplayAlerts = False
+    'EVENTSON = False
 End Sub
 
 Public Sub SetRangeFormat(myRange As Range, bgColor As Variant, fontColor As Variant)
@@ -446,50 +484,76 @@ exitsub:
 End Sub
 
 
-Public Sub BatchUpdateDropdownRefData()
+Public Function RefreshItemsExec(sourceWBStr As String) As Dictionary
 Dim prevCopyRowCount As Long: prevCopyRowCount = 0
 Dim prevCopyPasteCount As Long: prevCopyPasteCount = 0
-Dim sourceWBStr As String
+'Dim sourceWBStr As String
+Dim sourceWB As Workbook
+Dim fso As New FileSystemObject
+Dim fileName As String
+Dim resultsDict As New Dictionary
 
-    sourceWBStr = ActiveSheet.Range("REFSHEET").Value
+    SetEventsOff
     
-    
-    'groups
-    UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 4, "ITEM_GROUP_NAMES", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount
-    
-    'items
-    UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 5, "ITEM_NAMES", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount
-    UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 8, "ITEM_ITEMIDS", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount
-    'UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 11, "ITEM_ITEMIDS", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount
-    
-    'subitems
-    UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 5, "SUBITEM_ITEMNAMES", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount, False
-    UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 8, "SUBITEM_SUBITEMIDS", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount, False
-    'UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 11, "SUBITEM_SUBITEMIDS", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount, False
-    UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 6, "SUBITEM_SUBITEMNAMES", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount, False, True
-    
-    
-End Sub
-Public Sub UpdateDropdownRefData(ownerString As String, sourceWBStr As String, sourceWSStr As String, initRowNum As Long, initColNum As Long, targetRangeName As String, targetWBStr As String, targetWSStr As String, _
-                   ByRef prevCopyRowCount As Long, ByRef prevCopyPasteCount As Long, Optional parentOnlyFlag As Boolean = True, Optional overrideCopySizeFlag As Boolean = False)
-Dim sourceWB As Workbook, targetWB As Workbook
-Dim sourceWS As Worksheet, targetWS As Worksheet
-Dim initSourceCell As Range, initTargetCell As Range, targetRange As Range
-Dim targetNamedRange As Name
-Dim updatedNamedRangeAddress As String
-Dim initTargetCol As Long
+    'sourceWBStr = ActiveSheet.Range("REFSHEET").value
 
-    'SetEventsOff
-        
+    fileName = fso.GetFileName(sourceWBStr)
+
     On Error Resume Next
-    Set sourceWB = Workbooks(sourceWBStr & ".xlsm")
+    Set sourceWB = Workbooks(sourceWBStr)
     On Error GoTo 0
     
     If sourceWB Is Nothing Then
-        Set sourceWB = Workbooks.Open(ActiveSheet.Range("REFSHEET_DIR").Value & "\" & sourceWBStr & ".xlsm")
+        'Set sourceWB = Workbooks.Open(ActiveSheet.Range("REFSHEET_DIR").value & "\" & sourceWBStr & ".xlsm")
+        Set sourceWB = Workbooks.Open(sourceWBStr)
     End If
+    'Application.Run ("'Master Calc with Macro.xlsm'!SummarizeMaster")
     
-    Set sourceWS = sourceWB.Sheets(sourceWSStr)
+    Application.Run ("'" & fileName & "'!ExpandAll")
+    
+    'groups
+    'UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 4, "ITEM_GROUP_NAMES", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount
+    resultsDict.Add "ITEM_GROUP_NAMES", UpdateDropdownRefData("Jon Butler", sourceWB.Sheets("Viewer"), 5, 4, "ITEM_GROUP_NAMES", "MO.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount)
+    
+    'items
+    resultsDict.Add "ITEM_NAMES", UpdateDropdownRefData("Jon Butler", sourceWB.Sheets("Viewer"), 5, 5, "ITEM_NAMES", "MO.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount)
+    resultsDict.Add "ITEM_ITEMIDS", UpdateDropdownRefData("Jon Butler", sourceWB.Sheets("Viewer"), 5, 8, "ITEM_ITEMIDS", "MO.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount)
+    'UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 11, "ITEM_ITEMIDS", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount
+    
+    'subitems
+    resultsDict.Add "SUBITEM_ITEMNAMES", UpdateDropdownRefData("Jon Butler", sourceWB.Sheets("Viewer"), 5, 5, "SUBITEM_ITEMNAMES", "MO.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount, False)
+    resultsDict.Add "SUBITEM_SUBITEMIDS", UpdateDropdownRefData("Jon Butler", sourceWB.Sheets("Viewer"), 5, 8, "SUBITEM_SUBITEMIDS", "MO.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount, False)
+    'UpdateDropdownRefData "Jon Butler", sourceWBStr, "Viewer", 5, 11, "SUBITEM_SUBITEMIDS", "MondayAddItems.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount, False
+    resultsDict.Add "SUBITEM_SUBITEMNAMES", UpdateDropdownRefData("Jon Butler", sourceWB.Sheets("Viewer"), 5, 6, "SUBITEM_SUBITEMNAMES", "MO.xlsm", "Reference", prevCopyRowCount, prevCopyPasteCount, False, True)
+    
+    CloseBook sourceWB
+    
+    SetEventsOn
+
+    Set RefreshItemsExec = resultsDict
+    Set resultsDict = Nothing
+    Set fso = Nothing
+End Function
+Public Function UpdateDropdownRefData(ownerString As String, sourceWS As Worksheet, initRowNum As Long, initColNum As Long, targetRangeName As String, targetWBStr As String, targetWSStr As String, _
+                   ByRef prevCopyRowCount As Long, ByRef prevCopyPasteCount As Long, Optional parentOnlyFlag As Boolean = True, Optional overrideCopySizeFlag As Boolean = False) As Long
+Dim targetWB As Workbook
+Dim targetWS As Worksheet
+Dim initSourceCell As Range, initTargetCell As Range, targetRange As Range
+Dim targetNamedRange As Name
+Dim updatedNamedRangeAddress As String
+Dim initTargetCol As Long, initTargetRow As Long
+
+    'SetEventsOff
+        
+    'On Error Resume Next
+    'Set sourceWB = Workbooks(sourceWBStr & ".xlsm")
+    'On Error GoTo 0
+    
+    'If sourceWB Is Nothing Then
+    '    Set sourceWB = Workbooks.Open(ActiveSheet.Range("REFSHEET_DIR").value & "\" & sourceWBStr & ".xlsm")
+    'End If
+    
+    'Set sourceWS = sourceWB.Sheets(sourceWSStr)
     
     Set initCell = sourceWS.Cells(initRowNum, initColNum)
     
@@ -516,6 +580,9 @@ Dim initTargetCol As Long
     If overrideCopySizeFlag = False Then
         ' if not zero then num of rows was pasted in
         Range(Selection, Selection.End(xlDown)).Select
+        Range(Selection, Selection.End(xlDown)).Select
+        
+        Debug.Print Selection.Address
         initTargetRow = Selection.Rows.SpecialCells(xlCellTypeVisible).Count
         initTargetCol = Selection.Columns.Count
         prevCopyRowCount = Selection.Rows.Count
@@ -548,13 +615,14 @@ Dim initTargetCol As Long
 
 
 exitsub:
+    UpdateDropdownRefData = targetRange.Rows.Count
     Set sourceWB = Nothing
     Set sourceWS = Nothing
     Set initCell = Nothing
     
     'SetEventsOn
     
-End Sub
+End Function
 
 Public Sub CreateGroupNameDropdown(dropDownTarget As Range, inputRangeAddress As String, inputSheetName As String)
 Dim rangeAddress As String, sheetName As String, dropdownAddress As String
@@ -601,6 +669,6 @@ Dim tmpWorksheet As Worksheet
         .ShowError = True
     End With
     
-    dropDownTarget.Value = listRange.Rows(1) 'set the cell to the first value in the drop down
+    dropDownTarget.value = listRange.Rows(1) 'set the cell to the first value in the drop down
 End Sub
 

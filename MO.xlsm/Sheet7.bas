@@ -24,11 +24,15 @@ Dim boardRange As Range, dropDownTarget As Range, groupRange As Range, itemRange
         Exit Sub
     End If
     
-    If target.Value = "" Then
+    If IsError(target.value) = True Then
         Exit Sub
     End If
     
-    SetEventsOff
+    If target.value = "" Then
+        Exit Sub
+    End If
+    
+    'SetEventsOff
     
     Set boardRange = ActiveSheet.Range(boardRangeString)
     Set groupRange = ActiveSheet.Range(groupRangeString)
@@ -37,40 +41,43 @@ Dim boardRange As Range, dropDownTarget As Range, groupRange As Range, itemRange
     
     If Not Intersect(boardRange, target) Is Nothing Then
         
-        ActiveSheet.Range("SELECT_BOARD").Value = target.Value
-        Set dropDownTarget = target.Offset(, 1)
+        ActiveSheet.Range("SELECT_BOARD").value = target.value
+        'Set dropDownTarget = target.Offset(, 1)
+        Set dropDownTarget = target.Offset(1)
         CreateGroupNameDropdown dropDownTarget, "SELECT_GROUP_NAMES", "AddNewItems"
         
         
     ElseIf Not Intersect(groupRange, target) Is Nothing Then
-        ActiveSheet.Range("SELECT_GROUP").Value = target.Value
-        Set dropDownTarget = target.Offset(, 3)
+        ActiveSheet.Range("SELECT_GROUP").value = target.value
+        'Set dropDownTarget = target.Offset(, 3)
+        Set dropDownTarget = target.Offset(3)
         CreateGroupNameDropdown dropDownTarget, "SELECT_ITEM_NAMES", "AddNewItems"
         
         'set new item name to blank
-        ActiveSheet.Range("NEWITEM_NEWITEM_NAME").Rows(target.Row - 3).Value = ""
+        ActiveSheet.Range("NEWITEM_NEWITEM_NAME").Rows(target.Row - 3).value = ""
         
         
     ElseIf Not Intersect(itemRange, target) Is Nothing Then
-        ActiveSheet.Range("SELECT_ITEMS").Value = target.Value
-        Set dropDownTarget = target.Offset(, 3)
+        ActiveSheet.Range("SELECT_ITEMS").value = target.value
+        'Set dropDownTarget = target.Offset(, 3)
+        Set dropDownTarget = target.Offset(3)
         CreateGroupNameDropdown dropDownTarget, "SELECT_SUBITEM_NAMES", "AddNewItems"
 
         'set new item name to N/A as an existing item has been added
-        ActiveSheet.Range("NEWITEM_NEWITEM_NAME").Rows(target.Row - 3).Value = "N/A"
+        ActiveSheet.Range("NEWITEM_NEWITEM_NAME").Rows(target.Row - 3).value = "N/A"
         
         'set new sub item name to blank
-        ActiveSheet.Range("NEWSUBITEM_NEWSUBITEM_NAME").Rows(target.Row - 3).Value = ""
+        ActiveSheet.Range("NEWSUBITEM_NEWSUBITEM_NAME").Rows(target.Row - 3).value = ""
         
         'set new item is to blank
-        ActiveSheet.Range("NEWITEM_ADDEDITEMID").Rows(target.Row - 3).Value = ""
+        ActiveSheet.Range("NEWITEM_ADDEDITEMID").Rows(target.Row - 3).value = ""
         
     ElseIf Not Intersect(subItemRange, target) Is Nothing Then
         
         'set new sub item name to blank
-        ActiveSheet.Range("NEWSUBITEM_NEWSUBITEM_NAME").Rows(target.Row - 3).Value = "N/A"
+        ActiveSheet.Range("NEWSUBITEM_NEWSUBITEM_NAME").Rows(target.Row - 3).value = "N/A"
     End If
     
-    SetEventsOn
+    'SetEventsOn
 End Sub
 

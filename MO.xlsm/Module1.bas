@@ -1,4 +1,25 @@
 Attribute VB_Name = "Module1"
+'Function boardIdArray()
+'Function userNamesArray()
+'Public Sub AddFormulas(sumaryWorkbook As Workbook, boardWorksheet As Worksheet, numRows As Integer, startContentRow As Integer)
+'Public Sub AddUpdatesFormulas(targetSheet As Worksheet, numRows As Integer, mondayPrefix As String, mondaySuffix As String)
+'Public Sub DeleteMondayItem(itemID As String, tmpWorkbook As Workbook, mondayFolder As String)
+'Public Function GetFolderFromID(itemID As String, tmpWorkbook As Workbook) As String
+'Public Sub AddToMondayFile(itemID As String, mondayFolderPath As String, tmpWorkbook As Workbook, initDocText As String, extraDocText As String, itemName As String, Optional dryRun As Boolean = False)
+'Public Function CreateSimpleMondayFolder(mondayFolderPath As String, itemID As String, itemName As String) As String
+'Public Sub InitMondayFolder(itemID As String, itemName As String, mondayFolderPath As String, tmpWorkbook As Workbook, Optional initDocText As String = "", Optional dryRun As Boolean = False)
+'Public Sub AddFoldersFormulas(targetSheet As Worksheet, numRows As Integer, mondayPrefix As String, mondaySuffix As String)
+'Public Function GetUpdates(updateFileDir As String, updatesSheet As Worksheet)
+'Public Function GetSandboxFolder(sandboxDir As String, sandboxSheet As Worksheet)
+'Public Sub ApplyFilter(filterSheet As Worksheet, colName As String, colValue As Variant)
+'Public Sub ApplySort(sortSheet As Worksheet, sortColName As String)
+'Public Sub LoadMondayDumpFile()
+'Public Sub AddSearchTextColumn(maxRow As Integer, startRow As Integer, targetSheet As Worksheet, targetWorkbook As Workbook, sourceBook As Workbook)
+'Public Function CreateViewerBook(genBook As Workbook, viewerBookname As String, viewerBookpath As String, outputFolder As String) As Workbook
+'Public Function GetFolderSelection() As String
+'Public Sub DisplayGroups(tmpSheet As Worksheet, topLeftCell As Range)
+'Public Sub DisplayTags(tmpSheet As Worksheet, topLeftCell As Range)
+
 
 Const UNDERLINE = "_"
 Const SPACE = " "
@@ -127,24 +148,24 @@ Dim columnItemId As Range, columnUpdateUpdatesTime As Range
     
 End Sub
 
-Public Sub DeleteMondayItem(itemID As String, tmpWorkbook As Workbook, mondayFolder As String)
+Public Sub DeleteMondayItem(itemid As String, tmpWorkbook As Workbook, mondayFolder As String)
 Dim rs As String, rt As String, mondayFolderName As String
-    mondayFolderName = GetFolderFromID(itemID, tmpWorkbook)
+    mondayFolderName = GetFolderFromID(itemid, tmpWorkbook)
     
     If mondayFolderName <> "-1" Then
         ' need to delete the folder
     End If
     
-    DeleteItem itemID, rs, rt
+    DeleteItem itemid, rs, rt
 End Sub
-Public Function GetFolderFromID(itemID As String, tmpWorkbook As Workbook) As String
+Public Function GetFolderFromID(itemid As String, tmpWorkbook As Workbook) As String
 Dim folderNamesCol As Range, itemIdCell As Range
 
     Set folderNamesCol = tmpWorkbook.Sheets("Folders").Range("FOLDERS_COLUMNS").Columns(1)
     
     For Each itemIdCell In folderNamesCol.Cells
-        If InStr(1, itemIdCell.Value, itemID) <> 0 Then
-            GetFolderFromID = itemIdCell.Value
+        If InStr(1, itemIdCell.value, itemid) <> 0 Then
+            GetFolderFromID = itemIdCell.value
             Exit Function
         End If
     Next itemIdCell
@@ -152,7 +173,7 @@ Dim folderNamesCol As Range, itemIdCell As Range
     GetFolderFromID = -1
 
 End Function
-Public Sub AddToMondayFile(itemID As String, mondayFolderPath As String, tmpWorkbook As Workbook, initDocText As String, extraDocText As String, _
+Public Sub AddToMondayFile(itemid As String, mondayFolderPath As String, tmpWorkbook As Workbook, initDocText As String, extraDocText As String, _
                 itemName As String, Optional dryRun As Boolean = False)
 Dim wordDoc As Word.Document
 Dim fso As Scripting.FileSystemObject
@@ -163,15 +184,15 @@ Dim folderPath As String, mondayFolderName As String, foldername As String
     Set wordApp = CreateObject("Word.Application")
     Set fso = CreateObject("Scripting.FileSystemObject")
     
-    mondayFolderName = GetFolderFromID(itemID, tmpWorkbook)
+    mondayFolderName = GetFolderFromID(itemid, tmpWorkbook)
     
-    wordDocName = itemID & "__description__" & ".docx"
+    wordDocName = itemid & "__description__" & ".docx"
     
     If mondayFolderName = "-1" Then
-        mondayFolderName = itemID & " - " & itemName
+        mondayFolderName = itemid & " - " & itemName
         folderPath = fso.BuildPath(mondayFolderPath, mondayFolderName)
         'fso.CreateFolder folderPath
-        Debug.Print "created folder : " & itemID & " " & itemName
+        Debug.Print "created folder : " & itemid & " " & itemName
     Else
         folderPath = fso.BuildPath(mondayFolderPath, mondayFolderName)
     End If
@@ -183,20 +204,20 @@ Dim folderPath As String, mondayFolderName As String, foldername As String
 
         If Dir(docPath) = "" Then
             Set wordDoc = wordApp.Documents.Add
-            wordDoc.Content.InsertAfter Text:=initDocText
-            wordDoc.Content.InsertAfter Text:=extraDocText
+            wordDoc.Content.InsertAfter text:=initDocText
+            wordDoc.Content.InsertAfter text:=extraDocText
 
             Debug.Print "created word doc : " & wordDocName
         Else
             Set wordDoc = wordApp.Documents.Open(docPath)
             
-            If InStr(1, wordDoc.Content.Text, extraDocText) <> 0 Then
+            If InStr(1, wordDoc.Content.text, extraDocText) <> 0 Then
                 Debug.Print "content allready exists : " & docPath
                 GoTo exitsub
             End If
         
             wordDoc.Content.InsertParagraphAfter
-            wordDoc.Content.InsertAfter Text:=extraDocText
+            wordDoc.Content.InsertAfter text:=extraDocText
         End If
 
         Debug.Print "added to word doc : " & extraDocText
@@ -212,23 +233,23 @@ exitsub:
     Set fso = Nothing
 End Sub
 
-Public Function CreateSimpleMondayFolder(mondayFolderPath As String, itemID As String, itemName As String) As String
+Public Function CreateSimpleMondayFolder(mondayFolderPath As String, itemid As String, itemName As String) As String
 Dim folderPath As String
 
     Set fso = CreateObject("Scripting.FileSystemObject")
-    folderPath = fso.BuildPath(mondayFolderPath, itemID & " " & itemName)
+    folderPath = fso.BuildPath(mondayFolderPath, itemid & " " & itemName)
     If Dir(folderPath) = "" Then
         
         itemName = Replace(itemName, " ", "_")
         itemName = Replace(itemName, "/", "_")
-        folderPath = fso.BuildPath(mondayFolderPath, itemID & " " & itemName)
+        folderPath = fso.BuildPath(mondayFolderPath, itemid & " " & itemName)
         fso.CreateFolder folderPath
     End If
     
     CreateSimpleMondayFolder = folderPath
             
 End Function
-Public Sub InitMondayFolder(itemID As String, itemName As String, mondayFolderPath As String, tmpWorkbook As Workbook, _
+Public Sub InitMondayFolder(itemid As String, itemName As String, mondayFolderPath As String, tmpWorkbook As Workbook, _
     Optional initDocText As String = "", Optional dryRun As Boolean = False)
 Dim fso As Scripting.FileSystemObject
 Dim foldername As String, folderPath As String, wordDocName As String
@@ -243,14 +264,14 @@ Dim folderNamesCol As Range, itemIdCell As Range
     Set folderNamesCol = tmpWorkbook.Sheets("Folders").Range("FOLDERS_COLUMNS").Columns(1)
     
     For Each itemIdCell In folderNamesCol.Cells
-        If InStr(1, itemIdCell.Value, itemID) <> 0 Then
-            Debug.Print "folder exists : " & itemIdCell.Value
+        If InStr(1, itemIdCell.value, itemid) <> 0 Then
+            Debug.Print "folder exists : " & itemIdCell.value
             GoTo exitsub
         End If
     Next itemIdCell
-    wordDocName = itemID & "__description__" & ".docx"
+    wordDocName = itemid & "__description__" & ".docx"
 
-    foldername = itemID & " - " & itemName
+    foldername = itemid & " - " & itemName
     
     Set fso = CreateObject("Scripting.FileSystemObject")
     folderPath = fso.BuildPath(mondayFolderPath, foldername)
@@ -259,7 +280,7 @@ Dim folderNamesCol As Range, itemIdCell As Range
         If dryRun = False Then
             fso.CreateFolder folderPath
             Set wordDoc = wordApp.Documents.Add
-            wordDoc.Content.InsertAfter Text:=initDocText
+            wordDoc.Content.InsertAfter text:=initDocText
             wordDoc.SaveAs2 fso.BuildPath(folderPath, wordDocName)
             wordDoc.Close
         End If
@@ -345,7 +366,7 @@ Dim sectionFolderStart As Integer
     Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
     boardNameFormula = "=INDEX(DATA_BOARDNAMES,MATCH(" & boardIdStartCell.Address(0, 1) & ",DATA_BOARDID,0),1)"
     Set columnBoardName = columnBoardName.Offset(, -1)
-    columnBoardName.Rows(1).Value = "BOARD_NAME"
+    columnBoardName.Rows(1).value = "BOARD_NAME"
     Set boardNameStartCell = columnBoardName.Rows(2)
     boardNameStartCell.Select
     boardNameStartCell.Formula = boardNameFormula
@@ -362,7 +383,7 @@ Dim oFSO As FileSystemObject
 Dim tmpWorkbook As Workbook
 
     Set oFSO = CreateObject("Scripting.FileSystemObject")
-    Set tmpWorkbook = Workbooks.Open(filename:=oFSO.BuildPath(updateFileDir, "updates.txt"), Format:=6, Delimiter:="^")
+    Set tmpWorkbook = Workbooks.Open(fileName:=oFSO.BuildPath(updateFileDir, "updates.txt"), Format:=6, Delimiter:="^")
     tmpWorkbook.Sheets("updates").UsedRange.Select
     Selection.Copy
     updatesSheet.Activate
@@ -463,7 +484,7 @@ Dim colSortNum As Integer
     Set colSortRange = sortSheet.Range(sortColName)
         
     sortSheet.AutoFilter.Sort.SortFields.Clear
-    sortSheet.AutoFilter.Sort.SortFields.Add2 Key:=colSortRange, SortOn:=xlSortOnValues, Order:=xlDescending, DataOption:=xlSortNormal
+    sortSheet.AutoFilter.Sort.SortFields.Add2 key:=colSortRange, SortOn:=xlSortOnValues, Order:=xlDescending, DataOption:=xlSortNormal
     With sortSheet.AutoFilter.Sort
         .Header = xlYes
         .MatchCase = False
@@ -575,7 +596,7 @@ Dim fs As Object
                 
         ' build the input file name and open it
         dataFile = fs.BuildPath(datafileDirname, boardIdArray(i) & inputFileExtension)
-        Set tmpWorkbook = Workbooks.Open(filename:=dataFile, Format:=6, Delimiter:="^")
+        Set tmpWorkbook = Workbooks.Open(fileName:=dataFile, Format:=6, Delimiter:="^")
         Set tmpWorksheet = tmpWorkbook.Sheets(boardIdArray(i))
         tmpWorksheet.Activate
         
@@ -642,7 +663,7 @@ Dim fs As Object
     ApplyFilter boardWorksheet, "COLUMN_STATUS", Array("Working", "Not Started")
         
     summaryWorkbook.Activate
-    summaryWorkbook.SaveAs FileFormat:=xlOpenXMLWorkbookMacroEnabled, filename:=targetFileName
+    summaryWorkbook.SaveAs FileFormat:=xlOpenXMLWorkbookMacroEnabled, fileName:=targetFileName
     
     GoTo exitsub
     
@@ -694,19 +715,19 @@ Dim searchTermArray As Variant, outputArray As Variant
 
     Set searchTermRange = sourceBook.Sheets(configSheetName).Range(searchTermRangeString)
     Set searchTermColIndexRange = sourceBook.Sheets(configSheetName).Range(searchTermColIndexRangeString)
-    searchTermArray = Split(searchTermRange.Value, ",")
+    searchTermArray = Split(searchTermRange.value, ",")
 
-    Set targetColumnRange = targetSheet.Columns(searchTermColIndexRange.Value)
+    Set targetColumnRange = targetSheet.Columns(searchTermColIndexRange.value)
     
     For i = 1 To maxRow
         For j = LBound(searchTermArray) To UBound(searchTermArray)
             Set colValueRange = targetSheet.Range("COLUMN_" & searchTermArray(j))
-            outputArray(i - 1, 1) = outputArray(i - 1, 1) & colValueRange.Rows(i + 1).Value
+            outputArray(i - 1, 1) = outputArray(i - 1, 1) & colValueRange.Rows(i + 1).value
         Next j
     Next i
     
     Set targetColumnRange = targetColumnRange.Resize(maxRow).Offset(startRow)
-    targetColumnRange.Value = outputArray
+    targetColumnRange.value = outputArray
     
     Set viewerColumnFilterRange = targetSheet.Range("E1")
     Set viewerColumnFilterName = targetWorkbook.Names.Add("COLUMN_FILTER_SEARCHSTR", RefersTo:=viewerColumnFilterRange)
@@ -774,8 +795,8 @@ Dim startRow As Integer, foldersStartRow As Integer, maxRow As Integer
         
     For Each viewerGenColumnCell In viewerGenColumnNameRange
         Set viewerColumnRange = viewerSheet.Range(Cells(startRow, viewerGenColumnCell.Row() - 1), Cells(2000, viewerGenColumnCell.Row() - 1))
-        viewerWorkbook.Names.Add "COLUMN_" & viewerGenColumnCell.Value, RefersTo:=viewerColumnRange
-        viewerColumnRange.Rows(1).Value = viewerGenColumnCell.Value
+        viewerWorkbook.Names.Add "COLUMN_" & viewerGenColumnCell.value, RefersTo:=viewerColumnRange
+        viewerColumnRange.Rows(1).value = viewerGenColumnCell.value
         
         ' set the column width
         viewerColumnRange.ColumnWidth = viewerGenColumnWidthRange.Rows(viewerGenColumnCell.Row() - 1)
@@ -793,7 +814,7 @@ Dim startRow As Integer, foldersStartRow As Integer, maxRow As Integer
         Set typeCell = viewerGenColumnTypeRange.Rows(viewerGenColumnCell.Row() - 1)
         If typeCell <> -1 Then ' -1 means a formula
             viewerColumnRange.Select
-            Selection.NumberFormat = typeCell.Value
+            Selection.NumberFormat = typeCell.value
         End If
         
         ' set column header format
@@ -804,7 +825,7 @@ Dim startRow As Integer, foldersStartRow As Integer, maxRow As Integer
         If viewerGenColumnFilterInputRange.Rows(viewerGenColumnCell.Row() - 1) = 1 Then
 
             Set viewerColumnFilterRange = viewerColumnRange.Resize(1).Offset(-2)
-            Set viewerColumnFilterName = viewerWorkbook.Names.Add("COLUMN_FILTER_" & viewerGenColumnCell.Value, RefersTo:=viewerColumnFilterRange)
+            Set viewerColumnFilterName = viewerWorkbook.Names.Add("COLUMN_FILTER_" & viewerGenColumnCell.value, RefersTo:=viewerColumnFilterRange)
             viewerColumnFilterRange.Style = "input"
             'viewerGenColumnFilterInputRange.AddComment = "> for multiple values enter a comma separated list i.e. word1,word2" & vbNewLine & "> for wildcards add a asterisk as suffix/prefix i.e. *word* " & vbNewLine & "> to reset to no filters enter an empty string " & vbNewLine & "> for nonblanks enter <>"
         
@@ -861,12 +882,13 @@ Dim sFolder As String
 End Function
 
 
-Public Sub DisplayGroups(tmpSheet As Worksheet, topLeftCell As Range)
+Public Function DisplayGroups(tmpSheet As Worksheet, topLeftCell As Range) As Long
 Dim boardsColl As Collection, groupsColl As Collection
 Dim rs As String, rt As String
 Dim board As Variant, boardGroup As Variant, groupItem As Variant
 Dim rowIndex As Integer
 Dim nextCell As Range, namedRange As Range, lastCell As Range
+Dim totalgroups As Long
 
     Set nextCell = topLeftCell
     rowIndex = 1
@@ -877,20 +899,21 @@ Dim nextCell As Range, namedRange As Range, lastCell As Range
         Set groupsColl = GetGroupsForBoard(CStr(board("id")), rs, rt)
         
         If InStr(board("name"), "Subitems") = 1 Then
-            Debug.Print board("name"), groupsColl.Count
+            
             GoTo nextiter
         End If
         
         If groupsColl.Count > 0 Then
             
             For i = 1 To groupsColl.Count
-                nextCell.Value = board("id")
-                nextCell.Offset(, 1).Value = board("name")
-                nextCell.Offset(, 2).Value = groupsColl(i)("title")
-                nextCell.Offset(, 3).Value = groupsColl(i)("id")
-
+                nextCell.value = board("id")
+                nextCell.Offset(, 1).value = board("name")
+                nextCell.Offset(, 2).value = groupsColl(i)("title")
+                nextCell.Offset(, 3).value = groupsColl(i)("id")
+                Debug.Print "group:" & board("name") & "," & groupsColl(i)("title")
                 Set nextCell = nextCell.Offset(1)
             Next i
+            totalgroups = totalgroups + groupsColl.Count
             
         End If
 nextiter:
@@ -911,10 +934,10 @@ nextiter:
     Set namedRange = namedRange.Offset(, 1)
     ThisWorkbook.Names.Add Name:="GROUP_IDS", RefersTo:=namedRange
     
-    
-End Sub
+    DisplayGroups = totalgroups
+End Function
 
-Public Sub DisplayTags(tmpSheet As Worksheet, topLeftCell As Range)
+Public Function DisplayTags(tmpSheet As Worksheet, topLeftCell As Range) As Long
 Dim tagColl As Collection, tagsColl As Collection
 Dim rs As String, rt As String
 Dim tag As Variant
@@ -926,10 +949,14 @@ Dim numTags As Long
     rowIndex = 1
     Set tagsColl = GetTags(rs, rt)
 
+    nextCell.value = "SELECT_ONE"
+    nextCell.Offset(, 1).value = "SELECT_ONE"
+    Set nextCell = nextCell.Offset(1)
     For i = tagsColl.Count To 1 Step -1
-        nextCell.Value = tagsColl(i)("id")
-        nextCell.Offset(, 1).Value = tagsColl(i)("name")
+        nextCell.value = tagsColl(i)("id")
+        nextCell.Offset(, 1).value = tagsColl(i)("name")
         Set nextCell = nextCell.Offset(1)
+        Debug.Print "tag:" & tagsColl(i)("name")
     Next i
     
     Set lastCell = nextCell.Offset(-1)
@@ -940,4 +967,36 @@ Dim numTags As Long
     Set namedRange = namedRange.Offset(, 1)
     ThisWorkbook.Names.Add Name:="TAGS_NAMES", RefersTo:=namedRange
     
-End Sub
+    DisplayTags = tagsColl.Count
+End Function
+
+Public Function DisplayUsers(tmpSheet As Worksheet, topLeftCell As Range) As Long
+Dim tagColl As Collection, tagsColl As Collection
+Dim rs As String, rt As String
+Dim tag As Variant
+Dim rowIndex As Integer
+Dim nextCell As Range
+Dim numTags As Long
+
+    Set nextCell = topLeftCell
+    rowIndex = 1
+    Set tagsColl = GetUsers(rs, rt)
+
+    For i = tagsColl.Count To 1 Step -1
+        nextCell.value = tagsColl(i)("id")
+        nextCell.Offset(, 1).value = tagsColl(i)("name")
+        Set nextCell = nextCell.Offset(1)
+        Debug.Print "user:" & tagsColl(i)("name")
+    Next i
+    
+    Set lastCell = nextCell.Offset(-1)
+
+    Set namedRange = tmpSheet.Range(topLeftCell, lastCell)
+    ThisWorkbook.Names.Add Name:="USERS_ID", RefersTo:=namedRange
+    
+    Set namedRange = namedRange.Offset(, 1)
+    ThisWorkbook.Names.Add Name:="USERS_NAMES", RefersTo:=namedRange
+    
+    DisplayUsers = tagsColl.Count
+
+End Function

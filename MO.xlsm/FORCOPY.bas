@@ -1,4 +1,19 @@
 Attribute VB_Name = "FORCOPY"
+'Public Function AddTag(tagname As String, ByRef responseStatus As String, ByRef responseText As String) As String
+'Public Sub UpdateStatusMonday(board_id As String, itemID As String, newStatus As String, ByRef responseStatus As String, ByRef responseText As String)
+'Public Sub UpdateTagsMonday(board_id As String, itemID As String, newTags As String, ByRef responseStatus As String, ByRef responseText As String)
+'Public Sub UpdateItemAttributeMonday(board_id As String, itemID As String, itemType As String, newItemValue As String, ByRef responseStatus As String, ByRef responseText As String)
+'Public Sub PostUpdateMonday(itemID As String, msg As String, ByRef responseStatus As String, ByRef responseText As String)
+'Public Function GetBoardId(itemID As String, ByRef responseStatus As String, ByRef responseText As String) As Variant
+'Public Function GetBoards(ByRef responseStatus As String, ByRef responseText As String) As Collection
+'Public Function GetTags(ByRef responseStatus As String, ByRef responseText As String) As Collection
+'Public Sub DeleteItem(itemID As String, ByRef responseStatus As String, ByRef responseText As String)
+'Public Function GetGroupsForBoard(boardid As String, ByRef responseStatus As String, ByRef responseText As String) As Collection
+'Public Sub CreateMondayItem(boardid As String, groupid As String, itemName As String, statusenum As String, owner As String, newTags As String, ByRef responseStatus As String, ByRef responseText As String)
+'Public Sub CreateMondaySubItem(parentItemId As String, itemName As String, statusenum As String, owner As String, newTags As String, ByRef responseStatus As String, ByRef responseText As String)
+'Public Sub WriteToMondayAPI(postData As String, ByRef responseStatus As String, ByRef responseText As String)
+
+
 Public Function AddTag(tagname As String, ByRef responseStatus As String, ByRef responseText As String) As String
 Dim DDQ As String, postData As String
     DDQ = Chr(34)
@@ -13,25 +28,45 @@ Dim DDQ As String, postData As String
     AddTag = jsonObject("data")("create_or_get_tag")("id")
     
 End Function
-Public Sub UpdateStatusMonday(board_id As String, itemID As String, newStatus As String, ByRef responseStatus As String, ByRef responseText As String)
+Public Sub UpdateStatusMonday(board_id As String, itemid As String, newStatus As String, ByRef responseStatus As String, ByRef responseText As String)
 Dim DDQ As String, postData As String
     DDQ = Chr(34)
-    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { change_simple_column_value(board_id : " & board_id & ", item_id :" & itemID & ", column_id: \" & DDQ & "status" & "\" & DDQ & ", value: \" & DDQ & _
+    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { change_simple_column_value(board_id : " & board_id & ", item_id :" & itemid & ", column_id: \" & DDQ & "status" & "\" & DDQ & ", value: \" & DDQ & _
             newStatus & "\" & DDQ & ") {id}}" & DDQ & "}"
 
     Debug.Print postData
-    
+
     WriteToMondayAPI postData, responseStatus, responseText
 End Sub
 
-Public Sub UpdateTagsMonday(board_id As String, itemID As String, newTags As String, ByRef responseStatus As String, ByRef responseText As String)
+Public Sub UpdateStatusMondayMultiVal(board_id As String, itemid As String, newStatus As String, ByRef responseStatus As String, ByRef responseText As String)
+Dim DDQ As String, postData As String
+    DDQ = Chr(34)
+
+    
+    status = "\" & DDQ & "{" & "\\\" & DDQ & "status" & "\\\" & DDQ & ":{" & "\\\" & DDQ & "label" & "\\\" & DDQ & ":" & "\\\" & DDQ & newStatus & "\\\" & DDQ & "}}" & "\" & DDQ
+    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { change_multiple_column_values(board_id: " & board_id & ",item_id: " & itemid & ",column_values: " & status & "){id}}" & DDQ & "}"
+    
+    Debug.Print postData
+    WriteToMondayAPI postData, responseStatus, responseText
+
+ 'mutation {
+ ' change_multiple_column_values(
+ '   item_id:5764926352,
+ '   board_id:4977328922,
+ '   column_values: "{\"status\":{\"label\" : \"Working\"}}")
+
+End Sub
+
+
+Public Sub UpdateTagsMonday(board_id As String, itemid As String, newTags As String, ByRef responseStatus As String, ByRef responseText As String)
 Dim DDQ As String, postData As String
 
 'mutation { change_multiple_column_values(item_id:2951573079, board_id:2193345626, column_values: "{\"tags\" : {\"tag_ids\" : [10165564,10166350]}}") {ID}}
 'mutation { change_multiple_column_values(board_id : 2193345626, item_id :2951573079, column_values: "{\"tags\": {\"tag_ids\":[10165564,10166350]}}") {id}}
  
     DDQ = Chr(34)
-    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { change_multiple_column_values(board_id : " & board_id & ", item_id :" & itemID & ", column_values: " _
+    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { change_multiple_column_values(board_id : " & board_id & ", item_id :" & itemid & ", column_values: " _
             & DDQ & "{\" & DDQ & "tags" & "\" & DDQ & ": " & "{" & "\" & DDQ & "tag_ids" & "\" & DDQ & ":[" & newTags & "]}}" & DDQ & ") {id}}" & DDQ & "}"
 
     Debug.Print postData
@@ -39,10 +74,10 @@ Dim DDQ As String, postData As String
     WriteToMondayAPI postData, responseStatus, responseText
 End Sub
 
-Public Sub UpdateItemAttributeMonday(board_id As String, itemID As String, itemType As String, newItemValue As String, ByRef responseStatus As String, ByRef responseText As String)
+Public Sub UpdateItemAttributeMonday(board_id As String, itemid As String, itemType As String, newItemValue As String, ByRef responseStatus As String, ByRef responseText As String)
 Dim DDQ As String, postData As String
     DDQ = Chr(34)
-    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { change_simple_column_value(board_id : " & board_id & ", item_id :" & itemID & ", column_id: \" & DDQ & itemType & "\" & DDQ & ", value: \" & DDQ & _
+    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { change_simple_column_value(board_id : " & board_id & ", item_id :" & itemid & ", column_id: \" & DDQ & itemType & "\" & DDQ & ", value: \" & DDQ & _
             newItemValue & "\" & DDQ & ") {id}}" & DDQ & "}"
 
     Debug.Print postData
@@ -51,21 +86,21 @@ Dim DDQ As String, postData As String
 End Sub
 
 
-Public Sub PostUpdateMonday(itemID As String, msg As String, ByRef responseStatus As String, ByRef responseText As String)
+Public Sub PostUpdateMonday(itemid As String, msg As String, ByRef responseStatus As String, ByRef responseText As String)
 Dim DDQ As String, postData As String
     DDQ = Chr(34)
-    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { create_update (item_id: " & itemID & ", body: " & "\" & DDQ & msg & "\" & DDQ & ") {id}}" & DDQ & "}"
+    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { create_update (item_id: " & itemid & ", body: " & "\" & DDQ & msg & "\" & DDQ & ") {id}}" & DDQ & "}"
     
     WriteToMondayAPI postData, responseStatus, responseText
 End Sub
 
 
-Public Function GetBoardId(itemID As String, ByRef responseStatus As String, ByRef responseText As String) As Variant
+Public Function GetBoardId(itemid As String, ByRef responseStatus As String, ByRef responseText As String) As Variant
 Dim DDQ As String, postData As String
 Dim jsonObject As Object
     DDQ = Chr(34)
 
-    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "query {items (ids: [ " & itemID & "]) { board { id } } }" & DDQ & "}"
+    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "query {items (ids: [ " & itemid & "]) { board { id } } }" & DDQ & "}"
     WriteToMondayAPI postData, responseStatus, responseText
     
     Set jsonObject = ParseJson(responseText)
@@ -92,6 +127,22 @@ Dim itemDict As Variant
 
 End Function
 
+
+Public Function GetUsers(ByRef responseStatus As String, ByRef responseText As String) As Collection
+Dim DDQ As String, postData As String
+Dim jsonObject As Object
+Dim boardsObjects As Collection
+Dim itemDict As Variant
+
+    DDQ = Chr(34)
+
+    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "query {users () { id name } }" & DDQ & "}"
+    WriteToMondayAPI postData, responseStatus, responseText
+    
+    Set jsonObject = ParseJson(responseText)
+    Set GetUsers = jsonObject("data")("users")
+
+End Function
 Public Function GetTags(ByRef responseStatus As String, ByRef responseText As String) As Collection
 Dim DDQ As String, postData As String
 Dim jsonObject As Object
@@ -109,13 +160,13 @@ Dim itemDict As Variant
 End Function
 
 
-Public Sub DeleteItem(itemID As String, ByRef responseStatus As String, ByRef responseText As String)
+Public Sub DeleteItem(itemid As String, ByRef responseStatus As String, ByRef responseText As String)
 Dim DDQ As String, postData As String
 'mutation { delete_item (item_id: 12345678) {ID}}
 
     DDQ = Chr(34)
 
-    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { delete_item (item_id : " & itemID & ") {id}}" & DDQ & "}"
+    postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation { delete_item (item_id : " & itemid & ") {id}}" & DDQ & "}"
     Debug.Print postData
     WriteToMondayAPI postData, responseStatus, responseText
 
@@ -141,51 +192,69 @@ Dim itemDict As Variant
     
 End Function
 
-Public Sub CreateMondayItem(boardid As String, groupid As String, itemName As String, status As String, owner As String, newTags As String, _
-        ByRef responseStatus As String, ByRef responseText As String)
+Public Sub CreateMondayItem(boardid As String, groupid As String, itemName As String, statusenum As String, owner As String, newTags As String, _
+        ByRef responseStatus As String, ByRef responseText As String, Optional peopleFieldName As String = "people")
+
         
-Dim DDQ As String, postData As String
+Dim DDQ As String, postData As String, itemid As String
 Dim jsonObject As Object
 Dim boardsObjects As Collection
 Dim itemDict As Variant
 
 
-
+    ' people8 for test
+    
     DDQ = Chr(34)
     
     tags = "\\\" & DDQ & "tags" & "\\\" & DDQ & ": " & "{" & "\\\" & DDQ & "tag_ids" & "\\\" & DDQ & ":[" & newTags & "]}"
     
-    person = "\\\" & DDQ & "people" & "\\\" & DDQ & ": {" & "\\\" & DDQ & "personsAndTeams" & "\\\" & DDQ & ":[{" & "\\\" & DDQ & "id" & "\\\" & DDQ & ":22027695" & "," & "\\\" & DDQ & "kind" & "\\\" & DDQ & ":" & "\\\" & DDQ & "person" & "\\\" & DDQ & "}]}"
+    person = "\\\" & DDQ & peopleFieldName & "\\\" & DDQ & ": {" & "\\\" & DDQ & "personsAndTeams" & "\\\" & DDQ & ":[{" & "\\\" & DDQ & "id" & "\\\" & DDQ & ":" & owner & "," & "\\\" & DDQ & "kind" & "\\\" & DDQ & ":" & "\\\" & DDQ & "person" & "\\\" & DDQ & "}]}"
+    'person = "\\\" & DDQ & peopleFieldName & "\\\" & DDQ & ": {" & "\\\" & DDQ & "personsAndTeams" & "\\\" & DDQ & ":[{" & "\\\" & DDQ & "id" & "\\\" & DDQ & ":22027695" & "," & "\\\" & DDQ & "kind" & "\\\" & DDQ & ":" & "\\\" & DDQ & "person" & "\\\" & DDQ & "}]}"
     
-    column_values = "column_values:" & "\" & DDQ & "{" & "\\\" & DDQ & "status" & "\\\" & DDQ & ":" & "\\\" & DDQ & status & "\\\" & DDQ & "," & person & "," & tags & "}" & "\" & DDQ
+    status = "\\\" & DDQ & "status" & "\\\" & DDQ & ":" & "\\\" & DDQ & statusenum & "\\\"
+    
+    column_values = "column_values:" & "\" & DDQ & "{" & status & DDQ & "," & person & "," & tags & "}" & "\" & DDQ
+    'column_values = "column_values:" & "\" & DDQ & "{" & "\\\" & DDQ & "status" & "\\\" & DDQ & ":" & "\\\" & DDQ & statusenum & "\\\" & DDQ & "," & person & "," & tags & "}" & "\" & DDQ
     
     postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation {create_item (board_id: " & boardid & ",group_id:" & "\" & DDQ & groupid & "\" & DDQ & ",item_name:" & "\" & DDQ & itemName & "\" & DDQ & "," _
                 & column_values & ") { id } } " & DDQ & "}"
-    
-    
+                
+    'Debug.Print postData
+     
     WriteToMondayAPI postData, responseStatus, responseText
+    
+    'Set jsonObject = ParseJson(responseText)
+    'itemid = jsonObject("data")("create_item")("id")
+    
     
     
 End Sub
 
-Public Sub CreateMondaySubItem(parentItemId As String, itemName As String, status As String, owner As String, newTags As String, ByRef responseStatus As String, ByRef responseText As String)
+Public Sub CreateMondaySubItem(parentItemId As String, itemName As String, statusenum As String, owner As String, newTags As String, _
+    ByRef responseStatus As String, ByRef responseText As String, Optional peopleFieldName As String = "people")
 
 Dim DDQ As String, postData As String
 Dim jsonObject As Object
 Dim boardsObjects As Collection
 Dim itemDict As Variant
 
+    ' people 6 for test
     DDQ = Chr(34)
 
     tags = "\\\" & DDQ & "tags" & "\\\" & DDQ & ": " & "{" & "\\\" & DDQ & "tag_ids" & "\\\" & DDQ & ":[" & newTags & "]}"
     
-    person = "\\\" & DDQ & "people6" & "\\\" & DDQ & ": {" & "\\\" & DDQ & "personsAndTeams" & "\\\" & DDQ & ":[{" & "\\\" & DDQ & "id" & "\\\" & DDQ & ":22027695" & "," & "\\\" & DDQ & "kind" & "\\\" & DDQ & ":" & "\\\" & DDQ & "person" & "\\\" & DDQ & "}]}"
+    'person = "\\\" & DDQ & peopleFieldName & "\\\" & DDQ & ": {" & "\\\" & DDQ & "personsAndTeams" & "\\\" & DDQ & ":[{" & "\\\" & DDQ & "id" & "\\\" & DDQ & ":22027695" & "," & "\\\" & DDQ & "kind" & "\\\" & DDQ & ":" & "\\\" & DDQ & "person" & "\\\" & DDQ & "}]}"
+    person = "\\\" & DDQ & peopleFieldName & "\\\" & DDQ & ": {" & "\\\" & DDQ & "personsAndTeams" & "\\\" & DDQ & ":[{" & "\\\" & DDQ & "id" & "\\\" & DDQ & ":" & owner & "," & "\\\" & DDQ & "kind" & "\\\" & DDQ & ":" & "\\\" & DDQ & "person" & "\\\" & DDQ & "}]}"
     
-    column_values = "column_values:" & "\" & DDQ & "{" & "\\\" & DDQ & "status" & "\\\" & DDQ & ":" & "\\\" & DDQ & "1" & "\\\" & DDQ & "," & person & "," & tags & "}" & "\" & DDQ
+    column_values = "column_values:" & "\" & DDQ & "{" & "\\\" & DDQ & "status" & "\\\" & DDQ & ":" & "\\\" & DDQ & statusenum & "\\\" & DDQ & "," & person & "," & tags & "}" & "\" & DDQ
     
+    'postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation {create_subitem (parent_item_id: " & parentItemId & ",item_name:" & "\" & DDQ & itemName & "\" & DDQ & "," _
+    '            & column_values & ") { id } } " & DDQ & "}"
     postData = "{" & DDQ & "query" & DDQ & ":" & DDQ & "mutation {create_subitem (parent_item_id: " & parentItemId & ",item_name:" & "\" & DDQ & itemName & "\" & DDQ & "," _
-                & column_values & ") { id } } " & DDQ & "}"
-                 
+                & column_values & ") {id board {id}} } " & DDQ & "}"
+                
+            
+            
     WriteToMondayAPI postData, responseStatus, responseText
     
     

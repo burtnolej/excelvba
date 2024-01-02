@@ -7,7 +7,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Public Sub Workbook_open()
-    ActiveWorkbook.Sheets("AddNewItems").Activate
-    ActiveSheet.Cells(1, 1).Select
+'Public Sub Workbook_open()
+'    ActiveWorkbook.Sheets("AddNewItems").Activate
+'    ActiveSheet.Cells(1, 1).Select
+'End Sub
+
+Sub Auto_Close()
+
+    ThisWorkbook.Saved = True
+
 End Sub
