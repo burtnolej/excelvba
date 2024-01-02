@@ -169,7 +169,7 @@ Dim psexepath As String, execPath As String
 End Sub
 
 Public Sub LaunchPackupToolsExec(Optional startdir As String = "C:\Users\burtn\Development")
-Dim execStr As String
+Dim execStr As String, psexepath As String, execPath As String
 Dim objShell As Object
     
     psexepath = "POWERSHELL.exe"
@@ -434,7 +434,7 @@ Dim tmpWindow As Window
     tmpWindow.DisplayHeadings = False
     
 exitsub:
-    Set tmpWorkbook = Nothing
+    Set tmpWindow = Nothing
     
 End Sub
 
@@ -459,7 +459,7 @@ End Sub
 
 
 Sub HideSheets(bookname As String, Optional visibleSheet As String = "BLANK")
-
+Dim i As Integer
 Dim tmpBook As Workbook
     Set tmpBook = Workbooks(bookname)
     
@@ -475,7 +475,7 @@ End Sub
 
 Public Sub ShowSheets(Optional bookname As String = "")
 Dim tmpBook As Workbook
-
+Dim i As Integer
     If bookname <> "" Then
         If Right(bookname, 4) <> "xlsm" Then
             Set tmpBook = Workbooks(bookname & ".xlsm")
@@ -543,7 +543,7 @@ Dim tmpWindow As Window
 
 
 exitsub:
-    Set tmpWorkbook = Nothing
+    Set tmpWindow = Nothing
     
 End Sub
 Public Sub HideMenuBar(bookname As String)
