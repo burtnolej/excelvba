@@ -2,12 +2,12 @@ Attribute VB_Name = "RibbonUtils"
 
 'Dim rbxUI As IRibbonUI
 
-'Declare PtrSafe Function GetSystemMetrics32 Lib "USER32" _
-'    Alias "GetSystemMetrics" (ByVal nIndex As Long) As Long
-'Public Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" ( _
-'    destination As Any, _
-'    source As Any, _
-'    ByVal length As Long)
+Declare PtrSafe Function GetSystemMetrics32 Lib "USER32" _
+    Alias "GetSystemMetrics" (ByVal nIndex As Long) As Long
+Public Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" ( _
+    destination As Any, _
+    source As Any, _
+    ByVal length As Long)
     
 Sub MVdropDown_getText(control As IRibbonControl, ByRef returnedVal)
 Dim RV As MVRibbonVariables

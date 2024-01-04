@@ -58,10 +58,10 @@ Dim aPtr As LongPtr
     Debug.Print "RibbonPointer"
 
     If Not ribbonpointerval Is Nothing Then
-        'Set RibbonPointer = ribbonpointerval
+        Set RibbonPointer = ribbonpointerval
     Else
-        'aPtr = GetVariableSheetValue("ribbonpointerval")
-        'CopyMemory RibbonPointer, aPtr, LenB(aPtr)
+        aPtr = GetVariableSheetValue("ribbonpointerval")
+        CopyMemory RibbonPointer, aPtr, LenB(aPtr)
     End If
     
 End Property

@@ -447,7 +447,8 @@ Public Function GetUpdates(updateFileDir As String, ByVal updatesSheet As Worksh
 Dim oFSO As FileSystemObject
 Dim tmpWorkbook As Workbook
 
-    dataurl = ActiveWorkbook.Sheets("Reference").Range("dataurl").value
+    'dataurl = ActiveWorkbook.Sheets("Reference").Range("dataurl").value
+    dataurl = "https://www.veloxfintech.com/datafiles"
     
     Application.Run "VBAUtils.xlsm!HTTPDownloadFile", _
             dataurl + "/Monday/updates.txt", _
@@ -560,7 +561,7 @@ Public Sub GenerateReport(Optional param As String = "")
 Dim dirnameString As String, fileNameSuffix As String, parentDirnameString As String, datafileDirname As String, sortValue As String
 Dim targetSheetName As String, targetFileName As String, dataFile As String, targetDirName As String, inputUser As String, boardName As String
 Dim inputUserName As String, inputDate As String, inputGDrive As String, inputFolder As String, folderSheetName As String, outputFolder As String
-Dim fileExtension As String, inputFileExtension As String, outputFolderSheet As String, configSheetName As String, tmpPath As String
+Dim fileExtension As String, inputFileExtension As String, outputFolderSheet As String, configSheetName As String, tmpPath As String, saveReportFlag As String
 Dim mondayPrefix As String, mondaySuffix As String, updatesSheetName As String, outputBookname As String, subitemParentFlag As String, statusFilterFlag As String
 Dim tmpWorkbook As Workbook, summaryWorkbook As Workbook, codeWorkbook As Workbook
 Dim boardWorksheet As Worksheet, tmpWorksheet As Worksheet, sourceFolderSheet As Worksheet, targetFolderSheet As Worksheet, folderSheet As Worksheet
@@ -609,6 +610,7 @@ Dim RV As MVRibbonVariables
     End If
     
     inputOpenFlag = GetConfig(RV, "OpenReport")
+    saveReportFlag = GetConfig(RV, "SaveReport")
     refreshUpdatesFlag = GetConfig(RV, "RefreshUpdates")
     refreshFolderFlag = GetConfig(RV, "RefreshFolders")
     outputFolderSheet = GetConfig(RV, "Config__Output_Folder_Sheet")
@@ -768,9 +770,20 @@ Dim RV As MVRibbonVariables
         ApplyFilter boardWorksheet, "COLUMN_TYPE", Array("item", "subitem")
     End If
 
-    summaryWorkbook.Activate
-    summaryWorkbook.SaveAs FileFormat:=xlOpenXMLWorkbookMacroEnabled, filename:=targetFileName
+    If saveReportFlag = "Yes" Then
+        summaryWorkbook.Activate
+        summaryWorkbook.SaveAs FileFormat:=xlOpenXMLWorkbookMacroEnabled, filename:=targetFileName
+    End If
+
+    If inputOpenFlag = "No" Then
+        If Not summaryWorkbook Is Nothing Then
+            summaryWorkbook.Close
+            Set summaryWorkbook = Nothing
+        End If
+        'Workbooks.Open targetFileName, UpdateLinks:=0
+    End If
     
+        
     GoTo exitsub
     
 err:
@@ -786,10 +799,7 @@ err:
     
     
 exitsub:
-        If Not summaryWorkbook Is Nothing Then
-        summaryWorkbook.Close
-        Set summaryWorkbook = Nothing
-    End If
+
     
     codeWorkbook.Sheets(configSheetName).Activate
     
@@ -808,9 +818,7 @@ exitsub:
     Set tmpWorksheet = Nothing
     Set RV = Nothing
     
-    If inputOpenFlag = True Then
-        Workbooks.Open targetFileName, UpdateLinks:=0
-    End If
+
     
     SetEventsOn
         
