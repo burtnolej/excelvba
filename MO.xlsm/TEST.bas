@@ -40,6 +40,23 @@ Const CONTENT_ITEM_ID = "2951585128"
 Dim boardIds() As Variant
 Dim itemIds() As Variant
 
+Sub TestCreateSharepointMondayFolder()
+
+    CreateSharepointMondayFolder "foo"
+
+End Sub
+Public Sub CreateSharepointMondayFolder(folderName As String)
+Dim objShell As Object
+Dim PSExe, PSScript As String
+    
+    Set objShell = VBA.CreateObject("Wscript.Shell")
+
+    PythonExe = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+    PythonScript = "" & Environ("USERPROFILE") & "\Deploy\CreaterFolder-Nodep.ps1"
+
+    objShell.Run PythonExe & " " & PythonScript & " " & """/sites/VeloxSharedDrive/Shared%20Documents/General/Monday""" & " " & folderName
+
+End Sub
 Public Sub TestExportAllModules()
 
     Application.Run "vbautils.xlsm!ExportAllModules"
@@ -183,8 +200,8 @@ End Sub
 Public Sub AddItemExec(ByRef rs As String, ByRef rt As String, ByRef sirs As String, ByRef sirt As String)
 Dim dataRange As Range, dataRow As Range
 Dim groupid As String, boardid As String, itemName As String, tags_string As String, tag_name As String, subitemStatus As String, ownerEnum As String, subitemtags_string As String
-Dim status As String, owner As String, newItemName As String, newSubItemName As String, itemid As String, tag_id As String, DDQ As String, createFolderFlag As String
-Dim newItemId As String, addedFlag As String, newItemUpdateMsg As String, newSubItemId As String, newSubItemUpdateMsg As String, subitemOwnerEnum As String
+Dim status As String, owner As String, newItemName As String, newSubItemName As String, itemid As String, tag_id As String, DDQ As String, createFolderFlag As String, subitem_statusenum As String
+Dim newItemId As String, addedFlag As String, newItemUpdateMsg As String, newSubItemId As String, newSubItemUpdateMsg As String, subitemOwnerEnum As String, newFolderName As String
 Dim i As Integer
 Dim tag_index As Variant
 Dim first_tag As Boolean
@@ -202,11 +219,15 @@ Dim tmpSheet As Worksheet
     Set tmpSheet = Workbooks("MO.xlsm").Sheets("AddNewItems")
     Set dataRange = tmpSheet.Range("NEWITEM_DATA")
     Set addedItemIdRange = tmpSheet.Range("NEWITEM_ADDEDITEMID")
-    Set addedItemURLRange = tmpSheet.Range("NEWITEM_ADDEDITEMURL")
-    Set addedItemFolderRange = tmpSheet.Range("NEWITEM_ADDEDITEMFOLDER")
     Set addedSubItemIdRange = tmpSheet.Range("NEWITEM_ADDEDSUBITEMID")
     
+    Set addedItemURLRange = tmpSheet.Range("NEWITEM_ADDEDITEMURL")
+    Set addedItemFolderRange = tmpSheet.Range("NEWITEM_ADDEDITEMFOLDER")
+    Set addedSubItemURLRange = tmpSheet.Range("NEWITEM_ADDEDSUBITEMURL")
+    Set addedSubItemFolderRange = tmpSheet.Range("NEWITEM_ADDEDSUBITEMFOLDER")
+    
     createFolderFlag = tmpSheet.Range("CREATE_FOLDER_FLAG").value
+    createSubItemFolderFlag = tmpSheet.Range("CREATE_SUBITEM_FOLDER_FLAG").value
 
     Application.Run "vbautils.xlsm!RangeToDict", Workbooks("MO.xlsm"), "Reference", "TAGS_DATA", tagsDict
     Application.Run "vbautils.xlsm!RangeToDict", Workbooks("MO.xlsm"), "Reference", "STATUS_DATA", statusDict
@@ -221,15 +242,18 @@ Dim tmpSheet As Worksheet
     tags = tmpSheet.Range("NEWITEM_TAG").value
     tags2 = tmpSheet.Range("NEWITEM_TAG2").value
     subitemtags = tmpSheet.Range("NEWSUBITEM_TAG").value
-    subitemtags = tmpSheet.Range("NEWSUBITEM_TAG2").value
+    subitemtags2 = tmpSheet.Range("NEWSUBITEM_TAG2").value
     owner = tmpSheet.Range("NEWITEM_OWNER").value
+    On Error Resume Next ' 1/3/24 to account for adding subitem only
     ownerEnum = tmpSheet.Range("OWNERID").value
+    On Error GoTo 0
     subitemOwnerEnum = tmpSheet.Range("SUBITEMOWNERID").value
     itemid = tmpSheet.Range("NEWITEM_ITEMID").value
     newSubItemName = tmpSheet.Range("NEWSUBITEM_NEWSUBITEM_NAME").value
     newItemUpdateMsg = tmpSheet.Range("NEWITEM_NEWITEM_UPDATE").value
     newSubItemUpdateMsg = tmpSheet.Range("NEWSUBITEM_NEWSUBITEM_UPDATE").value
     statusenum = tmpSheet.Range("STATUS_ENUM").value
+    subitem_statusenum = tmpSheet.Range("SUBITEM_STATUS_ENUM").value
     
     addedFlag = addedItemIdRange.value
 
@@ -243,7 +267,8 @@ Dim tmpSheet As Worksheet
     If addedFlag = "" Then
         If newItemName <> "" Then ' then its a new item
             If boardid <> "" Then
-                If newItemName <> "N/A" Then  ' if N/A then its adding a sibitem anyway 06/24/23
+                If itemid = "" Then ' changes on 1/3/24 to better reflect new input form
+                'If newItemName <> "N/A" Then  ' if N/A then its adding a sibitem anyway 06/24/23
                 
                     If boardid = "4977328922" Then
                         ' test board
@@ -260,9 +285,9 @@ Dim tmpSheet As Worksheet
 
                 If newSubItemName <> "" Then  ' if "" then its adding  a parent only 06/24/23
                     If boardid = "4977328922" Then
-                        CreateMondaySubItem newItemId, newSubItemName, CStr(statusenum), subitemOwnerEnum, subitemtags_string, sirs, sirt, "people5"
+                        CreateMondaySubItem newItemId, newSubItemName, CStr(subitem_statusenum), subitemOwnerEnum, subitemtags_string, sirs, sirt, "people5"
                     Else
-                        CreateMondaySubItem newItemId, newSubItemName, CStr(statusenum), subitemOwnerEnum, subitemtags_string, sirs, sirt
+                        CreateMondaySubItem newItemId, newSubItemName, CStr(subitem_statusenum), subitemOwnerEnum, subitemtags_string, sirs, sirt
                     End If
                     newSubItemId = getResponseItemid(sirt, "create_subitem")
                     
@@ -293,13 +318,29 @@ Dim tmpSheet As Worksheet
         addedSubItemIdRange.value = newSubItemId
         
         If createFolderFlag = "YES" Then
-            folderPath = CreateSimpleMondayFolder("E:\Velox Financial Technology\Velox Shared Drive - Documents\General\Monday", newItemId, newItemName)
-        
-            addedItemFolderRange.Formula = "=HYPERLINK(" & DDQ & folderPath & DDQ & ")"
+            newFolderName = newItemId & "_" & newItemName
+            newFolderPath = "https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive/Shared%20Documents/General/Monday/" & newFolderName
+            CreateSharepointMondayFolder newFolderName
+            addedItemFolderRange.Formula = "=HYPERLINK(" & DDQ & newFolderPath & DDQ & "," & DDQ & newFolderName & DDQ & ")"
+            addedItemURLRange.Formula = "=HYPERLINK(" & DDQ & "https://veloxfintech.monday.com/boards/" & boardid & "/pulses/" & newItemId & DDQ & "," & DDQ & newFolderName & DDQ & ")"
         End If
         
+        If createSubItemFolderFlag = "YES" Then
+            newFolderName = newSubItemId & "_" & newSubItemName
+            newFolderPath = "https://veloxfintechcom.sharepoint.com/sites/VeloxSharedDrive/Shared%20Documents/General/Monday/" & newFolderName
+            CreateSharepointMondayFolder newFolderName
+            addedSubItemFolderRange.Formula = "=HYPERLINK(" & DDQ & newFolderPath & DDQ & "," & DDQ & newFolderName & DDQ & ")"
+            addedSubItemURLRange.Formula = "=HYPERLINK(" & DDQ & "https://veloxfintech.monday.com/boards/" & boardid & "/pulses/" & newSubItemId & DDQ & "," & DDQ & newFolderName & DDQ & ")"
+        End If
+        
+        
+            'folderPath = CreateSimpleMondayFolder("E:\Velox Financial Technology\Velox Shared Drive - Documents\General\Monday", newItemId, newItemName)
+        
+            'addedItemFolderRange.Formula = "=HYPERLINK(" & DDQ & folderPath & DDQ & ")"
+        'End If
+        
         ' add the new URL into the worksheet
-        addedItemURLRange.Formula = "=HYPERLINK(" & DDQ & "https://veloxfintech.monday.com/boards/" & boardid & "/pulses/" & newItemId & DDQ & ")"
+        
 
     Else
         Debug.Print "skipping row #" & i & " as already added"

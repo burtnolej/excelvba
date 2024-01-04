@@ -205,14 +205,14 @@ End Property
 Property Get Config__DataUrl() As String
     Debug.Print "Config__DataUrl"
     If config__dataurlval = "" Then
-        Config__DataUrl = GetVariableSheetValue("config__DataUrlval")
+        Config__DataUrl = GetVariableSheetValue("config__dataurlval")
     Else
         Config__DataUrl = config__dataurlval
     End If
 End Property
 Property Let Config__DataUrl(value As String)
     Debug.Print "LetConfig__DataUrl", value
-    LetVariableSheetValue "config__DataUrlval", value
+    LetVariableSheetValue "config__dataurlval", value
 End Property
 Sub LetVariableSheetValue(varname As String, value As String, Optional resultsDict As Dictionary = Nothing)
 Dim resultsRange As Range

@@ -1,6 +1,7 @@
 Attribute VB_Name = "RibbonUtiis"
 Option Explicit
 
+
 'Callback for customUI.onLoad
 Sub MOrbx_onLoad(ribbon As IRibbonUI)
 Dim RV As MORibbonVariables
@@ -8,7 +9,11 @@ Dim RV As MORibbonVariables
     Set RV = New MORibbonVariables
     
     CallByName RV, "RibbonPointer", VbLet, ribbon
+    
+    ribbon.ActivateTab "tab23"
     Set RV = Nothing
+    
+    ActiveWorkbook.Sheets("AddNewItems").Activate
 End Sub
 
 'Callback for actions__additem onAction

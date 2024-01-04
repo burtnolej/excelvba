@@ -178,7 +178,7 @@ Public Sub AddToMondayFile(itemid As String, mondayFolderPath As String, tmpWork
 Dim wordDoc As Word.Document
 Dim fso As Scripting.FileSystemObject
 Dim wordApp As Word.Application
-Dim folderPath As String, mondayFolderName As String, foldername As String
+Dim folderPath As String, mondayFolderName As String, folderName As String
 
     Set wordDoc = CreateObject("Word.Document")
     Set wordApp = CreateObject("Word.Application")
@@ -252,7 +252,7 @@ End Function
 Public Sub InitMondayFolder(itemid As String, itemName As String, mondayFolderPath As String, tmpWorkbook As Workbook, _
     Optional initDocText As String = "", Optional dryRun As Boolean = False)
 Dim fso As Scripting.FileSystemObject
-Dim foldername As String, folderPath As String, wordDocName As String
+Dim folderName As String, folderPath As String, wordDocName As String
 Dim wordDoc As Word.Document
 Dim wordApp As Word.Application
 Dim objSelection As Variant
@@ -271,10 +271,10 @@ Dim folderNamesCol As Range, itemIdCell As Range
     Next itemIdCell
     wordDocName = itemid & "__description__" & ".docx"
 
-    foldername = itemid & " - " & itemName
+    folderName = itemid & " - " & itemName
     
     Set fso = CreateObject("Scripting.FileSystemObject")
-    folderPath = fso.BuildPath(mondayFolderPath, foldername)
+    folderPath = fso.BuildPath(mondayFolderPath, folderName)
     If Dir(folderPath) = "" Then
     
         If dryRun = False Then
