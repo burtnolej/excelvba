@@ -246,14 +246,16 @@ Dim tmpSheet As Worksheet
     owner = tmpSheet.Range("NEWITEM_OWNER").value
     On Error Resume Next ' 1/3/24 to account for adding subitem only
     ownerEnum = tmpSheet.Range("OWNERID").value
-    On Error GoTo 0
     subitemOwnerEnum = tmpSheet.Range("SUBITEMOWNERID").value
+    On Error GoTo 0
     itemid = tmpSheet.Range("NEWITEM_ITEMID").value
     newSubItemName = tmpSheet.Range("NEWSUBITEM_NEWSUBITEM_NAME").value
     newItemUpdateMsg = tmpSheet.Range("NEWITEM_NEWITEM_UPDATE").value
     newSubItemUpdateMsg = tmpSheet.Range("NEWSUBITEM_NEWSUBITEM_UPDATE").value
     statusenum = tmpSheet.Range("STATUS_ENUM").value
+    On Error Resume Next ' 1/5/24 can be N/A if no subitem
     subitem_statusenum = tmpSheet.Range("SUBITEM_STATUS_ENUM").value
+    On Error GoTo 0
     
     addedFlag = addedItemIdRange.value
 
@@ -308,10 +310,14 @@ Dim tmpSheet As Worksheet
         End If
         
         ' then post the description field as an update
-        PostUpdateMonday newItemId, newItemUpdateMsg, rs, rt
+        If itemid = "" Then
+            PostUpdateMonday newItemId, newItemUpdateMsg, rs, rt
+        End If
         
         ' then post the description field as an update
-        PostUpdateMonday newSubItemId, newSubItemUpdateMsg, rs, rt
+        If newSubItemName <> "" Then
+            PostUpdateMonday newSubItemId, newSubItemUpdateMsg, rs, rt
+        End If
         
         ' add the new item id back into the worksheet
         addedItemIdRange.value = newItemId

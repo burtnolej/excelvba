@@ -15,6 +15,8 @@ Private bookname As String
 
 Private actions__addItemval As String
 Private actions__newItemval As String
+Private actions__emailupdateval As String
+
 
 Private refreshdata__usersval As String
 Private refreshdata__tagsval As String
@@ -67,6 +69,24 @@ Dim resultsDict As New Dictionary
     resultsDict.Add "sirt", sirt
     
     LetVariableSheetValue "actions__additemval", value, resultsDict
+End Property
+
+' Actions__EmailItemUpdate  ''''''''''''''''''''''''''''''
+Property Get Actions__EmailUpdate() As String
+    Debug.Print "Actions__EmailUpdate"
+    If actions__emailupdateval = "" Then
+        Actions__EmailUpdate = GetVariableSheetValue("actions__emailupdateval")
+    Else
+        Actions__EmailUpdate = actions__emailupdateval
+    End If
+End Property
+Property Let Actions__EmailUpdate(value As String)
+Dim rs As String, rt As String, sirs As String, sirt As String
+Dim resultsDict As New Dictionary
+
+    Debug.Print "actions__EmailUpdateval", value
+    EmailItemUpdateExec
+    LetVariableSheetValue "actions__emailupdateval", value
 End Property
 
 
